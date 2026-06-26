@@ -226,7 +226,7 @@ export default function Onboarding() {
                         <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
                         <span className="text-[10px] text-green-600 font-medium">Disponível</span>
                       </div>
-                      <p className="text-[11px] text-[#8B6E5A]">Psicóloga Clínica · CRP 00/00000</p>
+                      <p className="text-[11px] text-[#8B6E5A]">Psicóloga Clínica · CRP 06/157053</p>
                     </div>
                   </motion.div>
                 </div>

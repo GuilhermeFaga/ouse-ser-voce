@@ -66,7 +66,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <p className="font-serif text-xl lg:text-2xl text-white leading-relaxed italic">
             "{todayQuote}"
           </p>
-          <p className="text-[#E8D5CC] text-sm mt-3">— Soraia Farias</p>
+          <p className="text-[#E8D5CC] text-sm mt-3">— Soraya Farias</p>
         </div>
       </motion.div>
 

@@ -1,6 +1,6 @@
 // OUSE SER VOCÊ – Onboarding
 // Design: Clínica Emocional Sofisticada | Playfair Display + DM Sans | Rosa pó + Creme
-// Presença de Soraia Farias como psicóloga guia, identidade visual forte
+// Presença de Soraya Farias como psicóloga guia, identidade visual forte
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -22,7 +22,7 @@ const steps = [
   {
     id: "about",
     title: "O que você vai encontrar aqui",
-    subtitle: "30 dias de acompanhamento próximo com a psicóloga Soraia Farias",
+    subtitle: "30 dias de acompanhamento próximo com a psicóloga Soraya Farias",
     cta: "Continuar"
   },
   {
@@ -34,7 +34,7 @@ const steps = [
 ];
 
 const features = [
-  { icon: <BookOpen className="w-4 h-4" />, title: "Exercícios reflexivos diários", desc: "Práticas guiadas pela psicóloga Soraia Farias" },
+  { icon: <BookOpen className="w-4 h-4" />, title: "Exercícios reflexivos diários", desc: "Práticas guiadas pela psicóloga Soraya Farias" },
   { icon: <Heart className="w-4 h-4" />, title: "Diário emocional", desc: "Espaço seguro para registrar o que sente" },
   { icon: <Star className="w-4 h-4" />, title: "Scanner de Essência", desc: "Diagnóstico personalizado do seu estado emocional" },
   { icon: <Shield className="w-4 h-4" />, title: "Progresso e conquistas", desc: "Acompanhe sua evolução dia a dia" },
@@ -77,7 +77,7 @@ export default function Onboarding() {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#FAF6F1]/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1A0E08]/60 via-transparent to-transparent" />
 
-        {/* Soraia's quote at bottom */}
+        {/* Soraya's quote at bottom */}
         <div className="absolute bottom-10 left-8 right-8">
           <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-xl border border-white/50">
             <div className="flex items-start gap-3">
@@ -89,7 +89,7 @@ export default function Onboarding() {
                   "Você não perdeu quem você é. Só parou de procurar."
                 </p>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs text-[#C4856A] font-semibold">Soraia Farias</p>
+                  <p className="text-xs text-[#C4856A] font-semibold">Soraya Farias</p>
                   <span className="text-[#D4C4BC]">·</span>
                   <p className="text-xs text-[#8B6E5A]">Psicóloga Clínica</p>
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400 ml-1" />
@@ -183,7 +183,7 @@ export default function Onboarding() {
 
                   <div className="mt-2 p-4 bg-[#F5EDE8] rounded-xl border-l-3 border-[#C4856A]" style={{ borderLeftWidth: "3px" }}>
                     <p className="text-xs text-[#6B4C3B] leading-relaxed">
-                      Esta jornada foi desenvolvida pela psicóloga <strong>Soraia Farias</strong> para mulheres entre 30 e 60 anos que se sentem desconectadas de si mesmas.
+                      Esta jornada foi desenvolvida pela psicóloga <strong>Soraya Farias</strong> para mulheres entre 30 e 60 anos que se sentem desconectadas de si mesmas.
                     </p>
                   </div>
                 </div>
@@ -210,7 +210,7 @@ export default function Onboarding() {
                     </motion.div>
                   ))}
 
-                  {/* Soraia presence */}
+                  {/* Soraya presence */}
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -222,7 +222,7 @@ export default function Onboarding() {
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <p className="text-xs font-semibold text-[#2C1810]">Soraia Farias</p>
+                        <p className="text-xs font-semibold text-[#2C1810]">Soraya Farias</p>
                         <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
                         <span className="text-[10px] text-green-600 font-medium">Disponível</span>
                       </div>

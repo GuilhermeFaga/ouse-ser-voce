@@ -135,9 +135,9 @@ export default function DayView({ onNavigate }: DayViewProps) {
         <p className="text-[#8B6E5A] text-sm">{today.subtitle}</p>
       </div>
 
-      {/* Soraia's message */}
+      {/* Soraya's message */}
       <div className="bg-[#F5EDE8] rounded-2xl p-5 border-l-4 border-[#C4856A]">
-        <p className="text-xs text-[#B08070] font-medium mb-2 uppercase tracking-wide">Soraia Farias</p>
+        <p className="text-xs text-[#B08070] font-medium mb-2 uppercase tracking-wide">Soraya Farias</p>
         <p className="text-[#4A3728] leading-relaxed text-sm lg:text-base">
           {today.soraiaMessage}
         </p>

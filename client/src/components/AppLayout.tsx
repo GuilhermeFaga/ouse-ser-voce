@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
 import {
   Home, BookOpen, PenLine, Calendar, Trophy, Settings,
-  Sparkles, ClipboardList, Menu, X, Heart, FileText, MessageCircle, Users, Share2
+  Sparkles, ClipboardList, Menu, X, Heart, FileText, MessageCircle, Users, Share2, Bookmark
 } from "lucide-react";
 
 const LOGO_IMG = "/manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
@@ -23,7 +23,8 @@ export type AppPage =
   | "assessment"
   | "settings"
   | "share"
-  | "community";
+  | "community"
+  | "favorites";
 
 interface NavItem {
   id: AppPage;
@@ -42,6 +43,7 @@ const navItems: NavItem[] = [
   { id: "community", label: "Comunidade", shortLabel: "Comunidade", icon: <Users className="w-5 h-5" /> },
   { id: "scanner", label: "Scanner", shortLabel: "Scanner", icon: <Sparkles className="w-5 h-5" /> },
   { id: "assessment", label: "Avaliação", shortLabel: "Avaliação", icon: <ClipboardList className="w-5 h-5" /> },
+  { id: "favorites", label: "Favoritos", shortLabel: "Favoritos", icon: <Bookmark className="w-5 h-5" /> },
   { id: "share", label: "Compartilhar", shortLabel: "Compartilhar", icon: <Share2 className="w-5 h-5" /> },
   { id: "settings", label: "Config.", shortLabel: "Config.", icon: <Settings className="w-5 h-5" /> },
 ];

@@ -17,6 +17,7 @@ import Assessment from "./pages/Assessment";
 import SettingsPage from "./pages/SettingsPage";
 import Share from "./pages/Share";
 import Community from "./pages/Community";
+import Favorites from "./pages/Favorites";
 import { useState } from "react";
 import type { AppPage } from "./components/AppLayout";
 
@@ -26,7 +27,7 @@ function AppContent() {
   // Support deep-linking via URL hash
   const getInitialPage = (): AppPage => {
     const hash = window.location.hash.replace('#', '');
-    const validPages: AppPage[] = ['home', 'journey', 'day', 'journal', 'notes', 'calendar', 'achievements', 'scanner', 'assessment', 'settings', 'share', 'community'];
+    const validPages: AppPage[] = ['home', 'journey', 'day', 'journal', 'notes', 'calendar', 'achievements', 'scanner', 'assessment', 'settings', 'share', 'community', 'favorites'];
     if (validPages.includes(hash as AppPage)) return hash as AppPage;
     return 'home';
   };
@@ -60,6 +61,7 @@ function AppContent() {
       case "settings": return <SettingsPage />;
       case "share": return <Share onNavigate={handleNavigate} />;
       case "community": return <Community />;
+      case "favorites": return <Favorites onNavigate={handleNavigate} />;
       default: return <Dashboard onNavigate={handleNavigate} />;
     }
   };

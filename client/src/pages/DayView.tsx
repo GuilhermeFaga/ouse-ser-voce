@@ -11,6 +11,7 @@ import { Slider } from "@/components/ui/slider";
 import { CheckCircle2, ChevronLeft, ChevronRight, Play, Pause, BookOpen, PenLine, Heart } from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
 import MeditationPlayer from "@/components/MeditationPlayer";
+import ShareWhatsAppButton from "@/components/ShareWhatsAppButton";
 
 // Meditation URLs mapping
 const meditationUrls: Record<number, string> = {
@@ -112,6 +113,13 @@ export default function DayView({ onNavigate }: DayViewProps) {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <ShareWhatsAppButton
+            type="day"
+            dayNumber={today.day}
+            theme={today.theme}
+            mood={mood}
+            variant="primary"
+          />
           <Button
             onClick={() => onNavigate("home")}
             className="bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl"

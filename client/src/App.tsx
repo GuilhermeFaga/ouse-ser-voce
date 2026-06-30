@@ -15,6 +15,7 @@ import Achievements from "./pages/Achievements";
 import Scanner from "./pages/Scanner";
 import Assessment from "./pages/Assessment";
 import SettingsPage from "./pages/SettingsPage";
+import Share from "./pages/Share";
 import { useState } from "react";
 import type { AppPage } from "./components/AppLayout";
 
@@ -47,6 +48,7 @@ function AppContent() {
       case "scanner": return <Scanner />;
       case "assessment": return <Assessment />;
       case "settings": return <SettingsPage />;
+      case "share": return <Share onNavigate={handleNavigate} />;
       default: return <Dashboard onNavigate={handleNavigate} />;
     }
   };

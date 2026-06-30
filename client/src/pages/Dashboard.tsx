@@ -6,6 +6,7 @@ import { useApp } from "@/contexts/AppContext";
 import { dailyContent, dailyQuotes, weekModules, achievements } from "@/lib/journeyData";
 import { ArrowRight, CheckCircle2, Flame, BookOpen, Star, Sparkles } from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
+import ShareWhatsAppButton from "@/components/ShareWhatsAppButton";
 
 const MEDITATION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/meditation-calm-LSZxzQCsPGpdXyYLCrYptC.webp";
 
@@ -148,7 +149,18 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-[#2C1810]">Sua jornada</h3>
-          <span className="text-sm text-[#C4856A] font-medium">{state.completedDays.length}/30 dias</span>
+          <div className="flex items-center gap-2">
+            <ShareWhatsAppButton
+              type="progress"
+              completedDays={state.completedDays.length}
+              totalDays={30}
+              currentWeek={today.week}
+              weekTheme={currentWeek.theme}
+              size="sm"
+              variant="secondary"
+            />
+            <span className="text-sm text-[#C4856A] font-medium">{state.completedDays.length}/30 dias</span>
+          </div>
         </div>
         <div className="h-2 bg-[#F0E4DC] rounded-full overflow-hidden mb-4">
           <motion.div

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
 import { achievements } from "@/lib/journeyData";
 import { Trophy } from "lucide-react";
-import ShareWhatsAppButton from "@/components/ShareWhatsAppButton";
+import ShareInstagramButton from "@/components/ShareInstagramButton";
 
 export default function Achievements() {
   const { state } = useApp();
@@ -56,7 +56,7 @@ export default function Achievements() {
                   <p className="text-xs text-[#8B6E5A] mt-0.5 leading-relaxed">{a.description}</p>
                 </div>
                 <div className="ml-auto flex-shrink-0 flex items-center gap-2">
-                  <ShareWhatsAppButton
+                  <ShareInstagramButton
                     type="achievement"
                     achievementName={a.title}
                     achievementDescription={a.description}

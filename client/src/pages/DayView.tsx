@@ -11,7 +11,7 @@ import { Slider } from "@/components/ui/slider";
 import { CheckCircle2, ChevronLeft, ChevronRight, Play, Pause, BookOpen, PenLine, Heart } from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
 import MeditationPlayer from "@/components/MeditationPlayer";
-import ShareWhatsAppButton from "@/components/ShareWhatsAppButton";
+import ShareInstagramButton from "@/components/ShareInstagramButton";
 
 // Meditation URLs mapping
 const meditationUrls: Record<number, string> = {
@@ -40,7 +40,7 @@ const weekColors = {
   4: { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", accent: "#7C3AED" },
 };
 
-type TabType = "reflexao" | "exercicio" | "diario" | "meditacao";
+type TabType = "reflexao" | "exercicio" | "diario" | "audio";
 
 export default function DayView({ onNavigate }: DayViewProps) {
   const { state, completeDay, addJournalEntry } = useApp();
@@ -88,7 +88,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
     { id: "reflexao", label: "Reflexão", icon: <BookOpen className="w-4 h-4" /> },
     { id: "exercicio", label: "Exercício", icon: <Heart className="w-4 h-4" /> },
     { id: "diario", label: "Diário", icon: <PenLine className="w-4 h-4" /> },
-    { id: "meditacao", label: "Meditação", icon: <Play className="w-4 h-4" /> },
+    { id: "audio", label: "Áudio", icon: <Play className="w-4 h-4" /> },
   ];
 
   if (checkinDone || isCompleted) {
@@ -113,7 +113,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <ShareWhatsAppButton
+          <ShareInstagramButton
             type="day"
             dayNumber={today.day}
             theme={today.theme}
@@ -274,7 +274,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
             </div>
           )}
 
-          {activeTab === "meditacao" && (
+          {activeTab === "audio" && (
             <MeditationPlayer
               title={today.meditationTitle}
               duration={today.meditationDuration}

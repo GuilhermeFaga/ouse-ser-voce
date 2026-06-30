@@ -7,7 +7,7 @@ import { useApp } from "@/contexts/AppContext";
 import { dailyContent, weekModules, achievements } from "@/lib/journeyData";
 import { MessageCircle, Share2, TrendingUp, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ShareWhatsAppButton from "@/components/ShareWhatsAppButton";
+import ShareInstagramButton from "@/components/ShareInstagramButton";
 import type { AppPage } from "@/components/AppLayout";
 
 interface SharePageProps {
@@ -85,7 +85,7 @@ export default function Share({ onNavigate }: SharePageProps) {
                     <p className="font-semibold text-[#2C1810] text-sm">Dia {dayNum}</p>
                     <p className="text-xs text-[#8B6E5A]">{day.theme}</p>
                   </div>
-                  <ShareWhatsAppButton
+                  <ShareInstagramButton
                     type="day"
                     dayNumber={dayNum}
                     theme={day.theme}
@@ -129,7 +129,7 @@ export default function Share({ onNavigate }: SharePageProps) {
                     <p className="text-xs text-[#8B6E5A]">{achievement.description}</p>
                   </div>
                 </div>
-                <ShareWhatsAppButton
+                <ShareInstagramButton
                   type="achievement"
                   achievementName={achievement.title}
                   achievementDescription={achievement.description}
@@ -169,7 +169,7 @@ export default function Share({ onNavigate }: SharePageProps) {
             </div>
 
             {currentWeek && (
-              <ShareWhatsAppButton
+              <ShareInstagramButton
                 type="progress"
                 completedDays={state.completedDays.length}
                 totalDays={30}
@@ -180,7 +180,7 @@ export default function Share({ onNavigate }: SharePageProps) {
             )}
 
             {state.completedDays.length === 30 && (
-              <ShareWhatsAppButton
+              <ShareInstagramButton
                 type="journey"
                 finalMood={3}
                 variant="primary"

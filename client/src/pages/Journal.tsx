@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PenLine, Trash2, ChevronDown, ChevronUp, Plus, X } from "lucide-react";
 import type { JournalEntry } from "@/contexts/AppContext";
+import MoodChart from "@/components/MoodChart";
 
 const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
 const moodLabels = ["", "Muito pesado", "Pesado", "Neutro", "Leve", "Muito leve"];
@@ -51,6 +52,11 @@ export default function Journal() {
           {showNew ? <X className="w-4 h-4" /> : <><Plus className="w-4 h-4 mr-1" /> Nova entrada</>}
         </Button>
       </div>
+
+      {/* Mood Chart */}
+      {state.journalEntries.length > 0 && (
+        <MoodChart entries={state.journalEntries} />
+      )}
 
       {/* New Entry Form */}
       {showNew && (

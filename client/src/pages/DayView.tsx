@@ -10,6 +10,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { CheckCircle2, ChevronLeft, ChevronRight, Play, Pause, BookOpen, PenLine, Heart } from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
+import MeditationPlayer from "@/components/MeditationPlayer";
+
+// Meditation URLs mapping
+const meditationUrls: Record<number, string> = {
+  1: "/manus-storage/Dia1entenderseumomentoatual_726fb239.mp3",
+  2: "/manus-storage/Dia2resgatarsuaidentidade_de7551f9.mp3",
+  3: "/manus-storage/Dia3reconhecerhabitosepadroes_797282e1.mp3",
+  4: "/manus-storage/Dia4abrirespacoparamudancas_774577c2.mp3",
+  5: "/manus-storage/Dia5redescobrirsonhos_22244401.mp3",
+  6: "/manus-storage/Dia6cultivargratidao_6faeca2b.mp3",
+  7: "/manus-storage/Dia7integracao-olharparasimesma_7115f5d3.mp3",
+  8: "/manus-storage/Dia08identificaroquedrenaasuaenergia_ad2bab70.mp3",
+  9: "/manus-storage/Dia09ficarnoquerealmenteimporta_be06d38c.mp3",
+  30: "/manus-storage/Dia30novocomecoalinhado_a4b26cbb.mp3",
+};
 
 const JOURNAL_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/journal-writing-NfZ4kj7jHsTA3NaK7eidFt.webp";
 
@@ -252,61 +267,13 @@ export default function DayView({ onNavigate }: DayViewProps) {
           )}
 
           {activeTab === "meditacao" && (
-            <div className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden">
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src="https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/meditation-calm-LSZxzQCsPGpdXyYLCrYptC.webp"
-                  alt="Meditação"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2C1810]/70 to-transparent" />
-                <div className="absolute bottom-4 left-5 right-5">
-                  <p className="text-white font-serif text-lg leading-tight">{today.meditationTitle}</p>
-                  <p className="text-[#E8D5CC] text-sm mt-1">{today.meditationDuration}</p>
-                </div>
-              </div>
-              <div className="p-6">
-                <p className="text-[#8B6E5A] text-sm leading-relaxed mb-6">
-                  {today.meditationDescription}
-                </p>
-
-                {/* Audio Player UI */}
-                <div className="bg-[#FAF6F1] rounded-xl p-4 border border-[#F0E4DC]">
-                  <div className="flex items-center gap-4 mb-4">
-                    <button
-                      onClick={() => {
-                        setMeditationPlaying(!meditationPlaying);
-                        if (!meditationListened) setMeditationListened(true);
-                      }}
-                      className="w-12 h-12 rounded-full bg-[#C4856A] flex items-center justify-center text-white shadow-md hover:bg-[#B07055] transition-colors active:scale-95"
-                    >
-                      {meditationPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-                    </button>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-[#2C1810]">{today.meditationTitle}</p>
-                      <p className="text-xs text-[#8B6E5A]">{today.meditationDuration} · Meditação guiada</p>
-                    </div>
-                  </div>
-                  {/* Progress bar */}
-                  <div className="h-1.5 bg-[#E8D5CC] rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-[#C4856A] rounded-full"
-                      animate={{ width: meditationPlaying ? "100%" : meditationListened ? "60%" : "0%" }}
-                      transition={{ duration: meditationPlaying ? 30 : 0.3 }}
-                    />
-                  </div>
-                  <p className="text-xs text-[#B08070] mt-2 text-center">
-                    {meditationListened
-                      ? "Meditação registrada"
-                      : "Pressione play para começar"}
-                  </p>
-                </div>
-
-                <p className="text-xs text-[#B08070] mt-4 text-center leading-relaxed">
-                  Encontre um lugar tranquilo, sente-se confortavelmente e feche os olhos.
-                </p>
-              </div>
-            </div>
+            <MeditationPlayer
+              title={today.meditationTitle}
+              duration={today.meditationDuration}
+              audioUrl={meditationUrls[today.day] || ""}
+              dayNumber={today.day}
+              onComplete={() => setMeditationListened(true)}
+            />
           )}
         </motion.div>
       </div>

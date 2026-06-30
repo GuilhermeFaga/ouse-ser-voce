@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, Share2, ChevronDown, ChevronUp } from "lucide-react";
+import CommentsSection from "./CommentsSection";
 import type { CommunityStory } from "@/lib/communityStories";
 
 interface StoryCardProps {
@@ -123,6 +124,11 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
             )}
           </div>
         </motion.div>
+      )}
+
+      {/* Comments Section */}
+      {isExpanded && (
+        <CommentsSection storyId={story.id} storyAuthorName={story.name} />
       )}
 
       {/* Footer */}

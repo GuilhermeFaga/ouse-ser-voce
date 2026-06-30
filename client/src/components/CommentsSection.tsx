@@ -1,13 +1,13 @@
 // OUSE SER VOCÊ – Comments Section
-// Seção de comentários com formulário e lista de mensagens de apoio
+// Seção de comentários com suporte a respostas aninhadas
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, Send, Trash2, MessageCircle } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import CommentItem from "./CommentItem";
 import { useComments } from "@/hooks/useComments";
-import type { Comment } from "@/hooks/useComments";
 
 interface CommentsSectionProps {
   storyId: string;
@@ -32,12 +32,23 @@ export default function CommentsSection({ storyId, storyAuthorName }: CommentsSe
     setShowForm(false);
   };
 
+  const handleAddReply = (
+    text: string,
+    parentCommentId: string,
+    replyAuthorName: string,
+    replyAvatar: string
+  ) => {
+    addComment(replyAuthorName, replyAvatar, text, parentCommentId);
+  };
+
+  const totalComments = comments.length + comments.reduce((sum, c) => sum + (c.replies?.length || 0), 0);
+
   return (
     <div className="border-t border-[#F0E4DC] pt-5 mt-5">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="w-5 h-5 text-[#C4856A]" />
-        <p className="font-semibold text-[#2C1810]">Mensagens de apoio ({comments.length})</p>
+        <p className="font-semibold text-[#2C1810]">Conversas de apoio ({totalComments})</p>
       </div>
 
       {/* Form Toggle */}
@@ -133,66 +144,29 @@ export default function CommentsSection({ storyId, storyAuthorName }: CommentsSe
         </div>
       ) : (
         <div className="space-y-3">
-          {comments.map((comment, idx) => (
-            <motion.div
+          {comments.map((comment) => (
+            <CommentItem
               key={comment.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
-              className="bg-white rounded-xl border border-[#F0E4DC] p-4"
-            >
-              {/* Comment Header */}
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-[#F5EDE8] flex items-center justify-center text-lg">
-                    {comment.authorAvatar}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#2C1810]">{comment.authorName}</p>
-                    <p className="text-xs text-[#B08070]">
-                      {new Date(comment.createdAt).toLocaleDateString("pt-BR", {
-                        day: "numeric",
-                        month: "short",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-                {comment.authorName === "Você" && (
-                  <button
-                    onClick={() => removeComment(comment.id)}
-                    className="text-[#B08070] hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Comment Text */}
-              <p className="text-sm text-[#4A3728] leading-relaxed mb-3">{comment.text}</p>
-
-              {/* Comment Footer */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => likeComment(comment.id)}
-                  className="flex items-center gap-1 text-xs text-[#B08070] hover:text-red-500 transition-colors"
-                >
-                  <Heart className="w-3.5 h-3.5" />
-                  <span>{comment.likes > 0 ? comment.likes : ""}</span>
-                </button>
-              </div>
-
-              {/* Special Badge for Story Author */}
-              {comment.authorName === storyAuthorName && (
-                <div className="mt-2 inline-block px-2 py-1 bg-[#F5EDE8] rounded text-xs text-[#C4856A] font-semibold">
-                  ✓ Autora da história
-                </div>
-              )}
-            </motion.div>
+              comment={comment}
+              storyAuthorName={storyAuthorName}
+              depth={0}
+              onAddReply={handleAddReply}
+              onRemove={removeComment}
+              onLike={likeComment}
+            />
           ))}
         </div>
       )}
+
+      {/* Community Guidelines */}
+      <div className="mt-6 bg-[#F5EDE8] rounded-lg border border-[#E8D5CC] p-3">
+        <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">💡 Dicas para conversas acolhedoras</p>
+        <div className="space-y-1 text-xs text-[#6B4C3B]">
+          <p>✓ Responda com empatia e autenticidade</p>
+          <p>✓ Celebre as pequenas vitórias das outras mulheres</p>
+          <p>✓ Compartilhe sua própria experiência quando relevante</p>
+        </div>
+      </div>
     </div>
   );
 }

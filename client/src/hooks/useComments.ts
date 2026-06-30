@@ -1,5 +1,5 @@
 // OUSE SER VOCÊ – Comments Hook
-// Gerencia comentários nas histórias da comunidade com persistência em localStorage
+// Gerencia comentários nas histórias da comunidade com respostas aninhadas
 
 import { useState, useEffect } from "react";
 
@@ -12,6 +12,8 @@ export interface Comment {
   createdAt: string;
   likes: number;
   isApproved: boolean;
+  parentCommentId?: string;
+  replies?: Comment[];
 }
 
 const STORAGE_KEY = "ouse-comments";
@@ -20,24 +22,47 @@ export function useComments(storyId: string) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Organizar comentários em árvore (pai + respostas)
+  const organizeComments = (allComments: Comment[]): Comment[] => {
+    const storyComments = allComments.filter(
+      (c: Comment) => c.storyId === storyId && !c.parentCommentId
+    );
+    return storyComments
+      .map((comment: Comment) => ({
+        ...comment,
+        replies: allComments
+          .filter((c: Comment) => c.parentCommentId === comment.id)
+          .sort(
+            (a: Comment, b: Comment) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          ),
+      }))
+      .sort(
+        (a: Comment, b: Comment) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+  };
+
   // Carregar comentários do localStorage
   useEffect(() => {
     setLoading(true);
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const allComments = stored ? JSON.parse(stored) : [];
-      const storyComments = allComments.filter((c: Comment) => c.storyId === storyId);
-      setComments(storyComments.sort((a: Comment, b: Comment) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ));
+      setComments(organizeComments(allComments));
     } catch (error) {
       console.error("Erro ao carregar comentários:", error);
     }
     setLoading(false);
   }, [storyId]);
 
-  // Adicionar novo comentário
-  const addComment = (authorName: string, authorAvatar: string, text: string) => {
+  // Adicionar novo comentário ou resposta
+  const addComment = (
+    authorName: string,
+    authorAvatar: string,
+    text: string,
+    parentCommentId?: string
+  ) => {
     if (!text.trim()) return;
 
     const newComment: Comment = {
@@ -48,7 +73,9 @@ export function useComments(storyId: string) {
       text: text.trim(),
       createdAt: new Date().toISOString(),
       likes: 0,
-      isApproved: true, // Em produção, isso seria moderado
+      isApproved: true,
+      parentCommentId,
+      replies: [],
     };
 
     try {
@@ -57,21 +84,25 @@ export function useComments(storyId: string) {
       allComments.push(newComment);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(allComments));
 
-      setComments([newComment, ...comments]);
+      setComments(organizeComments(allComments));
     } catch (error) {
       console.error("Erro ao salvar comentário:", error);
     }
   };
 
-  // Remover comentário
+  // Remover comentário e suas respostas
   const removeComment = (commentId: string) => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const allComments = stored ? JSON.parse(stored) : [];
-      const filtered = allComments.filter((c: Comment) => c.id !== commentId);
+      
+      // Remover comentário e todas as suas respostas
+      const filtered = allComments.filter(
+        (c: Comment) => c.id !== commentId && c.parentCommentId !== commentId
+      );
+      
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-
-      setComments(comments.filter(c => c.id !== commentId));
+      setComments(organizeComments(filtered));
     } catch (error) {
       console.error("Erro ao remover comentário:", error);
     }
@@ -87,9 +118,7 @@ export function useComments(storyId: string) {
       );
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 
-      setComments(comments.map(c =>
-        c.id === commentId ? { ...c, likes: c.likes + 1 } : c
-      ));
+      setComments(organizeComments(updated));
     } catch (error) {
       console.error("Erro ao curtir comentário:", error);
     }

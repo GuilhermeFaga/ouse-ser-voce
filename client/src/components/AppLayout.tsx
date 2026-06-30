@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
 import {
   Home, BookOpen, PenLine, Calendar, Trophy, Settings,
-  Sparkles, ClipboardList, Menu, X, Heart, FileText, MessageCircle
+  Sparkles, ClipboardList, Menu, X, Heart, FileText, MessageCircle, Users
 } from "lucide-react";
 
 const LOGO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/logo-icon-5xGK2KQvieZRSNa3vjnTHA.png";
@@ -22,7 +22,8 @@ export type AppPage =
   | "scanner"
   | "assessment"
   | "settings"
-  | "share";
+  | "share"
+  | "community";
 
 interface NavItem {
   id: AppPage;
@@ -37,9 +38,10 @@ const navItems: NavItem[] = [
   { id: "notes", label: "Anotações", icon: <FileText className="w-5 h-5" /> },
   { id: "calendar", label: "Calendário", icon: <Calendar className="w-5 h-5" /> },
   { id: "achievements", label: "Conquistas", icon: <Trophy className="w-5 h-5" /> },
+  { id: "community", label: "Comunidade", icon: <Users className="w-5 h-5" /> },
   { id: "scanner", label: "Scanner", icon: <Sparkles className="w-5 h-5" /> },
   { id: "assessment", label: "Avaliação", icon: <ClipboardList className="w-5 h-5" /> },
-  { id: "share", label: "Compartilhar", icon: <Heart className="w-5 h-5" /> },
+  { id: "share", label: "Compartilhar", icon: <MessageCircle className="w-5 h-5" /> },
   { id: "settings", label: "Config.", icon: <Settings className="w-5 h-5" /> },
 ];
 

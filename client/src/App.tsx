@@ -16,6 +16,7 @@ import Scanner from "./pages/Scanner";
 import Assessment from "./pages/Assessment";
 import SettingsPage from "./pages/SettingsPage";
 import Share from "./pages/Share";
+import Community from "./pages/Community";
 import { useState } from "react";
 import type { AppPage } from "./components/AppLayout";
 
@@ -49,6 +50,7 @@ function AppContent() {
       case "assessment": return <Assessment />;
       case "settings": return <SettingsPage />;
       case "share": return <Share onNavigate={handleNavigate} />;
+      case "community": return <Community />;
       default: return <Dashboard onNavigate={handleNavigate} />;
     }
   };

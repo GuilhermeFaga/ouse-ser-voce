@@ -45,6 +45,7 @@ export interface DayContent {
   meditationTitle: string;
   meditationDuration: string;
   meditationDescription: string;
+  audioUrl?: string;
 }
 
 export interface ScannerQuestion {

@@ -12,22 +12,12 @@ import { CheckCircle2, ChevronLeft, ChevronRight, Play, Pause, BookOpen, PenLine
 import type { AppPage } from "@/components/AppLayout";
 import MeditationPlayer from "@/components/MeditationPlayer";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
-
-// Meditation URLs mapping
-const meditationUrls: Record<number, string> = {
-  1: "/manus-storage/Dia1entenderseumomentoatual_726fb239.mp3",
-  2: "/manus-storage/Dia2resgatarsuaidentidade_de7551f9.mp3",
-  3: "/manus-storage/Dia3reconhecerhabitosepadroes_797282e1.mp3",
-  4: "/manus-storage/Dia4abrirespacoparamudancas_774577c2.mp3",
-  5: "/manus-storage/Dia5redescobrirsonhos_22244401.mp3",
-  6: "/manus-storage/Dia6cultivargratidao_6faeca2b.mp3",
-  7: "/manus-storage/Dia7integracao-olharparasimesma_7115f5d3.mp3",
-  8: "/manus-storage/Dia08identificaroquedrenaasuaenergia_ad2bab70.mp3",
-  9: "/manus-storage/Dia09ficarnoquerealmenteimporta_be06d38c.mp3",
-  30: "/manus-storage/Dia30novocomecoalinhado_a4b26cbb.mp3",
-};
+import { meditationAudios } from "@/lib/meditationAudios";
 
 const JOURNAL_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/journal-writing-NfZ4kj7jHsTA3NaK7eidFt.webp";
+
+// Use meditationAudios from the separate file
+const meditationUrls = meditationAudios;
 
 interface DayViewProps {
   onNavigate: (page: AppPage, extra?: unknown) => void;

@@ -1,6 +1,8 @@
 // OUSE SER VOCÊ – Achievement Image Generator Hook
 // Gera imagens visuais de conquistas para compartilhamento em Stories
 
+import { getRandomMotivationalQuote } from "@/lib/motivationalQuotes";
+
 export interface AchievementImageOptions {
   title: string;
   description: string;
@@ -29,6 +31,7 @@ export function useAchievementImage() {
 
       const bgColor = options.backgroundColor || "#F5EDE8";
       const accentColor = options.accentColor || "#C4856A";
+      const motivationalQuote = getRandomMotivationalQuote();
 
       // Background gradient
       const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -110,6 +113,36 @@ export function useAchievementImage() {
       
       descLines.slice(0, 3).forEach((line, index) => {
         ctx.fillText(line, width / 2, descY + index * 50);
+      });
+
+      // Motivational quote section
+      const quoteY = height - 280;
+      
+      // Quote background
+      ctx.fillStyle = accentColor;
+      ctx.globalAlpha = 0.1;
+      ctx.beginPath();
+      ctx.roundRect(80, quoteY - 40, width - 160, 120, [20, 20, 20, 20]);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      // Quote border
+      ctx.strokeStyle = accentColor;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.roundRect(80, quoteY - 40, width - 160, 120, [20, 20, 20, 20]);
+      ctx.stroke();
+
+      // Quote text
+      ctx.fillStyle = "#2C1810";
+      ctx.font = "italic 28px 'DM Sans', sans-serif";
+      ctx.textAlign = "center";
+      
+      const quoteLines = wrapText(ctx, `"${motivationalQuote}"`, width - 200, 28);
+      let quoteTextY = quoteY + 10;
+      
+      quoteLines.slice(0, 2).forEach((line, index) => {
+        ctx.fillText(line, width / 2, quoteTextY + index * 40);
       });
 
       // Bottom accent

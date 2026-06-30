@@ -24,7 +24,8 @@ export type AppPage =
   | "settings"
   | "share"
   | "community"
-  | "favorites";
+  | "favorites"
+  | "profile";
 
 interface NavItem {
   id: AppPage;
@@ -44,6 +45,7 @@ const navItems: NavItem[] = [
   { id: "scanner", label: "Scanner", shortLabel: "Scanner", icon: <Sparkles className="w-5 h-5" /> },
   { id: "assessment", label: "Avaliação", shortLabel: "Avaliação", icon: <ClipboardList className="w-5 h-5" /> },
   { id: "favorites", label: "Favoritos", shortLabel: "Favoritos", icon: <Bookmark className="w-5 h-5" /> },
+  { id: "profile", label: "Soraya Farias", shortLabel: "Soraya", icon: <Heart className="w-5 h-5" /> },
   { id: "share", label: "Compartilhar", shortLabel: "Compartilhar", icon: <Share2 className="w-5 h-5" /> },
   { id: "settings", label: "Config.", shortLabel: "Config.", icon: <Settings className="w-5 h-5" /> },
 ];

@@ -3,8 +3,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, MessageCircle, Share2, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageCircle, Share2, ChevronDown, ChevronUp } from "lucide-react";
 import CommentsSection from "./CommentsSection";
+import LikeButton from "./LikeButton";
+import { useStoryLikes } from "@/hooks/useStoryLikes";
 import type { CommunityStory } from "@/lib/communityStories";
 
 interface StoryCardProps {
@@ -17,10 +19,10 @@ const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
 
 export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const { likes, isLiked, toggleLike } = useStoryLikes(story.id);
 
   const handleLike = () => {
-    setLiked(!liked);
+    toggleLike();
     onLike?.(story.id);
   };
 
@@ -151,17 +153,13 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
         </button>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={handleLike}
-            className="flex items-center gap-1 text-sm transition-colors"
-          >
-            <Heart
-              className={`w-4 h-4 ${liked ? "fill-red-500 text-red-500" : "text-[#B08070]"}`}
-            />
-            <span className={`text-xs ${liked ? "text-red-500 font-semibold" : "text-[#B08070]"}`}>
-              {story.likes + (liked ? 1 : 0)}
-            </span>
-          </button>
+          <LikeButton
+            likes={likes}
+            isLiked={isLiked}
+            onToggle={handleLike}
+            size="sm"
+            showCount={true}
+          />
 
           <button
             onClick={handleShare}

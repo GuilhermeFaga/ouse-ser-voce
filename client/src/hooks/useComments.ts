@@ -11,6 +11,7 @@ export interface Comment {
   text: string;
   createdAt: string;
   likes: number;
+  likedBy?: string[]; // Rastrear quem curtiu para evitar duplicatas
   isApproved: boolean;
   parentCommentId?: string;
   replies?: Comment[];
@@ -108,16 +109,22 @@ export function useComments(storyId: string) {
     }
   };
 
-  // Curtir comentário
-  const likeComment = (commentId: string) => {
+  // Curtir comentário (evitar duplicatas)
+  const likeComment = (commentId: string, userId: string = "user-" + Date.now()) => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const allComments = stored ? JSON.parse(stored) : [];
-      const updated = allComments.map((c: Comment) =>
-        c.id === commentId ? { ...c, likes: c.likes + 1 } : c
-      );
+      const updated = allComments.map((c: Comment) => {
+        if (c.id === commentId) {
+          const likedBy = c.likedBy || [];
+          if (!likedBy.includes(userId)) {
+            return { ...c, likes: c.likes + 1, likedBy: [...likedBy, userId] };
+          }
+          return c;
+        }
+        return c;
+      });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-
       setComments(organizeComments(updated));
     } catch (error) {
       console.error("Erro ao curtir comentário:", error);

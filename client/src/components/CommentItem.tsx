@@ -3,9 +3,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, Trash2, Reply, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, Reply, ChevronDown, ChevronUp } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import LikeButton from "./LikeButton";
 import type { Comment } from "@/hooks/useComments";
 
 interface CommentItemProps {
@@ -84,13 +85,13 @@ export default function CommentItem({
 
         {/* Comment Footer */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => onLike(comment.id)}
-            className="flex items-center gap-1 text-xs text-[#B08070] hover:text-red-500 transition-colors"
-          >
-            <Heart className="w-3.5 h-3.5" />
-            <span>{comment.likes > 0 ? comment.likes : ""}</span>
-          </button>
+          <LikeButton
+            likes={comment.likes}
+            isLiked={comment.likedBy?.includes("current-user") || false}
+            onToggle={() => onLike(comment.id)}
+            size="sm"
+            showCount={true}
+          />
 
           {canReply && (
             <button

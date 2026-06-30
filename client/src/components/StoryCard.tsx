@@ -37,9 +37,9 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
       className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden"
     >
       {/* Header */}
-      <div className="p-5 border-b border-[#F0E4DC]">
+      <div className="p-4 sm:p-5 border-b border-[#F0E4DC]">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
             <div className="w-12 h-12 rounded-full bg-[#F5EDE8] flex items-center justify-center text-2xl flex-shrink-0">
               {story.avatar}
             </div>
@@ -134,7 +134,7 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
       )}
 
       {/* Footer */}
-      <div className="px-5 py-4 border-t border-[#F0E4DC] flex items-center justify-between">
+      <div className="px-4 sm:px-5 py-3 sm:py-4 border-t border-[#F0E4DC] flex items-center justify-between">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center gap-1 text-sm text-[#C4856A] hover:text-[#B07055] transition-colors"

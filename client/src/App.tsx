@@ -22,7 +22,16 @@ import type { AppPage } from "./components/AppLayout";
 
 function AppContent() {
   const { state, updateState } = useApp();
-  const [currentPage, setCurrentPage] = useState<AppPage>("home");
+  
+  // Support deep-linking via URL hash
+  const getInitialPage = (): AppPage => {
+    const hash = window.location.hash.replace('#', '');
+    const validPages: AppPage[] = ['home', 'journey', 'day', 'journal', 'notes', 'calendar', 'achievements', 'scanner', 'assessment', 'settings', 'share', 'community'];
+    if (validPages.includes(hash as AppPage)) return hash as AppPage;
+    return 'home';
+  };
+  
+  const [currentPage, setCurrentPage] = useState<AppPage>(getInitialPage);
 
   const handleNavigate = (page: AppPage, extra?: unknown) => {
     // Support navigating to a specific day

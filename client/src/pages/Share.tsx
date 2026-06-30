@@ -34,26 +34,26 @@ export default function Share({ onNavigate }: SharePageProps) {
   });
 
   return (
-    <div className="space-y-6 pb-20 lg:pb-0">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">Compartilhe sua jornada</h1>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">Compartilhe sua jornada</h1>
         <p className="text-[#8B6E5A] text-sm">Inspire outras mulheres com sua transformação</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-[#E8D5CC] overflow-x-auto">
+      <div className="flex gap-1 sm:gap-2 border-b border-[#E8D5CC] overflow-x-auto scrollbar-hide">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-all ${
+            className={`px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-all ${
               activeTab === tab.id
                 ? "border-[#C4856A] text-[#C4856A]"
                 : "border-transparent text-[#B08070] hover:text-[#8B6E5A]"
             }`}
           >
-            <span>{tab.icon}</span> {tab.label} <span className="text-xs ml-1">({tab.count})</span>
+            <span>{tab.icon}</span> <span className="hidden sm:inline">{tab.label}</span><span className="sm:hidden">{tab.id === "dias" ? "Dias" : tab.id === "conquistas" ? "Conquistas" : "Progresso"}</span> <span className="text-xs ml-1">({tab.count})</span>
           </button>
         ))}
       </div>
@@ -79,20 +79,22 @@ export default function Share({ onNavigate }: SharePageProps) {
                   initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between"
+                  className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between gap-3"
                 >
-                  <div>
-                    <p className="font-semibold text-[#2C1810] text-sm">Dia {dayNum}</p>
-                    <p className="text-xs text-[#8B6E5A]">{day.theme}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-[#2C1810] text-sm truncate">Dia {dayNum}</p>
+                    <p className="text-xs text-[#8B6E5A] truncate">{day.theme}</p>
                   </div>
-                  <ShareInstagramButton
-                    type="day"
-                    dayNumber={dayNum}
-                    theme={day.theme}
-                    mood={3}
-                    size="sm"
-                    variant="primary"
-                  />
+                  <div className="flex-shrink-0">
+                    <ShareInstagramButton
+                      type="day"
+                      dayNumber={dayNum}
+                      theme={day.theme}
+                      mood={3}
+                      size="sm"
+                      variant="primary"
+                    />
+                  </div>
                 </motion.div>
               );
             })
@@ -118,24 +120,26 @@ export default function Share({ onNavigate }: SharePageProps) {
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between"
+                className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between gap-3"
               >
-                <div className="flex items-center gap-3 flex-1">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="w-10 h-10 rounded-lg bg-[#F5EDE8] flex items-center justify-center text-xl flex-shrink-0">
                     {achievement.icon}
                   </div>
-                  <div>
-                    <p className="font-semibold text-[#2C1810] text-sm">{achievement.title}</p>
-                    <p className="text-xs text-[#8B6E5A]">{achievement.description}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-[#2C1810] text-sm truncate">{achievement.title}</p>
+                    <p className="text-xs text-[#8B6E5A] truncate">{achievement.description}</p>
                   </div>
                 </div>
-                <ShareInstagramButton
-                  type="achievement"
-                  achievementName={achievement.title}
-                  achievementDescription={achievement.description}
-                  size="sm"
-                  variant="primary"
-                />
+                <div className="flex-shrink-0">
+                  <ShareInstagramButton
+                    type="achievement"
+                    achievementName={achievement.title}
+                    achievementDescription={achievement.description}
+                    size="sm"
+                    variant="primary"
+                  />
+                </div>
               </motion.div>
             ))
           )}
@@ -146,7 +150,7 @@ export default function Share({ onNavigate }: SharePageProps) {
       {activeTab === "progresso" && (
         <div className="space-y-4">
           {/* Stats Cards */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
               <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">{state.completedDays.length}</p>
               <p className="text-xs text-[#8B6E5A]">Dias</p>

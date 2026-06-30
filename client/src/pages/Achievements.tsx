@@ -20,14 +20,14 @@ export default function Achievements() {
     : null;
 
   return (
-    <div className="space-y-6 pb-20 lg:pb-0">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">Conquistas</h1>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">Conquistas</h1>
         <p className="text-[#8B6E5A] text-sm">{unlocked.length} de {achievements.length} desbloqueadas</p>
       </div>
 
       {/* Progress */}
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm">
+      <div className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm">
         <div className="flex justify-between text-sm text-[#8B6E5A] mb-2">
           <span>Progresso</span>
           <span className="font-medium text-[#C4856A]">{unlocked.length}/{achievements.length}</span>
@@ -53,7 +53,7 @@ export default function Achievements() {
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06 }}
-                className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm flex items-center gap-3 hover:shadow-md transition-shadow"
               >
                 <div className="w-12 h-12 rounded-xl bg-[#F5EDE8] flex items-center justify-center text-2xl flex-shrink-0">
                   {a.icon}
@@ -62,7 +62,7 @@ export default function Achievements() {
                   <p className="font-semibold text-[#2C1810] text-sm">{a.title}</p>
                   <p className="text-xs text-[#8B6E5A] mt-0.5 leading-relaxed">{a.description}</p>
                 </div>
-                <div className="ml-auto flex-shrink-0 flex items-center gap-2">
+                <div className="flex-shrink-0 flex items-center gap-1 sm:gap-2">
                   <button
                     onClick={() => setSelectedAchievement(a.id)}
                     className="p-2 hover:bg-[#F5EDE8] rounded-lg transition-colors text-[#C4856A]"
@@ -70,13 +70,15 @@ export default function Achievements() {
                   >
                     <Download className="w-4 h-4" />
                   </button>
-                  <ShareInstagramButton
-                    type="achievement"
-                    achievementName={a.title}
-                    achievementDescription={a.description}
-                    size="sm"
-                    variant="secondary"
-                  />
+                  <div className="hidden sm:block">
+                    <ShareInstagramButton
+                      type="achievement"
+                      achievementName={a.title}
+                      achievementDescription={a.description}
+                      size="sm"
+                      variant="secondary"
+                    />
+                  </div>
                   <div className="w-6 h-6 rounded-full bg-[#C4856A] flex items-center justify-center">
                     <span className="text-white text-xs">✓</span>
                   </div>

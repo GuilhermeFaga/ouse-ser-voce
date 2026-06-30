@@ -42,25 +42,25 @@ export default function Community() {
   ];
 
   return (
-    <div className="space-y-6 pb-20 lg:pb-0">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">Nossa Comunidade</h1>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">Nossa Comunidade</h1>
         <p className="text-[#8B6E5A] text-sm">Histórias reais de mulheres que se reconectaram consigo mesmas</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {stats.map((stat, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-4 text-center"
+            className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-4 text-center flex sm:flex-col items-center sm:items-center gap-3 sm:gap-0"
           >
-            <div className="flex justify-center mb-2 text-[#C4856A]">{stat.icon}</div>
-            <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">{stat.value}</p>
+            <div className="flex justify-center sm:mb-2 text-[#C4856A]">{stat.icon}</div>
+            <p className="text-xl sm:text-2xl font-serif font-bold text-[#C4856A] sm:mb-1">{stat.value}</p>
             <p className="text-xs text-[#8B6E5A] leading-tight">{stat.label}</p>
           </motion.div>
         ))}

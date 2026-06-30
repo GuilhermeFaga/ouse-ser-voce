@@ -29,16 +29,16 @@ export default function Journey({ onNavigate }: JourneyProps) {
   );
 
   return (
-    <div className="space-y-6 pb-20 lg:pb-0">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">Sua Jornada</h1>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">Sua Jornada</h1>
         <p className="text-[#8B6E5A] text-sm">
           {state.completedDays.length} de 30 dias concluídos
         </p>
       </div>
 
       {/* Progress bar */}
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm">
+      <div className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm">
         <div className="flex justify-between text-sm text-[#8B6E5A] mb-2">
           <span>Progresso total</span>
           <span className="font-medium text-[#C4856A]">{Math.round((state.completedDays.length / 30) * 100)}%</span>
@@ -52,11 +52,11 @@ export default function Journey({ onNavigate }: JourneyProps) {
           />
         </div>
         {/* Day dots */}
-        <div className="mt-4 flex flex-wrap gap-1">
+        <div className="mt-3 sm:mt-4 grid grid-cols-10 gap-0.5 sm:gap-1">
           {Array.from({ length: 30 }, (_, i) => i + 1).map(day => (
             <div
               key={day}
-              className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
+              className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold transition-all ${
                 state.completedDays.includes(day)
                   ? "bg-[#C4856A] text-white"
                   : day === state.currentDay
@@ -86,15 +86,15 @@ export default function Journey({ onNavigate }: JourneyProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: (week.week - 1) * 0.08 }}
-            className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden"
+            className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden"
           >
             {/* Week Header */}
             <button
               onClick={() => setExpandedWeek(isExpanded ? 0 : week.week)}
-              className={`w-full flex items-center justify-between p-5 ${wc.header} transition-colors`}
+              className={`w-full flex items-center justify-between p-3 sm:p-5 ${wc.header} transition-colors`}
             >
-              <div className="flex items-center gap-3 text-left">
-                <div className={`w-8 h-8 rounded-full ${wc.dot} flex items-center justify-center text-white text-xs font-bold`}>
+              <div className="flex items-center gap-2 sm:gap-3 text-left">
+                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${wc.dot} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
                   {week.week}
                 </div>
                 <div>
@@ -146,7 +146,7 @@ export default function Journey({ onNavigate }: JourneyProps) {
                         key={day.day}
                         onClick={() => isAccessible && onNavigate("day", day.day)}
                         disabled={!isAccessible}
-                        className={`w-full flex items-center gap-4 px-5 py-4 text-left transition-colors ${
+                        className={`w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 text-left transition-colors ${
                           isAccessible ? "hover:bg-[#FAF6F1]" : "opacity-50 cursor-not-allowed"
                         } ${isCurrent ? "bg-[#FAF6F1]" : ""}`}
                       >

@@ -84,9 +84,9 @@ export default function ShareInstagramButton({
   };
 
   const sizeClasses = {
-    sm: "h-8 px-3 text-xs",
-    md: "h-10 px-4 text-sm",
-    lg: "h-12 px-5 text-base",
+    sm: "h-8 px-2 sm:px-3 text-xs",
+    md: "h-10 px-3 sm:px-4 text-sm",
+    lg: "h-12 px-4 sm:px-5 text-base",
   };
 
   const variantClasses = {
@@ -96,8 +96,8 @@ export default function ShareInstagramButton({
   };
 
   const labels = {
-    day: "Compartilhar dia",
-    achievement: "Compartilhar conquista",
+    day: "Compartilhar",
+    achievement: "Compartilhar",
     progress: "Compartilhar progresso",
     week: "Compartilhar semana",
     journey: "Compartilhar jornada",

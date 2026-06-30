@@ -1,7 +1,7 @@
 // OUSE SER VOCÊ – Achievement Image Generator Hook
 // Gera imagens visuais de conquistas para compartilhamento em Stories
 
-import { getRandomMotivationalQuote } from "@/lib/motivationalQuotes";
+import { getRandomMotivationalQuote, getRandomQuoteFromCategory } from "@/lib/motivationalQuotes";
 
 export interface AchievementImageOptions {
   title: string;
@@ -9,6 +9,7 @@ export interface AchievementImageOptions {
   icon: string;
   backgroundColor?: string;
   accentColor?: string;
+  categoryId?: string;
 }
 
 export function useAchievementImage() {
@@ -31,7 +32,9 @@ export function useAchievementImage() {
 
       const bgColor = options.backgroundColor || "#F5EDE8";
       const accentColor = options.accentColor || "#C4856A";
-      const motivationalQuote = getRandomMotivationalQuote();
+      const motivationalQuote = options.categoryId
+        ? getRandomQuoteFromCategory(options.categoryId)
+        : getRandomMotivationalQuote();
 
       // Background gradient
       const gradient = ctx.createLinearGradient(0, 0, width, height);

@@ -1,10 +1,12 @@
 // OUSE SER VOCÊ – Meditation Player Avançado
 // Design: Controles de velocidade, progresso, conclusão e visual sofisticado
+// Com salvamento automático do progresso no localStorage
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Play, Pause, Volume2, Zap, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAudioProgress } from "@/hooks/useAudioProgress";
 
 interface MeditationPlayerProps {
   title: string;
@@ -27,6 +29,9 @@ export default function MeditationPlayer({
   const [totalDuration, setTotalDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
+
+  // Usar hook para salvar progresso automaticamente
+  useAudioProgress(dayNumber, audioRef);
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -208,6 +213,8 @@ export default function MeditationPlayer({
       {/* Info */}
       <p className="text-xs text-[#B08070] text-center">
         Dica: Use a velocidade 1.25x para uma experiência mais dinâmica, ou 0.75x para aprofundar.
+        <br />
+        <span className="text-[#A0705F]">Seu progresso é salvo automaticamente.</span>
       </p>
     </div>
   );

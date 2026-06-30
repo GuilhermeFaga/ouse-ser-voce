@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, BookOpen, Heart, Star, Shield, CheckCircle2 } from "lucide-react";
 
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/hero-woman-YaCZVbHUiWAFQX2m6hz48Q.webp";
-const LOGO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/logo-icon-5xGK2KQvieZRSNa3vjnTHA.png";
+const LOGO_IMG = "/manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
 
 const steps = [
   {
@@ -122,7 +122,7 @@ export default function Onboarding() {
         {/* Logo & Brand */}
         <div className="mb-8 flex flex-col items-center">
           <div className="flex items-center gap-3 mb-1">
-            <img src={LOGO_IMG} alt="Logo" className="w-9 h-9 opacity-85" />
+            <img src={LOGO_IMG} alt="Ouse Ser Você" className="w-12 h-12 object-contain" />
             <div>
               <p className="font-serif text-base font-bold text-[#2C1810] tracking-wide leading-none">OUSE SER VOCÊ</p>
               <p className="text-[9px] tracking-[0.3em] uppercase text-[#C4856A] font-medium mt-0.5">30 Dias Para Mudar</p>

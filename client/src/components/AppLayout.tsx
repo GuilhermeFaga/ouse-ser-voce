@@ -9,7 +9,7 @@ import {
   Sparkles, ClipboardList, Menu, X, Heart, FileText, MessageCircle, Users, Share2
 } from "lucide-react";
 
-const LOGO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/logo-icon-5xGK2KQvieZRSNa3vjnTHA.png";
+const LOGO_IMG = "/manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
 
 export type AppPage =
   | "home"
@@ -66,7 +66,7 @@ export default function AppLayout({ currentPage, onNavigate, children }: AppLayo
         {/* Logo */}
         <div className="p-6 border-b border-[#F0E4DC]">
           <div className="flex items-center gap-3">
-            <img src={LOGO_IMG} alt="Logo" className="w-8 h-8 opacity-80" />
+            <img src={LOGO_IMG} alt="Ouse Ser Você" className="w-10 h-10 object-contain" />
             <div>
               <p className="font-serif text-sm font-bold text-[#2C1810] leading-tight">Ouse Ser Você</p>
               <p className="text-[10px] text-[#B08070] tracking-wide uppercase">30 Dias Para Mudar</p>
@@ -134,7 +134,7 @@ export default function AppLayout({ currentPage, onNavigate, children }: AppLayo
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#F0E4DC] shadow-sm">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-2">
-            <img src={LOGO_IMG} alt="Logo" className="w-7 h-7 opacity-80" />
+            <img src={LOGO_IMG} alt="Ouse Ser Você" className="w-9 h-9 object-contain" />
             <p className="font-serif text-sm font-bold text-[#2C1810]">Ouse Ser Você</p>
           </div>
           <div className="flex items-center gap-3">

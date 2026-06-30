@@ -1,16 +1,23 @@
 // OUSE SER VOCÊ – Conquistas
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
 import { achievements } from "@/lib/journeyData";
-import { Trophy } from "lucide-react";
+import { Trophy, Download } from "lucide-react";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
+import AchievementImageModal from "@/components/AchievementImageModal";
 
 export default function Achievements() {
   const { state } = useApp();
+  const [selectedAchievement, setSelectedAchievement] = useState<string | null>(null);
   const unlocked = state.unlockedAchievements;
 
   const unlockedList = achievements.filter(a => unlocked.includes(a.id));
   const lockedList = achievements.filter(a => !unlocked.includes(a.id));
+
+  const selectedAchievementData = selectedAchievement
+    ? achievements.find(a => a.id === selectedAchievement)
+    : null;
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
@@ -46,16 +53,23 @@ export default function Achievements() {
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06 }}
-                className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm flex items-center gap-4"
+                className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow"
               >
                 <div className="w-12 h-12 rounded-xl bg-[#F5EDE8] flex items-center justify-center text-2xl flex-shrink-0">
                   {a.icon}
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-[#2C1810] text-sm">{a.title}</p>
                   <p className="text-xs text-[#8B6E5A] mt-0.5 leading-relaxed">{a.description}</p>
                 </div>
                 <div className="ml-auto flex-shrink-0 flex items-center gap-2">
+                  <button
+                    onClick={() => setSelectedAchievement(a.id)}
+                    className="p-2 hover:bg-[#F5EDE8] rounded-lg transition-colors text-[#C4856A]"
+                    title="Gerar imagem para Stories"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
                   <ShareInstagramButton
                     type="achievement"
                     achievementName={a.title}
@@ -86,7 +100,7 @@ export default function Achievements() {
                 <div className="w-12 h-12 rounded-xl bg-[#F0E4DC] flex items-center justify-center text-2xl flex-shrink-0 grayscale">
                   {a.icon}
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-[#6B4C3B] text-sm">{a.title}</p>
                   <p className="text-xs text-[#B08070] mt-0.5 leading-relaxed">{a.description}</p>
                 </div>
@@ -111,6 +125,16 @@ export default function Achievements() {
             Complete os dias da jornada para desbloquear conquistas.
           </p>
         </div>
+      )}
+
+      {/* Achievement Image Modal */}
+      {selectedAchievementData && (
+        <AchievementImageModal
+          isOpen={!!selectedAchievement}
+          onClose={() => setSelectedAchievement(null)}
+          achievement={selectedAchievementData}
+          accentColor="#C4856A"
+        />
       )}
     </div>
   );

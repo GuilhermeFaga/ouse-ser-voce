@@ -242,8 +242,7 @@ export default function Onboarding() {
                   >
                     <p className="text-xs text-[#6B4C3B] leading-relaxed">
                       Esta jornada foi desenvolvida pela psicóloga{" "}
-                      <strong>Soraya Farias</strong> para mulheres entre 30 e 60
-                      anos que se sentem desconectadas de si mesmas.
+                      <strong>Soraya Farias</strong> para mulheres que se sentem desconectadas de si mesmas.
                     </p>
                   </div>
                 </div>

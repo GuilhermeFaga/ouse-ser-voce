@@ -8,7 +8,23 @@ import { meditationAudios } from "@/lib/meditationAudios";
 import { dailyContent } from "@/lib/journeyData";
 
 interface FavoritesProps {
-  onNavigate?: (page: "day" | "home" | "journey" | "journal" | "notes" | "calendar" | "achievements" | "scanner" | "assessment" | "settings" | "share" | "community" | "favorites", extra?: unknown) => void;
+  onNavigate?: (
+    page:
+      | "day"
+      | "home"
+      | "journey"
+      | "journal"
+      | "notes"
+      | "calendar"
+      | "achievements"
+      | "scanner"
+      | "assessment"
+      | "settings"
+      | "share"
+      | "community"
+      | "favorites",
+    extra?: unknown
+  ) => void;
 }
 
 export default function Favorites({ onNavigate }: FavoritesProps) {
@@ -41,19 +57,23 @@ export default function Favorites({ onNavigate }: FavoritesProps) {
           <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
             <Headphones className="w-7 h-7 text-[#D4C4BC]" />
           </div>
-          <p className="text-[#8B6E5A] font-medium mb-1">Nenhum favorito ainda</p>
+          <p className="text-[#8B6E5A] font-medium mb-1">
+            Nenhum favorito ainda
+          </p>
           <p className="text-xs text-[#B08070] max-w-xs mx-auto">
-            Ao ouvir os áudios diários, toque no ícone de marcador para salvar seus favoritos aqui.
+            Ao ouvir os áudios diários, toque no ícone de marcador para salvar
+            seus favoritos aqui.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
           {/* Counter */}
           <p className="text-xs text-[#B08070] font-medium">
-            {sortedFavorites.length} {sortedFavorites.length === 1 ? "áudio salvo" : "áudios salvos"}
+            {sortedFavorites.length}{" "}
+            {sortedFavorites.length === 1 ? "áudio salvo" : "áudios salvos"}
           </p>
 
-          {sortedFavorites.map((fav) => {
+          {sortedFavorites.map(fav => {
             const dayData = dailyContent[fav.day - 1];
             const audioUrl = meditationAudios[fav.day];
             const weekNumber = Math.ceil(fav.day / 7);
@@ -84,7 +104,8 @@ export default function Favorites({ onNavigate }: FavoritesProps) {
                     {dayData?.title || fav.title}
                   </p>
                   <p className="text-xs text-[#B08070] mt-0.5">
-                    Semana {weekNumber} · {dayData?.meditationDuration || "5-10 min"}
+                    Semana {weekNumber} ·{" "}
+                    {dayData?.meditationDuration || "5-10 min"}
                   </p>
                 </div>
 
@@ -117,7 +138,9 @@ export default function Favorites({ onNavigate }: FavoritesProps) {
       {sortedFavorites.length > 0 && (
         <div className="p-4 bg-[#F5EDE8] rounded-xl border border-[#E8D5CC]">
           <p className="text-xs text-[#6B4C3B] leading-relaxed">
-            <strong>Dica:</strong> Ouça seus áudios favoritos em momentos de pausa durante o dia — no café da manhã, antes de dormir ou durante uma caminhada. A repetição aprofunda a transformação.
+            <strong>Dica:</strong> Ouça seus áudios favoritos em momentos de
+            pausa durante o dia — no café da manhã, antes de dormir ou durante
+            uma caminhada. A repetição aprofunda a transformação.
           </p>
         </div>
       )}

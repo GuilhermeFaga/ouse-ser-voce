@@ -3,27 +3,61 @@
 
 import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
-import { dailyContent, dailyQuotes, weekModules, achievements } from "@/lib/journeyData";
-import { ArrowRight, CheckCircle2, Flame, BookOpen, Star, Sparkles } from "lucide-react";
+import {
+  dailyContent,
+  dailyQuotes,
+  weekModules,
+  achievements,
+} from "@/lib/journeyData";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Flame,
+  BookOpen,
+  Star,
+  Sparkles,
+} from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
 
-const MEDITATION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/meditation-calm-LSZxzQCsPGpdXyYLCrYptC.webp";
+const MEDITATION_IMG =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/meditation-calm-LSZxzQCsPGpdXyYLCrYptC.webp";
 
 interface DashboardProps {
   onNavigate: (page: AppPage, extra?: unknown) => void;
 }
 
 const weekColors = {
-  1: { bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", dot: "bg-rose-400" },
-  2: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", dot: "bg-amber-400" },
-  3: { bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", dot: "bg-teal-400" },
-  4: { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", dot: "bg-purple-400" },
+  1: {
+    bg: "bg-rose-50",
+    border: "border-rose-200",
+    text: "text-rose-700",
+    dot: "bg-rose-400",
+  },
+  2: {
+    bg: "bg-amber-50",
+    border: "border-amber-200",
+    text: "text-amber-700",
+    dot: "bg-amber-400",
+  },
+  3: {
+    bg: "bg-teal-50",
+    border: "border-teal-200",
+    text: "text-teal-700",
+    dot: "bg-teal-400",
+  },
+  4: {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    text: "text-purple-700",
+    dot: "bg-purple-400",
+  },
 };
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const { state, progressPercent, currentStreak } = useApp();
-  const today = dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
+  const today =
+    dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
   const todayQuote = dailyQuotes[(state.currentDay - 1) % dailyQuotes.length];
   const todayCompleted = state.completedDays.includes(state.currentDay);
   const currentWeek = weekModules.find(w => w.week === today.week)!;
@@ -37,7 +71,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   const fadeUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.4, ease: "easeOut" as const }
+    transition: { duration: 0.4, ease: "easeOut" as const },
   };
 
   return (
@@ -48,7 +82,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           {getGreeting()}, {state.userName}
         </p>
         <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] leading-tight">
-          {todayCompleted ? "Você completou o dia de hoje." : "Como está seu coração hoje?"}
+          {todayCompleted
+            ? "Você completou o dia de hoje."
+            : "Como está seu coração hoje?"}
         </h1>
       </motion.div>
 
@@ -59,11 +95,17 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         className="relative overflow-hidden rounded-2xl"
       >
         <div className="absolute inset-0">
-          <img src={MEDITATION_IMG} alt="" className="w-full h-full object-cover" />
+          <img
+            src={MEDITATION_IMG}
+            alt=""
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-[#2C1810]/80 to-[#2C1810]/40" />
         </div>
         <div className="relative p-6 lg:p-8">
-          <p className="text-[#F5EDE8] text-xs uppercase tracking-widest mb-3 font-medium">Frase do dia</p>
+          <p className="text-[#F5EDE8] text-xs uppercase tracking-widest mb-3 font-medium">
+            Frase do dia
+          </p>
           <p className="font-serif text-xl lg:text-2xl text-white leading-relaxed italic">
             "{todayQuote}"
           </p>
@@ -77,15 +119,21 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
         className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden"
       >
-        <div className={`px-6 py-3 ${weekColor.bg} border-b ${weekColor.border} flex items-center gap-2`}>
+        <div
+          className={`px-6 py-3 ${weekColor.bg} border-b ${weekColor.border} flex items-center gap-2`}
+        >
           <div className={`w-2 h-2 rounded-full ${weekColor.dot}`} />
-          <span className={`text-xs font-medium ${weekColor.text}`}>{currentWeek.subtitle} — {currentWeek.title}</span>
+          <span className={`text-xs font-medium ${weekColor.text}`}>
+            {currentWeek.subtitle} — {currentWeek.title}
+          </span>
         </div>
         <div className="p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs text-[#B08070] font-medium uppercase tracking-wide">Dia {today.day}</span>
+                <span className="text-xs text-[#B08070] font-medium uppercase tracking-wide">
+                  Dia {today.day}
+                </span>
                 <span className="text-[#E8D5CC]">·</span>
                 <span className="text-xs text-[#B08070]">{today.theme}</span>
               </div>
@@ -122,21 +170,27 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <div className="flex items-center justify-center gap-1 mb-1">
             <Flame className="w-4 h-4 text-[#C4856A]" />
           </div>
-          <p className="font-serif text-2xl font-bold text-[#C4856A]">{currentStreak}</p>
+          <p className="font-serif text-2xl font-bold text-[#C4856A]">
+            {currentStreak}
+          </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Dias seguidos</p>
         </div>
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-4 text-center shadow-sm">
           <div className="flex items-center justify-center gap-1 mb-1">
             <BookOpen className="w-4 h-4 text-[#C4856A]" />
           </div>
-          <p className="font-serif text-2xl font-bold text-[#C4856A]">{state.journalEntries.length}</p>
+          <p className="font-serif text-2xl font-bold text-[#C4856A]">
+            {state.journalEntries.length}
+          </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Entradas no diário</p>
         </div>
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-4 text-center shadow-sm">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Star className="w-4 h-4 text-[#C4856A]" />
           </div>
-          <p className="font-serif text-2xl font-bold text-[#C4856A]">{state.unlockedAchievements.length}</p>
+          <p className="font-serif text-2xl font-bold text-[#C4856A]">
+            {state.unlockedAchievements.length}
+          </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Conquistas</p>
         </div>
       </motion.div>
@@ -159,7 +213,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               size="sm"
               variant="secondary"
             />
-            <span className="text-sm text-[#C4856A] font-medium">{state.completedDays.length}/30 dias</span>
+            <span className="text-sm text-[#C4856A] font-medium">
+              {state.completedDays.length}/30 dias
+            </span>
           </div>
         </div>
         <div className="h-2 bg-[#F0E4DC] rounded-full overflow-hidden mb-4">
@@ -174,12 +230,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         <div className="grid grid-cols-4 gap-2">
           {weekModules.map(week => {
             const weekDays = dailyContent.filter(d => d.week === week.week);
-            const completed = weekDays.filter(d => state.completedDays.includes(d.day)).length;
+            const completed = weekDays.filter(d =>
+              state.completedDays.includes(d.day)
+            ).length;
             const pct = Math.round((completed / weekDays.length) * 100);
             const wc = weekColors[week.week as keyof typeof weekColors];
             return (
               <div key={week.week} className="text-center">
-                <div className={`h-1.5 rounded-full ${wc.bg} border ${wc.border} overflow-hidden mb-1`}>
+                <div
+                  className={`h-1.5 rounded-full ${wc.bg} border ${wc.border} overflow-hidden mb-1`}
+                >
                   <div
                     className={`h-full ${wc.dot} rounded-full transition-all duration-700`}
                     style={{ width: `${pct}%` }}
@@ -204,9 +264,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <Sparkles className="w-5 h-5 text-[#C4856A]" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-[#2C1810] mb-1">Scanner de Essência</h3>
+              <h3 className="font-semibold text-[#2C1810] mb-1">
+                Scanner de Essência
+              </h3>
               <p className="text-sm text-[#8B6E5A] leading-relaxed">
-                Descubra seu nível de autoabandono e a área mais crítica para trabalhar agora.
+                Descubra seu nível de autoabandono e a área mais crítica para
+                trabalhar agora.
               </p>
               <button
                 onClick={() => onNavigate("scanner")}
@@ -227,7 +290,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-[#2C1810]">Conquistas recentes</h3>
+            <h3 className="font-semibold text-[#2C1810]">
+              Conquistas recentes
+            </h3>
             <button
               onClick={() => onNavigate("achievements")}
               className="text-xs text-[#C4856A] font-medium"
@@ -240,7 +305,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <div key={a.id} className="flex items-center gap-3">
                 <span className="text-2xl">{a.icon}</span>
                 <div>
-                  <p className="text-sm font-medium text-[#2C1810]">{a.title}</p>
+                  <p className="text-sm font-medium text-[#2C1810]">
+                    {a.title}
+                  </p>
                   <p className="text-xs text-[#8B6E5A]">{a.description}</p>
                 </div>
               </div>

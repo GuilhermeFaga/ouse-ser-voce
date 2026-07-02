@@ -4,7 +4,14 @@
 
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, Volume2, Zap, CheckCircle2, Bookmark } from "lucide-react";
+import {
+  Play,
+  Pause,
+  Volume2,
+  Zap,
+  CheckCircle2,
+  Bookmark,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAudioProgress } from "@/hooks/useAudioProgress";
 import { useFavoriteAudios } from "@/hooks/useFavoriteAudios";
@@ -104,7 +111,9 @@ export default function MeditationPlayer({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const progressPercent = totalDuration ? (currentTime / totalDuration) * 100 : 0;
+  const progressPercent = totalDuration
+    ? (currentTime / totalDuration) * 100
+    : 0;
 
   return (
     <div className="space-y-4">
@@ -128,8 +137,12 @@ export default function MeditationPlayer({
         {/* Title + Favorite */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-[#2C1810] mb-1 truncate">{title}</h3>
-            <p className="text-xs text-[#B08070]">Dia {dayNumber} · {duration}</p>
+            <h3 className="font-semibold text-[#2C1810] mb-1 truncate">
+              {title}
+            </h3>
+            <p className="text-xs text-[#B08070]">
+              Dia {dayNumber} · {duration}
+            </p>
           </div>
           <motion.button
             onClick={handleToggleFavorite}
@@ -249,9 +262,12 @@ export default function MeditationPlayer({
 
       {/* Info */}
       <p className="text-xs text-[#B08070] text-center">
-        Dica: Use a velocidade 1.25x para uma experiência mais dinâmica, ou 0.75x para aprofundar.
+        Dica: Use a velocidade 1.25x para uma experiência mais dinâmica, ou
+        0.75x para aprofundar.
         <br />
-        <span className="text-[#A0705F]">Seu progresso é salvo automaticamente.</span>
+        <span className="text-[#A0705F]">
+          Seu progresso é salvo automaticamente.
+        </span>
       </p>
     </div>
   );

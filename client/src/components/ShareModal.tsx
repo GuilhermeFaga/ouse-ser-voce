@@ -39,7 +39,14 @@ export default function ShareModal({
   daysCompleted,
   finalMood,
 }: ShareModalProps) {
-  const { shareDayCompletion, shareAchievement, shareProgress, shareWeekCompletion, shareJourneyCompletion, openWhatsApp } = useWhatsAppShare();
+  const {
+    shareDayCompletion,
+    shareAchievement,
+    shareProgress,
+    shareWeekCompletion,
+    shareJourneyCompletion,
+    openWhatsApp,
+  } = useWhatsAppShare();
 
   const getMessage = (): string => {
     switch (type) {
@@ -54,13 +61,20 @@ export default function ShareModal({
         }
         break;
       case "progress":
-        if (completedDays !== undefined && totalDays && currentWeek && weekTheme) {
-          return shareProgress(completedDays, totalDays, currentWeek, weekTheme).text;
+        if (
+          completedDays !== undefined &&
+          totalDays &&
+          currentWeek &&
+          weekTheme
+        ) {
+          return shareProgress(completedDays, totalDays, currentWeek, weekTheme)
+            .text;
         }
         break;
       case "week":
         if (currentWeek && weekTheme && daysCompleted) {
-          return shareWeekCompletion(currentWeek, weekTheme, daysCompleted).text;
+          return shareWeekCompletion(currentWeek, weekTheme, daysCompleted)
+            .text;
         }
         break;
       case "journey":
@@ -105,7 +119,9 @@ export default function ShareModal({
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-[#F5EDE8] to-[#FAF6F1] border-b border-[#E8D5CC] px-6 py-4 flex items-center justify-between">
-              <h2 className="font-semibold text-[#2C1810]">Compartilhar no WhatsApp</h2>
+              <h2 className="font-semibold text-[#2C1810]">
+                Compartilhar no WhatsApp
+              </h2>
               <button
                 onClick={onClose}
                 className="w-8 h-8 rounded-lg hover:bg-[#E8D5CC] flex items-center justify-center transition-colors"

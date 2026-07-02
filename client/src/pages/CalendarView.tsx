@@ -6,13 +6,24 @@ import { dailyContent } from "@/lib/journeyData";
 import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 
 const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
-const moodColors = ["", "bg-red-100", "bg-orange-100", "bg-yellow-100", "bg-green-100", "bg-emerald-100"];
+const moodColors = [
+  "",
+  "bg-red-100",
+  "bg-orange-100",
+  "bg-yellow-100",
+  "bg-green-100",
+  "bg-emerald-100",
+];
 
 export default function CalendarView() {
   const { state } = useApp();
-  const [selectedDay, setSelectedDay] = useState<number | null>(state.currentDay);
+  const [selectedDay, setSelectedDay] = useState<number | null>(
+    state.currentDay
+  );
 
-  const selectedDayContent = selectedDay ? dailyContent.find(d => d.day === selectedDay) : null;
+  const selectedDayContent = selectedDay
+    ? dailyContent.find(d => d.day === selectedDay)
+    : null;
   const selectedCheckin = selectedDay ? state.checkins[selectedDay] : null;
 
   // Build 30-day grid
@@ -30,18 +41,27 @@ export default function CalendarView() {
   });
 
   // Group by weeks
-  const weeks: typeof days[] = [];
+  const weeks: (typeof days)[] = [];
   for (let i = 0; i < days.length; i += 7) {
     weeks.push(days.slice(i, i + 7));
   }
 
-  const weekLabels = ["S1 · Autoconhecimento", "S2 · Desapego", "S3 · Autoconfiança", "S4 · Transformação"];
+  const weekLabels = [
+    "S1 · Autoconhecimento",
+    "S2 · Desapego",
+    "S3 · Autoconfiança",
+    "S4 · Transformação",
+  ];
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
       <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">Calendário de Evolução</h1>
-        <p className="text-[#8B6E5A] text-sm">{state.completedDays.length} dias concluídos</p>
+        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
+          Calendário de Evolução
+        </h1>
+        <p className="text-[#8B6E5A] text-sm">
+          {state.completedDays.length} dias concluídos
+        </p>
       </div>
 
       {/* Calendar Grid */}
@@ -49,31 +69,41 @@ export default function CalendarView() {
         {weeks.map((week, wi) => (
           <div key={wi}>
             <div className="px-4 py-2 bg-[#FAF6F1] border-b border-[#F0E4DC]">
-              <p className="text-xs font-medium text-[#8B6E5A]">{weekLabels[wi]}</p>
+              <p className="text-xs font-medium text-[#8B6E5A]">
+                {weekLabels[wi]}
+              </p>
             </div>
             <div className="grid grid-cols-7 divide-x divide-[#F0E4DC]">
               {week.map(({ day, date, completed, isCurrent, checkin }) => (
                 <button
                   key={day}
-                  onClick={() => setSelectedDay(day === selectedDay ? null : day)}
+                  onClick={() =>
+                    setSelectedDay(day === selectedDay ? null : day)
+                  }
                   className={`p-2 flex flex-col items-center gap-1 transition-colors min-h-[64px] ${
                     selectedDay === day ? "bg-[#F5EDE8]" : "hover:bg-[#FAF6F1]"
                   } ${day > state.currentDay ? "opacity-40" : ""}`}
                 >
                   <span className="text-[10px] text-[#B08070]">
-                    {date.toLocaleDateString("pt-BR", { weekday: "short" }).slice(0, 3)}
+                    {date
+                      .toLocaleDateString("pt-BR", { weekday: "short" })
+                      .slice(0, 3)}
                   </span>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                    completed
-                      ? "bg-[#C4856A] text-white"
-                      : isCurrent
-                      ? "border-2 border-[#C4856A] text-[#C4856A]"
-                      : "text-[#6B4C3B]"
-                  }`}>
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      completed
+                        ? "bg-[#C4856A] text-white"
+                        : isCurrent
+                          ? "border-2 border-[#C4856A] text-[#C4856A]"
+                          : "text-[#6B4C3B]"
+                    }`}
+                  >
                     {day}
                   </div>
                   {checkin && (
-                    <span className="text-base leading-none">{moodEmojis[checkin.mood]}</span>
+                    <span className="text-base leading-none">
+                      {moodEmojis[checkin.mood]}
+                    </span>
                   )}
                 </button>
               ))}
@@ -108,8 +138,12 @@ export default function CalendarView() {
         >
           <div className="flex items-start justify-between mb-4">
             <div>
-              <p className="text-xs text-[#B08070] mb-1">Dia {selectedDay} · {selectedDayContent.theme}</p>
-              <h3 className="font-serif text-lg text-[#2C1810]">{selectedDayContent.title}</h3>
+              <p className="text-xs text-[#B08070] mb-1">
+                Dia {selectedDay} · {selectedDayContent.theme}
+              </p>
+              <h3 className="font-serif text-lg text-[#2C1810]">
+                {selectedDayContent.title}
+              </h3>
             </div>
             {state.completedDays.includes(selectedDay) && (
               <CheckCircle2 className="w-6 h-6 text-[#C4856A] flex-shrink-0" />
@@ -119,22 +153,39 @@ export default function CalendarView() {
           {selectedCheckin ? (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{moodEmojis[selectedCheckin.mood]}</span>
+                <span className="text-2xl">
+                  {moodEmojis[selectedCheckin.mood]}
+                </span>
                 <div>
                   <p className="text-xs text-[#B08070]">Humor neste dia</p>
                   <p className="text-sm font-medium text-[#4A3728]">
-                    {["", "Muito pesado", "Pesado", "Neutro", "Leve", "Muito leve"][selectedCheckin.mood]}
+                    {
+                      [
+                        "",
+                        "Muito pesado",
+                        "Pesado",
+                        "Neutro",
+                        "Leve",
+                        "Muito leve",
+                      ][selectedCheckin.mood]
+                    }
                   </p>
                 </div>
               </div>
               {selectedCheckin.notes && (
                 <div className="bg-[#FAF6F1] rounded-xl p-3">
-                  <p className="text-sm text-[#4A3728] leading-relaxed">{selectedCheckin.notes}</p>
+                  <p className="text-sm text-[#4A3728] leading-relaxed">
+                    {selectedCheckin.notes}
+                  </p>
                 </div>
               )}
               <div className="flex gap-4 text-xs text-[#8B6E5A]">
-                {selectedCheckin.exerciseCompleted && <span>✓ Exercício feito</span>}
-                {selectedCheckin.meditationListened && <span>✓ Meditação ouvida</span>}
+                {selectedCheckin.exerciseCompleted && (
+                  <span>✓ Exercício feito</span>
+                )}
+                {selectedCheckin.meditationListened && (
+                  <span>✓ Meditação ouvida</span>
+                )}
               </div>
             </div>
           ) : (
@@ -142,8 +193,8 @@ export default function CalendarView() {
               {selectedDay < state.currentDay
                 ? "Dia não registrado."
                 : selectedDay === state.currentDay
-                ? "Você ainda não concluiu este dia."
-                : "Este dia ainda não chegou."}
+                  ? "Você ainda não concluiu este dia."
+                  : "Este dia ainda não chegou."}
             </p>
           )}
         </motion.div>
@@ -152,13 +203,18 @@ export default function CalendarView() {
       {/* Mood Summary */}
       {Object.keys(state.checkins).length > 0 && (
         <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
-          <h3 className="font-semibold text-[#2C1810] mb-4">Evolução do humor</h3>
+          <h3 className="font-semibold text-[#2C1810] mb-4">
+            Evolução do humor
+          </h3>
           <div className="flex items-end gap-1 h-16">
             {Array.from({ length: 30 }, (_, i) => {
               const checkin = state.checkins[i + 1];
               const height = checkin ? (checkin.mood / 5) * 100 : 0;
               return (
-                <div key={i} className="flex-1 flex flex-col items-center justify-end">
+                <div
+                  key={i}
+                  className="flex-1 flex flex-col items-center justify-end"
+                >
                   <div
                     className={`w-full rounded-t-sm transition-all ${
                       checkin ? moodColors[checkin.mood] : "bg-[#F0E4DC]"

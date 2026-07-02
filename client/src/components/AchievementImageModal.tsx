@@ -30,7 +30,8 @@ export default function AchievementImageModal({
 }: AchievementImageModalProps) {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>("celebration");
+  const [selectedCategory, setSelectedCategory] =
+    useState<string>("celebration");
   const { generateAchievementImage, downloadImage } = useAchievementImage();
   const { copyToClipboard } = useInstagramShare();
 
@@ -48,7 +49,7 @@ export default function AchievementImageModal({
       icon: achievement.icon,
       accentColor,
       categoryId: selectedCategory,
-    }).then((url) => {
+    }).then(url => {
       setImageUrl(url);
       setLoading(false);
     });
@@ -72,7 +73,9 @@ export default function AchievementImageModal({
 
   if (!isOpen) return null;
 
-  const selectedCategoryData = quoteCategories.find(c => c.id === selectedCategory);
+  const selectedCategoryData = quoteCategories.find(
+    c => c.id === selectedCategory
+  );
 
   return (
     <motion.div
@@ -86,7 +89,7 @@ export default function AchievementImageModal({
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
         className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden my-8"
       >
         {/* Header */}
@@ -108,7 +111,7 @@ export default function AchievementImageModal({
               Escolha a mensagem inspiradora
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {quoteCategories.map((category) => (
+              {quoteCategories.map(category => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
@@ -134,7 +137,8 @@ export default function AchievementImageModal({
           {selectedCategoryData && (
             <div className="bg-[#F5EDE8] rounded-lg p-3 border border-[#E8D5CC]">
               <p className="text-xs text-[#6B4C3B] leading-relaxed">
-                <strong>{selectedCategoryData.name}:</strong> {selectedCategoryData.description}
+                <strong>{selectedCategoryData.name}:</strong>{" "}
+                {selectedCategoryData.description}
               </p>
             </div>
           )}
@@ -149,18 +153,18 @@ export default function AchievementImageModal({
                 </div>
               </div>
             ) : imageUrl ? (
-              <img
-                src={imageUrl}
-                alt="Conquista"
-                className="w-full h-auto"
-              />
+              <img src={imageUrl} alt="Conquista" className="w-full h-auto" />
             ) : null}
           </div>
 
           {/* Info */}
           <div className="bg-[#F5EDE8] rounded-lg p-3 text-center">
-            <p className="text-xs text-[#8B6E5A] mb-1">Tamanho otimizado para</p>
-            <p className="text-sm font-semibold text-[#2C1810]">Instagram Stories</p>
+            <p className="text-xs text-[#8B6E5A] mb-1">
+              Tamanho otimizado para
+            </p>
+            <p className="text-sm font-semibold text-[#2C1810]">
+              Instagram Stories
+            </p>
           </div>
 
           {/* Buttons */}
@@ -198,7 +202,9 @@ export default function AchievementImageModal({
           {/* Tips */}
           <div className="bg-[#F5EDE8] rounded-lg p-3 border border-[#E8D5CC]">
             <p className="text-xs text-[#6B4C3B] leading-relaxed">
-              💡 <strong>Dica:</strong> Escolha a categoria que mais ressoa com você, gere quantas frases quiser e compartilhe nos Stories do Instagram para inspirar outras mulheres!
+              💡 <strong>Dica:</strong> Escolha a categoria que mais ressoa com
+              você, gere quantas frases quiser e compartilhe nos Stories do
+              Instagram para inspirar outras mulheres!
             </p>
           </div>
         </div>

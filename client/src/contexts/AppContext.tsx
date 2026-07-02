@@ -1,6 +1,14 @@
 import React, { createContext, useContext } from "react";
 import { useAppState } from "@/hooks/useAppState";
-import type { AppState, JournalEntry, DayCheckin, Note, ScannerResult, InitialAssessment, FinalAssessment } from "@/hooks/useAppState";
+import type {
+  AppState,
+  JournalEntry,
+  DayCheckin,
+  Note,
+  ScannerResult,
+  InitialAssessment,
+  FinalAssessment,
+} from "@/hooks/useAppState";
 
 type AppContextType = ReturnType<typeof useAppState>;
 
@@ -17,4 +25,12 @@ export function useApp() {
   return ctx;
 }
 
-export type { AppState, JournalEntry, DayCheckin, Note, ScannerResult, InitialAssessment, FinalAssessment };
+export type {
+  AppState,
+  JournalEntry,
+  DayCheckin,
+  Note,
+  ScannerResult,
+  InitialAssessment,
+  FinalAssessment,
+};

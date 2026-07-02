@@ -13,7 +13,12 @@ interface CommentItemProps {
   comment: Comment;
   storyAuthorName: string;
   depth?: number;
-  onAddReply: (text: string, parentCommentId: string, authorName: string, authorAvatar: string) => void;
+  onAddReply: (
+    text: string,
+    parentCommentId: string,
+    authorName: string,
+    authorAvatar: string
+  ) => void;
   onRemove: (commentId: string) => void;
   onLike: (commentId: string) => void;
 }
@@ -61,7 +66,9 @@ export default function CommentItem({
               {comment.authorAvatar}
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#2C1810]">{comment.authorName}</p>
+              <p className="text-sm font-semibold text-[#2C1810]">
+                {comment.authorName}
+              </p>
               <p className="text-xs text-[#B08070]">
                 {new Date(comment.createdAt).toLocaleDateString("pt-BR", {
                   day: "numeric",
@@ -81,7 +88,9 @@ export default function CommentItem({
         </div>
 
         {/* Comment Text */}
-        <p className="text-sm text-[#4A3728] leading-relaxed mb-3">{comment.text}</p>
+        <p className="text-sm text-[#4A3728] leading-relaxed mb-3">
+          {comment.text}
+        </p>
 
         {/* Comment Footer */}
         <div className="flex items-center gap-3">
@@ -122,20 +131,24 @@ export default function CommentItem({
         >
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">Seu nome</label>
+              <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">
+                Seu nome
+              </label>
               <input
                 type="text"
                 value={replyAuthorName}
-                onChange={(e) => setReplyAuthorName(e.target.value)}
+                onChange={e => setReplyAuthorName(e.target.value)}
                 placeholder="Como você gostaria de ser chamada?"
                 className="w-full px-3 py-2 rounded-lg border border-[#E8D5CC] bg-white text-sm text-[#2C1810] placeholder:text-[#B08070] focus:outline-none focus:border-[#C4856A]"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">Avatar</label>
+              <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">
+                Avatar
+              </label>
               <div className="flex gap-2">
-                {avatarOptions.map((avatar) => (
+                {avatarOptions.map(avatar => (
                   <button
                     key={avatar}
                     onClick={() => setReplyAvatar(avatar)}
@@ -152,10 +165,12 @@ export default function CommentItem({
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">Sua resposta</label>
+              <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">
+                Sua resposta
+              </label>
               <Textarea
                 value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
+                onChange={e => setReplyText(e.target.value)}
                 placeholder="Responda com apoio e autenticidade..."
                 className="min-h-[80px] border-[#E8D5CC] focus:border-[#C4856A] bg-white rounded-lg resize-none text-sm text-[#2C1810] placeholder:text-[#B08070]"
               />
@@ -191,19 +206,21 @@ export default function CommentItem({
             {showReplies ? (
               <>
                 <ChevronUp className="w-3.5 h-3.5" />
-                Ocultar {comment.replies.length} resposta{comment.replies.length !== 1 ? "s" : ""}
+                Ocultar {comment.replies.length} resposta
+                {comment.replies.length !== 1 ? "s" : ""}
               </>
             ) : (
               <>
                 <ChevronDown className="w-3.5 h-3.5" />
-                Ver {comment.replies.length} resposta{comment.replies.length !== 1 ? "s" : ""}
+                Ver {comment.replies.length} resposta
+                {comment.replies.length !== 1 ? "s" : ""}
               </>
             )}
           </button>
 
           {showReplies && (
             <div className="space-y-3">
-              {comment.replies.map((reply) => (
+              {comment.replies.map(reply => (
                 <CommentItem
                   key={reply.id}
                   comment={reply}

@@ -17,7 +17,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const HERO_IMG = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
+const HERO_IMG =
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
 
 export default function ProfileSoraya() {
   return (
@@ -48,20 +49,22 @@ export default function ProfileSoraya() {
                 Psicóloga Clínica · CRP 06/157053
               </p>
               <p className="text-[#6B4C3B] text-sm leading-relaxed max-w-md">
-                Especialista em autoestima feminina, reconexão emocional e desenvolvimento pessoal.
-                Criadora do programa OUSE SER VOCÊ.
+                Especialista em autoestima feminina, reconexão emocional e
+                desenvolvimento pessoal. Criadora do programa OUSE SER VOCÊ.
               </p>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
-                {["Autoestima", "Identidade", "Bem-estar", "Propósito"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 bg-white/80 text-[#8B6E5A] text-xs font-medium rounded-full border border-[#E8D5CC]"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {["Autoestima", "Identidade", "Bem-estar", "Propósito"].map(
+                  tag => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 bg-white/80 text-[#8B6E5A] text-xs font-medium rounded-full border border-[#E8D5CC]"
+                    >
+                      {tag}
+                    </span>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -77,11 +80,14 @@ export default function ProfileSoraya() {
       >
         <Quote className="w-6 h-6 text-[#E8D5CC] absolute top-4 left-4" />
         <p className="text-[#6B4C3B] italic text-sm leading-relaxed pl-8 pr-4">
-          "Acredito que toda mulher carrega dentro de si uma força extraordinária. Meu trabalho é
-          ajudá-la a se reconectar com essa essência — sem julgamentos, sem pressa, com profundidade
-          e acolhimento genuíno."
+          "Acredito que toda mulher carrega dentro de si uma força
+          extraordinária. Meu trabalho é ajudá-la a se reconectar com essa
+          essência — sem julgamentos, sem pressa, com profundidade e acolhimento
+          genuíno."
         </p>
-        <p className="text-[#C4856A] text-xs font-medium mt-3 pl-8">— Soraya Farias</p>
+        <p className="text-[#C4856A] text-xs font-medium mt-3 pl-8">
+          — Soraya Farias
+        </p>
       </motion.div>
 
       {/* Biografia */}
@@ -92,20 +98,25 @@ export default function ProfileSoraya() {
         </div>
         <div className="bg-white rounded-xl p-5 border border-[#F0E4DC] space-y-4">
           <p className="text-[#4A3728] text-sm leading-relaxed">
-            Sou Soraya Farias, psicóloga clínica com mais de 10 anos de experiência no atendimento
-            a mulheres que se sentem desconectadas de si mesmas. Minha jornada na psicologia começou
-            pela curiosidade de entender por que tantas mulheres brilhantes se apagam ao longo da vida.
+            Sou Soraya Farias, psicóloga clínica com mais de 10 anos de
+            experiência no atendimento a mulheres que se sentem desconectadas de
+            si mesmas. Minha jornada na psicologia começou pela curiosidade de
+            entender por que tantas mulheres brilhantes se apagam ao longo da
+            vida.
           </p>
           <p className="text-[#4A3728] text-sm leading-relaxed">
-            Ao longo dos anos, percebi um padrão: mulheres entre 30 e 60 anos que dedicaram tanto
-            tempo aos outros — filhos, parceiros, trabalho — que esqueceram quem são. Não por
-            fraqueza, mas por excesso de entrega. Esse foi o ponto de partida para criar o programa
-            OUSE SER VOCÊ.
+            Ao longo dos anos, percebi um padrão: mulheres entre 30 e 60 anos
+            que dedicaram tanto tempo aos outros — filhos, parceiros, trabalho —
+            que esqueceram quem são. Não por fraqueza, mas por excesso de
+            entrega. Esse foi o ponto de partida para criar o programa OUSE SER
+            VOCÊ.
           </p>
           <p className="text-[#4A3728] text-sm leading-relaxed">
-            Minha abordagem combina psicologia clínica com práticas de autoconhecimento, oferecendo
-            um caminho estruturado e acolhedor para que cada mulher possa se reencontrar, estabelecer
-            limites saudáveis e construir uma vida alinhada com seus valores e desejos mais profundos.
+            Minha abordagem combina psicologia clínica com práticas de
+            autoconhecimento, oferecendo um caminho estruturado e acolhedor para
+            que cada mulher possa se reencontrar, estabelecer limites saudáveis
+            e construir uma vida alinhada com seus valores e desejos mais
+            profundos.
           </p>
         </div>
       </section>
@@ -114,7 +125,9 @@ export default function ProfileSoraya() {
       <section>
         <div className="flex items-center gap-2 mb-4">
           <GraduationCap className="w-5 h-5 text-[#C4856A]" />
-          <h2 className="font-serif text-xl text-[#2C1810]">Formação e Credenciais</h2>
+          <h2 className="font-serif text-xl text-[#2C1810]">
+            Formação e Credenciais
+          </h2>
         </div>
         <div className="space-y-3">
           {[
@@ -147,8 +160,12 @@ export default function ProfileSoraya() {
                 <Award className="w-4 h-4 text-[#C4856A]" />
               </div>
               <div>
-                <p className="font-medium text-[#2C1810] text-sm">{item.title}</p>
-                <p className="text-[#8B6E5A] text-xs mt-0.5">{item.institution}</p>
+                <p className="font-medium text-[#2C1810] text-sm">
+                  {item.title}
+                </p>
+                <p className="text-[#8B6E5A] text-xs mt-0.5">
+                  {item.institution}
+                </p>
                 <p className="text-[#B08070] text-xs mt-0.5">{item.detail}</p>
               </div>
             </div>
@@ -160,12 +177,15 @@ export default function ProfileSoraya() {
       <section>
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-[#C4856A]" />
-          <h2 className="font-serif text-xl text-[#2C1810]">Abordagem Terapêutica</h2>
+          <h2 className="font-serif text-xl text-[#2C1810]">
+            Abordagem Terapêutica
+          </h2>
         </div>
         <div className="bg-white rounded-xl p-5 border border-[#F0E4DC] space-y-4">
           <p className="text-[#4A3728] text-sm leading-relaxed">
-            Minha abordagem é integrativa e personalizada, combinando diferentes vertentes da
-            psicologia para atender às necessidades únicas de cada mulher:
+            Minha abordagem é integrativa e personalizada, combinando diferentes
+            vertentes da psicologia para atender às necessidades únicas de cada
+            mulher:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
@@ -186,10 +206,15 @@ export default function ProfileSoraya() {
                 desc: "Gentileza consigo mesma e redução da autocrítica",
               },
             ].map((approach, i) => (
-              <div key={i} className="p-3 bg-[#FAF6F1] rounded-lg border border-[#F0E4DC]">
+              <div
+                key={i}
+                className="p-3 bg-[#FAF6F1] rounded-lg border border-[#F0E4DC]"
+              >
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#C4856A]" />
-                  <p className="font-medium text-[#2C1810] text-xs">{approach.name}</p>
+                  <p className="font-medium text-[#2C1810] text-xs">
+                    {approach.name}
+                  </p>
                 </div>
                 <p className="text-[#8B6E5A] text-xs pl-5.5">{approach.desc}</p>
               </div>
@@ -227,13 +252,16 @@ export default function ProfileSoraya() {
       <section>
         <div className="flex items-center gap-2 mb-4">
           <BookOpen className="w-5 h-5 text-[#C4856A]" />
-          <h2 className="font-serif text-xl text-[#2C1810]">Sobre o Programa</h2>
+          <h2 className="font-serif text-xl text-[#2C1810]">
+            Sobre o Programa
+          </h2>
         </div>
         <div className="bg-gradient-to-br from-[#F5EDE8] to-white rounded-xl p-5 border border-[#E8D5CC]">
           <p className="text-[#4A3728] text-sm leading-relaxed mb-4">
-            O programa <strong>OUSE SER VOCÊ – 30 Dias Para Mudar</strong> nasceu da minha
-            experiência clínica com milhares de mulheres. É uma jornada estruturada que condensa
-            os pilares mais transformadores do meu trabalho em um formato acessível e prático.
+            O programa <strong>OUSE SER VOCÊ – 30 Dias Para Mudar</strong>{" "}
+            nasceu da minha experiência clínica com milhares de mulheres. É uma
+            jornada estruturada que condensa os pilares mais transformadores do
+            meu trabalho em um formato acessível e prático.
           </p>
           <div className="space-y-2">
             {[
@@ -265,7 +293,9 @@ export default function ProfileSoraya() {
             </div>
             <div>
               <p className="text-[#2C1810] text-sm font-medium">Localização</p>
-              <p className="text-[#8B6E5A] text-xs">São Paulo, SP — Atendimento presencial e online</p>
+              <p className="text-[#8B6E5A] text-xs">
+                São Paulo, SP — Atendimento presencial e online
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -273,8 +303,12 @@ export default function ProfileSoraya() {
               <Clock className="w-4 h-4 text-[#C4856A]" />
             </div>
             <div>
-              <p className="text-[#2C1810] text-sm font-medium">Horário de atendimento</p>
-              <p className="text-[#8B6E5A] text-xs">Segunda a sexta, 8h às 19h</p>
+              <p className="text-[#2C1810] text-sm font-medium">
+                Horário de atendimento
+              </p>
+              <p className="text-[#8B6E5A] text-xs">
+                Segunda a sexta, 8h às 19h
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -292,7 +326,9 @@ export default function ProfileSoraya() {
             </div>
             <div>
               <p className="text-[#2C1810] text-sm font-medium">E-mail</p>
-              <p className="text-[#8B6E5A] text-xs">contato@sorayafarias.com.br</p>
+              <p className="text-[#8B6E5A] text-xs">
+                contato@sorayafarias.com.br
+              </p>
             </div>
           </div>
         </div>

@@ -44,13 +44,17 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
               {story.avatar}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-[#2C1810] text-sm">{story.name}</p>
+              <p className="font-semibold text-[#2C1810] text-sm">
+                {story.name}
+              </p>
               <p className="text-xs text-[#8B6E5A]">{story.role}</p>
               <p className="text-xs text-[#B08070] mt-0.5">{story.timestamp}</p>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
-            <p className="text-sm font-semibold text-[#C4856A]">{story.daysCompleted}/30</p>
+            <p className="text-sm font-semibold text-[#C4856A]">
+              {story.daysCompleted}/30
+            </p>
             <p className="text-xs text-[#8B6E5A]">dias</p>
           </div>
         </div>
@@ -76,8 +80,12 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
 
       {/* Main Transformation */}
       <div className="px-5 py-4 bg-gradient-to-r from-[#F5EDE8] to-[#FAF6F1] border-b border-[#E8D5CC]">
-        <p className="text-sm font-semibold text-[#C4856A] mb-1">Sua transformação</p>
-        <p className="text-sm text-[#2C1810] leading-relaxed">{story.mainTransformation}</p>
+        <p className="text-sm font-semibold text-[#C4856A] mb-1">
+          Sua transformação
+        </p>
+        <p className="text-sm text-[#2C1810] leading-relaxed">
+          {story.mainTransformation}
+        </p>
       </div>
 
       {/* Expandable Content */}
@@ -91,13 +99,19 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
           <div className="p-5 space-y-4">
             {/* Full Story */}
             <div>
-              <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">Sua história</p>
-              <p className="text-sm text-[#4A3728] leading-relaxed">{story.fullStory}</p>
+              <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">
+                Sua história
+              </p>
+              <p className="text-sm text-[#4A3728] leading-relaxed">
+                {story.fullStory}
+              </p>
             </div>
 
             {/* Highlights */}
             <div>
-              <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">Destaques</p>
+              <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">
+                Destaques
+              </p>
               <div className="space-y-2">
                 {story.highlights.map((highlight, idx) => (
                   <div key={idx} className="flex items-start gap-2">
@@ -111,7 +125,9 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
             {/* Achievements */}
             {story.achievements.length > 0 && (
               <div>
-                <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">Conquistas</p>
+                <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">
+                  Conquistas
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {story.achievements.map((achievement, idx) => (
                     <span

@@ -19,17 +19,31 @@ export function useInstagramShare() {
 
   // Copiar para clipboard
   const copyToClipboard = (text: string): void => {
-    navigator.clipboard.writeText(text).then(() => {
-      console.log("Mensagem copiada para clipboard!");
-    }).catch(() => {
-      console.error("Erro ao copiar para clipboard");
-    });
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log("Mensagem copiada para clipboard!");
+      })
+      .catch(() => {
+        console.error("Erro ao copiar para clipboard");
+      });
   };
 
   // Compartilhar conclusão de dia
-  const shareDayCompletion = (dayNumber: number, theme: string, mood: number): ShareMessage => {
+  const shareDayCompletion = (
+    dayNumber: number,
+    theme: string,
+    mood: number
+  ): ShareMessage => {
     const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
-    const moodLabels = ["", "Muito pesado", "Pesado", "Neutro", "Leve", "Muito leve"];
+    const moodLabels = [
+      "",
+      "Muito pesado",
+      "Pesado",
+      "Neutro",
+      "Leve",
+      "Muito leve",
+    ];
 
     const message = `🌸 OUSE SER VOCÊ – 30 Dias Para Mudar
 
@@ -51,7 +65,10 @@ Quer embarcar nessa jornada comigo? 🤍
   };
 
   // Compartilhar conquista desbloqueada
-  const shareAchievement = (achievementName: string, description: string): ShareMessage => {
+  const shareAchievement = (
+    achievementName: string,
+    description: string
+  ): ShareMessage => {
     const message = `🏆 OUSE SER VOCÊ – Conquista Desbloqueada!
 
 Consegui! 🎊
@@ -96,7 +113,11 @@ Quer conhecer essa jornada?
   };
 
   // Compartilhar conclusão de semana
-  const shareWeekCompletion = (weekNumber: number, weekTheme: string, daysCompleted: number): ShareMessage => {
+  const shareWeekCompletion = (
+    weekNumber: number,
+    weekTheme: string,
+    daysCompleted: number
+  ): ShareMessage => {
     const weekEmojis = ["", "🌱", "🦋", "✨", "👑"];
     const weekEmoji = weekEmojis[weekNumber] || "🌟";
 
@@ -121,7 +142,14 @@ Obrigada, Soraya Farias, por essa jornada incrível! 🙏
   // Compartilhar conclusão da jornada completa
   const shareJourneyCompletion = (finalMood: number): ShareMessage => {
     const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
-    const moodLabels = ["", "Muito pesado", "Pesado", "Neutro", "Leve", "Muito leve"];
+    const moodLabels = [
+      "",
+      "Muito pesado",
+      "Pesado",
+      "Neutro",
+      "Leve",
+      "Muito leve",
+    ];
 
     const message = `🎊 OUSE SER VOCÊ – 30 DIAS COMPLETOS! 🎊
 

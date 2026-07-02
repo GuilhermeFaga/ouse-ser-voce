@@ -39,7 +39,14 @@ export default function ShareInstagramButton({
   size = "md",
   variant = "primary",
 }: ShareInstagramButtonProps) {
-  const { shareDayCompletion, shareAchievement, shareProgress, shareWeekCompletion, shareJourneyCompletion, openInstagram } = useInstagramShare();
+  const {
+    shareDayCompletion,
+    shareAchievement,
+    shareProgress,
+    shareWeekCompletion,
+    shareJourneyCompletion,
+    openInstagram,
+  } = useInstagramShare();
 
   const handleShare = () => {
     let message = "";
@@ -53,19 +60,36 @@ export default function ShareInstagramButton({
         break;
       case "achievement":
         if (achievementName && achievementDescription) {
-          const { text } = shareAchievement(achievementName, achievementDescription);
+          const { text } = shareAchievement(
+            achievementName,
+            achievementDescription
+          );
           message = text;
         }
         break;
       case "progress":
-        if (completedDays !== undefined && totalDays && currentWeek && weekTheme) {
-          const { text } = shareProgress(completedDays, totalDays, currentWeek, weekTheme);
+        if (
+          completedDays !== undefined &&
+          totalDays &&
+          currentWeek &&
+          weekTheme
+        ) {
+          const { text } = shareProgress(
+            completedDays,
+            totalDays,
+            currentWeek,
+            weekTheme
+          );
           message = text;
         }
         break;
       case "week":
         if (currentWeek && weekTheme && daysCompleted) {
-          const { text } = shareWeekCompletion(currentWeek, weekTheme, daysCompleted);
+          const { text } = shareWeekCompletion(
+            currentWeek,
+            weekTheme,
+            daysCompleted
+          );
           message = text;
         }
         break;
@@ -90,9 +114,12 @@ export default function ShareInstagramButton({
   };
 
   const variantClasses = {
-    primary: "bg-gradient-to-r from-[#F77737] to-[#FD1D1D] hover:from-[#E66626] hover:to-[#EC1C1C] text-white shadow-md",
-    secondary: "bg-[#F0F0F0] hover:bg-[#E0E0E0] text-[#F77737] border border-[#E8D5CC]",
-    ghost: "bg-transparent hover:bg-[#F5EDE8] text-[#F77737] border border-[#F77737]",
+    primary:
+      "bg-gradient-to-r from-[#F77737] to-[#FD1D1D] hover:from-[#E66626] hover:to-[#EC1C1C] text-white shadow-md",
+    secondary:
+      "bg-[#F0F0F0] hover:bg-[#E0E0E0] text-[#F77737] border border-[#E8D5CC]",
+    ghost:
+      "bg-transparent hover:bg-[#F5EDE8] text-[#F77737] border border-[#F77737]",
   };
 
   const labels = {

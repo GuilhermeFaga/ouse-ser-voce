@@ -50,7 +50,12 @@ export interface DayContent {
 
 export interface ScannerQuestion {
   id: string;
-  area: "identidade" | "emocional" | "autocuidado" | "relacionamentos" | "proposito";
+  area:
+    | "identidade"
+    | "emocional"
+    | "autocuidado"
+    | "relacionamentos"
+    | "proposito";
   question: string;
   options: { label: string; value: number }[];
 }
@@ -63,28 +68,32 @@ export const weekModules: WeekModule[] = [
     title: "Autoconhecimento e Presença",
     subtitle: "Semana 1",
     theme: "Quem sou eu?",
-    description: "Esta semana você vai se reencontrar. Vamos explorar sua identidade, seus padrões emocionais, seus sonhos esquecidos e a arte de estar presente consigo mesma.",
+    description:
+      "Esta semana você vai se reencontrar. Vamos explorar sua identidade, seus padrões emocionais, seus sonhos esquecidos e a arte de estar presente consigo mesma.",
   },
   {
     week: 2,
     title: "Desapego e Foco",
     subtitle: "Semana 2",
     theme: "O que eu carrego?",
-    description: "Chegou a hora de soltar o que não é seu. Vamos trabalhar crenças limitantes, excesso de responsabilidades, relações desgastantes e aprender a direcionar sua energia.",
+    description:
+      "Chegou a hora de soltar o que não é seu. Vamos trabalhar crenças limitantes, excesso de responsabilidades, relações desgastantes e aprender a direcionar sua energia.",
   },
   {
     week: 3,
     title: "Limites e Autoconfiança",
     subtitle: "Semana 3",
     theme: "Quem eu quero ser?",
-    description: "Autoestima, comunicação assertiva, culpa, limites saudáveis e o silenciamento da crítica interna. Esta semana você aprende a se defender — de você mesma e dos outros.",
+    description:
+      "Autoestima, comunicação assertiva, culpa, limites saudáveis e o silenciamento da crítica interna. Esta semana você aprende a se defender — de você mesma e dos outros.",
   },
   {
     week: 4,
     title: "Transformação e Prosperidade",
     subtitle: "Semana 4",
     theme: "Para onde eu vou?",
-    description: "Propósito, resiliência, perdão, comparações e visão de futuro. A semana final é sobre integrar tudo que você descobriu e criar uma nova narrativa para sua vida.",
+    description:
+      "Propósito, resiliência, perdão, comparações e visão de futuro. A semana final é sobre integrar tudo que você descobriu e criar uma nova narrativa para sua vida.",
   },
 ];
 
@@ -128,12 +137,17 @@ export const dailyQuotes: string[] = [
 export const dailyContent: DayContent[] = [
   // SEMANA 1 – AUTOCONHECIMENTO E PRESENÇA
   {
-    day: 1, week: 1, theme: "Identidade",
+    day: 1,
+    week: 1,
+    theme: "Identidade",
     title: "Quem você é além dos papéis que desempenha?",
     subtitle: "O primeiro passo é se ver.",
-    soraiaMessage: "Antes de qualquer coisa, quero que você saiba: chegar até aqui já é um ato de coragem. Muitas mulheres passam anos sem se perguntar quem são além de mãe, esposa, filha, profissional. Hoje, vamos começar com a pergunta mais importante: quem é você quando ninguém está olhando?",
-    reflection: "Desde criança, aprendemos a nos definir pelos papéis que ocupamos. Com o tempo, esses papéis se tornam nossa identidade — e esquecemos que existe uma mulher por trás de tudo isso. Hoje não é sobre o que você faz. É sobre quem você é.",
-    affirmation: "Eu sou mais do que os papéis que desempenho. Minha essência existe independente do que faço pelos outros.",
+    soraiaMessage:
+      "Antes de qualquer coisa, quero que você saiba: chegar até aqui já é um ato de coragem. Muitas mulheres passam anos sem se perguntar quem são além de mãe, esposa, filha, profissional. Hoje, vamos começar com a pergunta mais importante: quem é você quando ninguém está olhando?",
+    reflection:
+      "Desde criança, aprendemos a nos definir pelos papéis que ocupamos. Com o tempo, esses papéis se tornam nossa identidade — e esquecemos que existe uma mulher por trás de tudo isso. Hoje não é sobre o que você faz. É sobre quem você é.",
+    affirmation:
+      "Eu sou mais do que os papéis que desempenho. Minha essência existe independente do que faço pelos outros.",
     exercise: {
       title: "Carta para você mesma",
       description: "Um exercício simples e poderoso de autoconhecimento.",
@@ -152,15 +166,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Reencontro com você mesma",
     meditationDuration: "10 min",
-    meditationDescription: "Uma meditação guiada para você se reconectar com sua essência, além dos papéis e responsabilidades do dia a dia.",
+    meditationDescription:
+      "Uma meditação guiada para você se reconectar com sua essência, além dos papéis e responsabilidades do dia a dia.",
   },
   {
-    day: 2, week: 1, theme: "Padrões Emocionais",
+    day: 2,
+    week: 1,
+    theme: "Padrões Emocionais",
     title: "Os padrões que você repete sem perceber",
     subtitle: "Consciência é o primeiro passo para a mudança.",
-    soraiaMessage: "Todos nós temos padrões emocionais — respostas automáticas que desenvolvemos para sobreviver. O problema é quando esses padrões nos aprisionam. Hoje vamos iluminar o que está operando nas sombras da sua vida emocional.",
-    reflection: "Você já se pegou reagindo de uma forma e depois pensando 'por que fiz isso de novo'? Esses são seus padrões em ação. Eles foram úteis em algum momento — mas talvez já não sirvam mais à mulher que você está se tornando.",
-    affirmation: "Eu tenho consciência dos meus padrões e o poder de escolher respostas diferentes.",
+    soraiaMessage:
+      "Todos nós temos padrões emocionais — respostas automáticas que desenvolvemos para sobreviver. O problema é quando esses padrões nos aprisionam. Hoje vamos iluminar o que está operando nas sombras da sua vida emocional.",
+    reflection:
+      "Você já se pegou reagindo de uma forma e depois pensando 'por que fiz isso de novo'? Esses são seus padrões em ação. Eles foram úteis em algum momento — mas talvez já não sirvam mais à mulher que você está se tornando.",
+    affirmation:
+      "Eu tenho consciência dos meus padrões e o poder de escolher respostas diferentes.",
     exercise: {
       title: "Mapeamento de padrões",
       description: "Identifique seus padrões emocionais mais recorrentes.",
@@ -179,15 +199,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Observando sem julgar",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação de atenção plena para observar seus padrões emocionais com curiosidade, não com julgamento.",
+    meditationDescription:
+      "Meditação de atenção plena para observar seus padrões emocionais com curiosidade, não com julgamento.",
   },
   {
-    day: 3, week: 1, theme: "Sonhos Esquecidos",
+    day: 3,
+    week: 1,
+    theme: "Sonhos Esquecidos",
     title: "O que você sonhava antes de 'crescer'?",
     subtitle: "Seus sonhos não morreram. Estão esperando.",
-    soraiaMessage: "Existe uma versão de você que sonhava livremente — antes das responsabilidades, antes das decepções, antes do 'isso não é possível'. Hoje vamos encontrar essa mulher e ouvir o que ela tem a dizer.",
-    reflection: "Quando crescemos, aprendemos a 'ser realistas'. Mas muitas vezes confundimos realismo com resignação. Seus sonhos esquecidos carregam pistas importantes sobre quem você realmente é e o que sua alma precisa.",
-    affirmation: "Meus sonhos são válidos. Tenho permissão de querer mais para minha vida.",
+    soraiaMessage:
+      "Existe uma versão de você que sonhava livremente — antes das responsabilidades, antes das decepções, antes do 'isso não é possível'. Hoje vamos encontrar essa mulher e ouvir o que ela tem a dizer.",
+    reflection:
+      "Quando crescemos, aprendemos a 'ser realistas'. Mas muitas vezes confundimos realismo com resignação. Seus sonhos esquecidos carregam pistas importantes sobre quem você realmente é e o que sua alma precisa.",
+    affirmation:
+      "Meus sonhos são válidos. Tenho permissão de querer mais para minha vida.",
     exercise: {
       title: "Arqueologia dos sonhos",
       description: "Resgate os sonhos que você deixou para trás.",
@@ -206,14 +232,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "O jardim dos sonhos",
     meditationDuration: "15 min",
-    meditationDescription: "Uma visualização guiada para reconectar com seus desejos mais profundos e autênticos.",
+    meditationDescription:
+      "Uma visualização guiada para reconectar com seus desejos mais profundos e autênticos.",
   },
   {
-    day: 4, week: 1, theme: "Gratidão",
+    day: 4,
+    week: 1,
+    theme: "Gratidão",
     title: "O que você tem que ainda não viu",
     subtitle: "Gratidão não é negação. É perspectiva.",
-    soraiaMessage: "Gratidão não é fingir que tudo está bem. É treinar o olhar para enxergar o que existe de bom mesmo quando a vida está difícil. Hoje vamos praticar isso — não como positividade tóxica, mas como um ato de honestidade com o que você já tem.",
-    reflection: "A mente humana tem uma tendência natural de focar no negativo — isso é biologia, não fraqueza. Praticar gratidão é um ato de resistência consciente. É escolher ver além do que dói.",
+    soraiaMessage:
+      "Gratidão não é fingir que tudo está bem. É treinar o olhar para enxergar o que existe de bom mesmo quando a vida está difícil. Hoje vamos praticar isso — não como positividade tóxica, mas como um ato de honestidade com o que você já tem.",
+    reflection:
+      "A mente humana tem uma tendência natural de focar no negativo — isso é biologia, não fraqueza. Praticar gratidão é um ato de resistência consciente. É escolher ver além do que dói.",
     affirmation: "Reconheço o que tenho enquanto trabalho pelo que quero.",
     exercise: {
       title: "Gratidão profunda",
@@ -232,14 +263,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Coração aberto",
     meditationDuration: "10 min",
-    meditationDescription: "Meditação de gratidão para abrir o coração e cultivar uma perspectiva mais amorosa sobre sua vida.",
+    meditationDescription:
+      "Meditação de gratidão para abrir o coração e cultivar uma perspectiva mais amorosa sobre sua vida.",
   },
   {
-    day: 5, week: 1, theme: "Presença",
+    day: 5,
+    week: 1,
+    theme: "Presença",
     title: "Você está aqui, mas está presente?",
     subtitle: "O passado e o futuro roubam o agora.",
-    soraiaMessage: "Quantas vezes você está fisicamente presente, mas mentalmente em outro lugar — preocupada com o que vai acontecer, ruminando o que já passou? Hoje vamos praticar o ato radical de estar aqui, agora, consigo mesma.",
-    reflection: "A ausência de presença é uma das formas mais sutis de autoabandono. Quando você não está presente, perde os momentos que constroem sua vida. A prática da presença é um ato de amor-próprio.",
+    soraiaMessage:
+      "Quantas vezes você está fisicamente presente, mas mentalmente em outro lugar — preocupada com o que vai acontecer, ruminando o que já passou? Hoje vamos praticar o ato radical de estar aqui, agora, consigo mesma.",
+    reflection:
+      "A ausência de presença é uma das formas mais sutis de autoabandono. Quando você não está presente, perde os momentos que constroem sua vida. A prática da presença é um ato de amor-próprio.",
     affirmation: "Estou aqui. Estou presente. Este momento é suficiente.",
     exercise: {
       title: "5 sentidos agora",
@@ -261,15 +297,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Aqui e agora",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação de mindfulness para cultivar a presença plena e reduzir a ruminação mental.",
+    meditationDescription:
+      "Meditação de mindfulness para cultivar a presença plena e reduzir a ruminação mental.",
   },
   {
-    day: 6, week: 1, theme: "Autorreflexão",
+    day: 6,
+    week: 1,
+    theme: "Autorreflexão",
     title: "O espelho que você evita",
     subtitle: "Ver a si mesma com clareza é um ato de coragem.",
-    soraiaMessage: "Autorreflexão honesta é rara. A maioria de nós oscila entre a autocrítica destruidora e a negação protetora. Hoje vamos encontrar o meio-termo: olhar para si mesma com honestidade e compaixão ao mesmo tempo.",
-    reflection: "Você não precisa ser perfeita para ser digna de amor e respeito. Mas precisa ser honesta consigo mesma para crescer. O espelho da autorreflexão não é para te julgar — é para te conhecer.",
-    affirmation: "Me vejo com honestidade e compaixão. Sou humana, imperfeita e em constante crescimento.",
+    soraiaMessage:
+      "Autorreflexão honesta é rara. A maioria de nós oscila entre a autocrítica destruidora e a negação protetora. Hoje vamos encontrar o meio-termo: olhar para si mesma com honestidade e compaixão ao mesmo tempo.",
+    reflection:
+      "Você não precisa ser perfeita para ser digna de amor e respeito. Mas precisa ser honesta consigo mesma para crescer. O espelho da autorreflexão não é para te julgar — é para te conhecer.",
+    affirmation:
+      "Me vejo com honestidade e compaixão. Sou humana, imperfeita e em constante crescimento.",
     exercise: {
       title: "Inventário pessoal",
       description: "Um olhar honesto e compassivo sobre si mesma.",
@@ -287,15 +329,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Encontro com a verdade",
     meditationDuration: "10 min",
-    meditationDescription: "Meditação para desenvolver a capacidade de se ver com clareza e compaixão.",
+    meditationDescription:
+      "Meditação para desenvolver a capacidade de se ver com clareza e compaixão.",
   },
   {
-    day: 7, week: 1, theme: "Integração",
+    day: 7,
+    week: 1,
+    theme: "Integração",
     title: "O que você descobriu sobre si mesma esta semana?",
     subtitle: "Integrar é tão importante quanto descobrir.",
-    soraiaMessage: "Você completou a primeira semana. Isso não é pouco — é muito. Muitas mulheres chegam até aqui e já sentem algo diferente dentro de si. Hoje é dia de integrar, celebrar e preparar o coração para o que vem a seguir.",
-    reflection: "Integração é o processo de fazer as descobertas fazerem parte de você — não apenas como conhecimento intelectual, mas como vivência. O que você aprendeu esta semana precisa descer da cabeça para o coração.",
-    affirmation: "Cada descoberta sobre mim mesma me aproxima de quem eu realmente sou.",
+    soraiaMessage:
+      "Você completou a primeira semana. Isso não é pouco — é muito. Muitas mulheres chegam até aqui e já sentem algo diferente dentro de si. Hoje é dia de integrar, celebrar e preparar o coração para o que vem a seguir.",
+    reflection:
+      "Integração é o processo de fazer as descobertas fazerem parte de você — não apenas como conhecimento intelectual, mas como vivência. O que você aprendeu esta semana precisa descer da cabeça para o coração.",
+    affirmation:
+      "Cada descoberta sobre mim mesma me aproxima de quem eu realmente sou.",
     exercise: {
       title: "Carta de integração",
       description: "Consolide as descobertas da semana.",
@@ -314,16 +362,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Celebração interior",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de integração e celebração para honrar o que você viveu e descobriu nesta primeira semana.",
+    meditationDescription:
+      "Meditação de integração e celebração para honrar o que você viveu e descobriu nesta primeira semana.",
   },
 
   // SEMANA 2 – DESAPEGO E FOCO
   {
-    day: 8, week: 2, theme: "Crenças Limitantes",
+    day: 8,
+    week: 2,
+    theme: "Crenças Limitantes",
     title: "As histórias que você conta sobre si mesma",
     subtitle: "Crenças não são verdades. São narrativas.",
-    soraiaMessage: "Desde a infância, construímos narrativas sobre quem somos e o que merecemos. Muitas dessas histórias foram escritas por outros — pais, professores, parceiros, sociedade. Hoje vamos identificar quais histórias estão te limitando.",
-    reflection: "Uma crença limitante é uma ideia que você aceita como verdade absoluta, mas que na realidade é apenas uma interpretação. 'Não sou boa o suficiente', 'Não mereço ser feliz', 'Sempre vai ser assim' — essas são histórias, não fatos.",
+    soraiaMessage:
+      "Desde a infância, construímos narrativas sobre quem somos e o que merecemos. Muitas dessas histórias foram escritas por outros — pais, professores, parceiros, sociedade. Hoje vamos identificar quais histórias estão te limitando.",
+    reflection:
+      "Uma crença limitante é uma ideia que você aceita como verdade absoluta, mas que na realidade é apenas uma interpretação. 'Não sou boa o suficiente', 'Não mereço ser feliz', 'Sempre vai ser assim' — essas são histórias, não fatos.",
     affirmation: "Tenho o poder de reescrever as histórias que me limitam.",
     exercise: {
       title: "Caça às crenças",
@@ -342,14 +395,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Libertando narrativas antigas",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação para identificar e soltar as histórias que te aprisionam.",
+    meditationDescription:
+      "Meditação para identificar e soltar as histórias que te aprisionam.",
   },
   {
-    day: 9, week: 2, theme: "Excesso de Responsabilidades",
+    day: 9,
+    week: 2,
+    theme: "Excesso de Responsabilidades",
     title: "Você carrega o que não é seu",
     subtitle: "Nem tudo que pesa é sua responsabilidade.",
-    soraiaMessage: "Muitas mulheres carregam o peso do mundo — a felicidade dos filhos, a estabilidade do relacionamento, o humor do chefe, os problemas da família. Hoje vamos examinar o que você está carregando que não pertence a você.",
-    reflection: "Existe uma diferença entre ser responsável e ser responsabilizada por tudo. Quando você assume responsabilidades que não são suas, perde energia para cuidar do que realmente importa: você mesma.",
+    soraiaMessage:
+      "Muitas mulheres carregam o peso do mundo — a felicidade dos filhos, a estabilidade do relacionamento, o humor do chefe, os problemas da família. Hoje vamos examinar o que você está carregando que não pertence a você.",
+    reflection:
+      "Existe uma diferença entre ser responsável e ser responsabilizada por tudo. Quando você assume responsabilidades que não são suas, perde energia para cuidar do que realmente importa: você mesma.",
     affirmation: "Cuido do que é meu. Libero o que não me pertence.",
     exercise: {
       title: "Inventário de responsabilidades",
@@ -368,14 +426,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Soltando o peso",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de liberação para soltar responsabilidades que não são suas.",
+    meditationDescription:
+      "Meditação de liberação para soltar responsabilidades que não são suas.",
   },
   {
-    day: 10, week: 2, theme: "Relações Desgastantes",
+    day: 10,
+    week: 2,
+    theme: "Relações Desgastantes",
     title: "As relações que drenam sua energia",
     subtitle: "Nem todo vínculo merece sua energia.",
-    soraiaMessage: "Algumas relações nos nutrem. Outras nos drenam. Hoje vamos olhar honestamente para os vínculos da sua vida — não para destruí-los, mas para entender o que eles fazem com você.",
-    reflection: "Uma relação desgastante não precisa ser abusiva para ser prejudicial. Pode ser simplesmente uma relação onde você dá muito mais do que recebe, onde você se sente pequena, invisível ou constantemente culpada.",
+    soraiaMessage:
+      "Algumas relações nos nutrem. Outras nos drenam. Hoje vamos olhar honestamente para os vínculos da sua vida — não para destruí-los, mas para entender o que eles fazem com você.",
+    reflection:
+      "Uma relação desgastante não precisa ser abusiva para ser prejudicial. Pode ser simplesmente uma relação onde você dá muito mais do que recebe, onde você se sente pequena, invisível ou constantemente culpada.",
     affirmation: "Mereço relações que me nutrem e me fazem crescer.",
     exercise: {
       title: "Mapa de energia relacional",
@@ -394,14 +457,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Protegendo sua energia",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação para criar um escudo energético e proteger sua paz interior.",
+    meditationDescription:
+      "Meditação para criar um escudo energético e proteger sua paz interior.",
   },
   {
-    day: 11, week: 2, theme: "Autocuidado",
+    day: 11,
+    week: 2,
+    theme: "Autocuidado",
     title: "Você é a última da sua lista?",
     subtitle: "Autocuidado não é luxo. É sobrevivência.",
-    soraiaMessage: "Você cuida de todos — mas quando foi a última vez que cuidou de você com a mesma dedicação? Hoje vamos falar sobre autocuidado real: não apenas banhos relaxantes, mas sobre se colocar como prioridade.",
-    reflection: "Autocuidado não é egoísmo. É a base de tudo. Quando você não se cuida, não tem nada para oferecer aos outros — só o que sobra, e sobras não nutrem ninguém.",
+    soraiaMessage:
+      "Você cuida de todos — mas quando foi a última vez que cuidou de você com a mesma dedicação? Hoje vamos falar sobre autocuidado real: não apenas banhos relaxantes, mas sobre se colocar como prioridade.",
+    reflection:
+      "Autocuidado não é egoísmo. É a base de tudo. Quando você não se cuida, não tem nada para oferecer aos outros — só o que sobra, e sobras não nutrem ninguém.",
     affirmation: "Meu bem-estar é uma prioridade, não uma recompensa.",
     exercise: {
       title: "Plano de autocuidado real",
@@ -421,15 +489,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Voltando para casa",
     meditationDuration: "10 min",
-    meditationDescription: "Meditação de autocuidado para nutrir seu corpo, mente e coração.",
+    meditationDescription:
+      "Meditação de autocuidado para nutrir seu corpo, mente e coração.",
   },
   {
-    day: 12, week: 2, theme: "Energia Emocional",
+    day: 12,
+    week: 2,
+    theme: "Energia Emocional",
     title: "Para onde vai sua energia emocional?",
     subtitle: "Energia é um recurso finito. Use com sabedoria.",
-    soraiaMessage: "Sua energia emocional é um recurso precioso. Cada preocupação, cada conflito não resolvido, cada relação tóxica consome uma parte dela. Hoje vamos mapear onde sua energia está indo e recuperar o que foi desperdiçado.",
-    reflection: "Você já se sentiu exausta sem ter feito nada físico? Isso é esgotamento emocional. Quando sua energia está fragmentada em mil preocupações, não sobra nada para o que realmente importa.",
-    affirmation: "Direciono minha energia para o que me nutre e me faz crescer.",
+    soraiaMessage:
+      "Sua energia emocional é um recurso precioso. Cada preocupação, cada conflito não resolvido, cada relação tóxica consome uma parte dela. Hoje vamos mapear onde sua energia está indo e recuperar o que foi desperdiçado.",
+    reflection:
+      "Você já se sentiu exausta sem ter feito nada físico? Isso é esgotamento emocional. Quando sua energia está fragmentada em mil preocupações, não sobra nada para o que realmente importa.",
+    affirmation:
+      "Direciono minha energia para o que me nutre e me faz crescer.",
     exercise: {
       title: "Auditoria de energia",
       description: "Identifique onde sua energia está sendo gasta.",
@@ -447,15 +521,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Recuperando sua energia",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de recuperação energética para restaurar sua vitalidade emocional.",
+    meditationDescription:
+      "Meditação de recuperação energética para restaurar sua vitalidade emocional.",
   },
   {
-    day: 13, week: 2, theme: "Foco",
+    day: 13,
+    week: 2,
+    theme: "Foco",
     title: "O que realmente importa para você?",
     subtitle: "Clareza é poder.",
-    soraiaMessage: "Vivemos em um mundo que constantemente nos diz o que deveria importar. Mas o que realmente importa para você — não para sua família, não para a sociedade, não para as redes sociais? Hoje vamos encontrar seu foco verdadeiro.",
-    reflection: "Foco não é sobre fazer mais. É sobre fazer o que importa. Quando você sabe o que realmente importa, fica mais fácil dizer não para o que não importa.",
-    affirmation: "Sei o que importa para mim e direciono minha vida nessa direção.",
+    soraiaMessage:
+      "Vivemos em um mundo que constantemente nos diz o que deveria importar. Mas o que realmente importa para você — não para sua família, não para a sociedade, não para as redes sociais? Hoje vamos encontrar seu foco verdadeiro.",
+    reflection:
+      "Foco não é sobre fazer mais. É sobre fazer o que importa. Quando você sabe o que realmente importa, fica mais fácil dizer não para o que não importa.",
+    affirmation:
+      "Sei o que importa para mim e direciono minha vida nessa direção.",
     exercise: {
       title: "As 5 prioridades da sua vida",
       description: "Identifique o que realmente importa.",
@@ -473,14 +553,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Clareza interior",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação para conectar com seus valores mais profundos e encontrar clareza sobre o que importa.",
+    meditationDescription:
+      "Meditação para conectar com seus valores mais profundos e encontrar clareza sobre o que importa.",
   },
   {
-    day: 14, week: 2, theme: "Integração",
+    day: 14,
+    week: 2,
+    theme: "Integração",
     title: "Você está mais leve?",
     subtitle: "Desapegar é um processo, não um evento.",
-    soraiaMessage: "Duas semanas. Você chegou até aqui. Talvez você sinta que soltou algumas coisas — ou talvez ainda sinta o peso. Tudo bem. Desapego é um processo que acontece em camadas. Hoje celebramos o que você já soltou.",
-    reflection: "Desapegar não significa não se importar. Significa escolher conscientemente o que merece sua energia, seu tempo e seu coração. Você está aprendendo a fazer isso.",
+    soraiaMessage:
+      "Duas semanas. Você chegou até aqui. Talvez você sinta que soltou algumas coisas — ou talvez ainda sinta o peso. Tudo bem. Desapego é um processo que acontece em camadas. Hoje celebramos o que você já soltou.",
+    reflection:
+      "Desapegar não significa não se importar. Significa escolher conscientemente o que merece sua energia, seu tempo e seu coração. Você está aprendendo a fazer isso.",
     affirmation: "Cada coisa que solto cria espaço para algo melhor entrar.",
     exercise: {
       title: "Ritual de liberação",
@@ -499,17 +584,23 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Leveza",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de liberação profunda para celebrar o desapego e receber o novo.",
+    meditationDescription:
+      "Meditação de liberação profunda para celebrar o desapego e receber o novo.",
   },
 
   // SEMANA 3 – LIMITES E AUTOCONFIANÇA
   {
-    day: 15, week: 3, theme: "Autoestima",
+    day: 15,
+    week: 3,
+    theme: "Autoestima",
     title: "O que você acha de si mesma?",
     subtitle: "Autoestima é a base de tudo.",
-    soraiaMessage: "Autoestima não é achar que você é perfeita. É acreditar que você tem valor — mesmo com suas imperfeições, mesmo quando erra, mesmo quando não agrada a todos. Hoje vamos trabalhar a raiz da sua relação com você mesma.",
-    reflection: "A autoestima é construída ao longo da vida — e pode ser reconstruída. Cada vez que você se trata com respeito, cada vez que honra suas necessidades, cada vez que se defende, você está construindo autoestima.",
-    affirmation: "Tenho valor independente do que faço, do que tenho ou do que os outros pensam.",
+    soraiaMessage:
+      "Autoestima não é achar que você é perfeita. É acreditar que você tem valor — mesmo com suas imperfeições, mesmo quando erra, mesmo quando não agrada a todos. Hoje vamos trabalhar a raiz da sua relação com você mesma.",
+    reflection:
+      "A autoestima é construída ao longo da vida — e pode ser reconstruída. Cada vez que você se trata com respeito, cada vez que honra suas necessidades, cada vez que se defende, você está construindo autoestima.",
+    affirmation:
+      "Tenho valor independente do que faço, do que tenho ou do que os outros pensam.",
     exercise: {
       title: "Carta de amor próprio",
       description: "Escreva para si mesma como escreveria para alguém que ama.",
@@ -527,15 +618,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Amor incondicional",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de amor-próprio para cultivar uma relação mais amorosa e respeitosa consigo mesma.",
+    meditationDescription:
+      "Meditação de amor-próprio para cultivar uma relação mais amorosa e respeitosa consigo mesma.",
   },
   {
-    day: 16, week: 3, theme: "Comunicação Assertiva",
+    day: 16,
+    week: 3,
+    theme: "Comunicação Assertiva",
     title: "Você diz o que pensa ou o que os outros querem ouvir?",
     subtitle: "Sua voz importa.",
-    soraiaMessage: "Assertividade é a habilidade de expressar o que você pensa, sente e precisa — com respeito por você e pelo outro. Não é agressividade. Não é passividade. É honestidade corajosa.",
-    reflection: "Muitas mulheres aprenderam que expressar suas necessidades é egoísmo, que discordar é conflito, que dizer não é crueldade. Hoje vamos desaprender isso.",
-    affirmation: "Minha voz tem valor. Expresso minhas necessidades com clareza e respeito.",
+    soraiaMessage:
+      "Assertividade é a habilidade de expressar o que você pensa, sente e precisa — com respeito por você e pelo outro. Não é agressividade. Não é passividade. É honestidade corajosa.",
+    reflection:
+      "Muitas mulheres aprenderam que expressar suas necessidades é egoísmo, que discordar é conflito, que dizer não é crueldade. Hoje vamos desaprender isso.",
+    affirmation:
+      "Minha voz tem valor. Expresso minhas necessidades com clareza e respeito.",
     exercise: {
       title: "Praticando o não",
       description: "Exercite a assertividade em situações do dia a dia.",
@@ -554,15 +651,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Encontrando sua voz",
     meditationDuration: "10 min",
-    meditationDescription: "Meditação para fortalecer sua voz interior e cultivar a coragem de se expressar.",
+    meditationDescription:
+      "Meditação para fortalecer sua voz interior e cultivar a coragem de se expressar.",
   },
   {
-    day: 17, week: 3, theme: "Culpa",
+    day: 17,
+    week: 3,
+    theme: "Culpa",
     title: "A culpa que você carrega sem precisar",
     subtitle: "Nem toda culpa é sua.",
-    soraiaMessage: "A culpa é uma das emoções mais pesadas que as mulheres carregam. Culpa por trabalhar, por descansar, por querer mais, por não querer, por não ser perfeita. Hoje vamos examinar essa culpa e descobrir o que é real e o que é programação.",
-    reflection: "Existe a culpa saudável — que nos avisa quando agimos contra nossos valores. E existe a culpa tóxica — que nos pune por simplesmente existir, ter necessidades e ser humana. Aprender a distinguir as duas é libertador.",
-    affirmation: "Não sou responsável pela felicidade de todos. Tenho permissão de existir sem culpa.",
+    soraiaMessage:
+      "A culpa é uma das emoções mais pesadas que as mulheres carregam. Culpa por trabalhar, por descansar, por querer mais, por não querer, por não ser perfeita. Hoje vamos examinar essa culpa e descobrir o que é real e o que é programação.",
+    reflection:
+      "Existe a culpa saudável — que nos avisa quando agimos contra nossos valores. E existe a culpa tóxica — que nos pune por simplesmente existir, ter necessidades e ser humana. Aprender a distinguir as duas é libertador.",
+    affirmation:
+      "Não sou responsável pela felicidade de todos. Tenho permissão de existir sem culpa.",
     exercise: {
       title: "Auditoria da culpa",
       description: "Examine suas culpas e libere as que não são suas.",
@@ -580,15 +683,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Libertando a culpa",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de perdão e liberação para soltar a culpa que não é sua.",
+    meditationDescription:
+      "Meditação de perdão e liberação para soltar a culpa que não é sua.",
   },
   {
-    day: 18, week: 3, theme: "Limites Saudáveis",
+    day: 18,
+    week: 3,
+    theme: "Limites Saudáveis",
     title: "Dizer não é um ato de amor",
     subtitle: "Limites protegem o que você mais valoriza.",
-    soraiaMessage: "Limites não são muros para afastar as pessoas. São cercas que protegem o que você mais valoriza — sua energia, sua paz, sua saúde, seus sonhos. Hoje vamos aprender a construir limites com amor e firmeza.",
-    reflection: "Quando você não tem limites, permite que outros decidam como você vai se sentir, o que vai fazer e quanto vai se dar. Limites são a linguagem do autorrespeito.",
-    affirmation: "Meus limites são um ato de amor por mim mesma e pelos outros.",
+    soraiaMessage:
+      "Limites não são muros para afastar as pessoas. São cercas que protegem o que você mais valoriza — sua energia, sua paz, sua saúde, seus sonhos. Hoje vamos aprender a construir limites com amor e firmeza.",
+    reflection:
+      "Quando você não tem limites, permite que outros decidam como você vai se sentir, o que vai fazer e quanto vai se dar. Limites são a linguagem do autorrespeito.",
+    affirmation:
+      "Meus limites são um ato de amor por mim mesma e pelos outros.",
     exercise: {
       title: "Definindo seus limites",
       description: "Identifique e pratique seus limites.",
@@ -606,15 +715,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Construindo seu espaço",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação para fortalecer sua capacidade de estabelecer e manter limites saudáveis.",
+    meditationDescription:
+      "Meditação para fortalecer sua capacidade de estabelecer e manter limites saudáveis.",
   },
   {
-    day: 19, week: 3, theme: "Autoconfiança",
+    day: 19,
+    week: 3,
+    theme: "Autoconfiança",
     title: "Você confia em si mesma?",
     subtitle: "Autoconfiança se constrói com ação.",
-    soraiaMessage: "Autoconfiança não é ausência de medo. É agir apesar do medo. É confiar que você tem recursos internos para lidar com o que vier. Hoje vamos trabalhar essa confiança que talvez você tenha perdido ao longo do caminho.",
-    reflection: "A autoconfiança é construída por evidências — cada vez que você enfrenta um desafio, cada vez que supera um obstáculo, cada vez que se mantém fiel a si mesma. Você tem mais evidências do que imagina.",
-    affirmation: "Confio em mim mesma para enfrentar o que vier. Tenho recursos internos poderosos.",
+    soraiaMessage:
+      "Autoconfiança não é ausência de medo. É agir apesar do medo. É confiar que você tem recursos internos para lidar com o que vier. Hoje vamos trabalhar essa confiança que talvez você tenha perdido ao longo do caminho.",
+    reflection:
+      "A autoconfiança é construída por evidências — cada vez que você enfrenta um desafio, cada vez que supera um obstáculo, cada vez que se mantém fiel a si mesma. Você tem mais evidências do que imagina.",
+    affirmation:
+      "Confio em mim mesma para enfrentar o que vier. Tenho recursos internos poderosos.",
     exercise: {
       title: "Inventário de conquistas",
       description: "Reconheça o que você já superou.",
@@ -632,14 +747,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Força interior",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação para acessar sua força interior e cultivar autoconfiança profunda.",
+    meditationDescription:
+      "Meditação para acessar sua força interior e cultivar autoconfiança profunda.",
   },
   {
-    day: 20, week: 3, theme: "Crítica Interna",
+    day: 20,
+    week: 3,
+    theme: "Crítica Interna",
     title: "A voz que te sabota por dentro",
     subtitle: "Você não precisa acreditar em tudo que pensa.",
-    soraiaMessage: "Existe uma voz dentro de você que critica, compara, diminui e sabota. Essa voz não é você — é uma coleção de mensagens que você absorveu ao longo da vida. Hoje vamos aprender a reconhecê-la e a responder a ela.",
-    reflection: "A crítica interna fala com a voz de quem nos machucou — pais exigentes, professores cruéis, parceiros que nos diminuíram. Mas você não precisa mais ouvir essa voz como se fosse a verdade.",
+    soraiaMessage:
+      "Existe uma voz dentro de você que critica, compara, diminui e sabota. Essa voz não é você — é uma coleção de mensagens que você absorveu ao longo da vida. Hoje vamos aprender a reconhecê-la e a responder a ela.",
+    reflection:
+      "A crítica interna fala com a voz de quem nos machucou — pais exigentes, professores cruéis, parceiros que nos diminuíram. Mas você não precisa mais ouvir essa voz como se fosse a verdade.",
     affirmation: "Sou minha maior aliada, não minha maior crítica.",
     exercise: {
       title: "Diálogo com o crítico interno",
@@ -658,15 +778,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Silenciando o crítico",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de autocompaixão para transformar a relação com sua voz crítica interior.",
+    meditationDescription:
+      "Meditação de autocompaixão para transformar a relação com sua voz crítica interior.",
   },
   {
-    day: 21, week: 3, theme: "Integração",
+    day: 21,
+    week: 3,
+    theme: "Integração",
     title: "Três semanas. Você está diferente.",
     subtitle: "A transformação já está acontecendo.",
-    soraiaMessage: "Três semanas. Você trabalhou autoestima, comunicação, culpa, limites e autoconfiança. Isso é profundo. Hoje vamos pausar, respirar e reconhecer o quanto você cresceu.",
-    reflection: "Transformação não é um evento dramático. É uma série de pequenas escolhas que, somadas, mudam tudo. Cada vez que você se escolheu, cada vez que foi honesta consigo mesma, você se transformou.",
-    affirmation: "Estou em transformação constante. Cada passo me aproxima de quem eu realmente sou.",
+    soraiaMessage:
+      "Três semanas. Você trabalhou autoestima, comunicação, culpa, limites e autoconfiança. Isso é profundo. Hoje vamos pausar, respirar e reconhecer o quanto você cresceu.",
+    reflection:
+      "Transformação não é um evento dramático. É uma série de pequenas escolhas que, somadas, mudam tudo. Cada vez que você se escolheu, cada vez que foi honesta consigo mesma, você se transformou.",
+    affirmation:
+      "Estou em transformação constante. Cada passo me aproxima de quem eu realmente sou.",
     exercise: {
       title: "Carta para o futuro",
       description: "Escreva para a mulher que você está se tornando.",
@@ -684,16 +810,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Encontrando a nova você",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de integração para honrar sua transformação e preparar o coração para a semana final.",
+    meditationDescription:
+      "Meditação de integração para honrar sua transformação e preparar o coração para a semana final.",
   },
 
   // SEMANA 4 – TRANSFORMAÇÃO E PROSPERIDADE
   {
-    day: 22, week: 4, theme: "Propósito",
+    day: 22,
+    week: 4,
+    theme: "Propósito",
     title: "Para que você veio ao mundo?",
     subtitle: "Propósito não é destino. É direção.",
-    soraiaMessage: "Propósito não é uma grande missão grandiosa que você precisa descobrir. É a direção que faz sua vida fazer sentido — o que te move, o que te dá energia, o que você faz que faz o mundo um pouco melhor.",
-    reflection: "Muitas mulheres acreditam que não têm propósito porque não encontraram 'a grande missão'. Mas propósito pode estar nos pequenos atos — na forma como você cuida, cria, conecta, inspira.",
+    soraiaMessage:
+      "Propósito não é uma grande missão grandiosa que você precisa descobrir. É a direção que faz sua vida fazer sentido — o que te move, o que te dá energia, o que você faz que faz o mundo um pouco melhor.",
+    reflection:
+      "Muitas mulheres acreditam que não têm propósito porque não encontraram 'a grande missão'. Mas propósito pode estar nos pequenos atos — na forma como você cuida, cria, conecta, inspira.",
     affirmation: "Minha vida tem propósito. Estou aqui por uma razão.",
     exercise: {
       title: "Encontrando seu propósito",
@@ -713,14 +844,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Chamado interior",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação para conectar com seu propósito mais profundo e encontrar clareza sobre sua direção.",
+    meditationDescription:
+      "Meditação para conectar com seu propósito mais profundo e encontrar clareza sobre sua direção.",
   },
   {
-    day: 23, week: 4, theme: "Resiliência",
+    day: 23,
+    week: 4,
+    theme: "Resiliência",
     title: "Você é mais forte do que acredita",
     subtitle: "Resiliência não é não cair. É se levantar.",
-    soraiaMessage: "Você já passou por coisas difíceis. Já se levantou quando achava que não conseguia. Já sobreviveu ao que parecia impossível. Hoje vamos honrar essa força e aprender a cultivá-la conscientemente.",
-    reflection: "Resiliência não é endurecer o coração. É ter raízes profundas o suficiente para dobrar sem quebrar. É saber que você tem recursos internos para enfrentar o que vier.",
+    soraiaMessage:
+      "Você já passou por coisas difíceis. Já se levantou quando achava que não conseguia. Já sobreviveu ao que parecia impossível. Hoje vamos honrar essa força e aprender a cultivá-la conscientemente.",
+    reflection:
+      "Resiliência não é endurecer o coração. É ter raízes profundas o suficiente para dobrar sem quebrar. É saber que você tem recursos internos para enfrentar o que vier.",
     affirmation: "Sou resiliente. Cada desafio me fortalece e me ensina.",
     exercise: {
       title: "Mapa da resiliência",
@@ -739,14 +875,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Raízes profundas",
     meditationDuration: "12 min",
-    meditationDescription: "Meditação para fortalecer suas raízes internas e cultivar resiliência profunda.",
+    meditationDescription:
+      "Meditação para fortalecer suas raízes internas e cultivar resiliência profunda.",
   },
   {
-    day: 24, week: 4, theme: "Perdão",
+    day: 24,
+    week: 4,
+    theme: "Perdão",
     title: "O perdão que te liberta",
     subtitle: "Perdoar não é absolver. É se libertar.",
-    soraiaMessage: "Perdão é um dos temas mais mal compreendidos. Perdoar não é dizer que o que aconteceu estava certo. Não é reconciliar. É soltar o peso que você carrega — não pelo outro, mas por você.",
-    reflection: "Guardar mágoa é como tomar veneno esperando que o outro morra. O perdão é um presente que você se dá. E o perdão mais importante — e muitas vezes o mais difícil — é o perdão a si mesma.",
+    soraiaMessage:
+      "Perdão é um dos temas mais mal compreendidos. Perdoar não é dizer que o que aconteceu estava certo. Não é reconciliar. É soltar o peso que você carrega — não pelo outro, mas por você.",
+    reflection:
+      "Guardar mágoa é como tomar veneno esperando que o outro morra. O perdão é um presente que você se dá. E o perdão mais importante — e muitas vezes o mais difícil — é o perdão a si mesma.",
     affirmation: "Escolho o perdão como um ato de amor por mim mesma.",
     exercise: {
       title: "Carta de perdão",
@@ -765,15 +906,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Libertação pelo perdão",
     meditationDuration: "20 min",
-    meditationDescription: "Meditação profunda de perdão para soltar mágoas e se libertar do passado.",
+    meditationDescription:
+      "Meditação profunda de perdão para soltar mágoas e se libertar do passado.",
   },
   {
-    day: 25, week: 4, theme: "Comparações",
+    day: 25,
+    week: 4,
+    theme: "Comparações",
     title: "Você não está em competição com ninguém",
     subtitle: "Sua jornada é única. Sua medida é você mesma.",
-    soraiaMessage: "As redes sociais tornaram a comparação uma epidemia. Mas comparar sua vida com a vida dos outros é comparar seu bastidor com o palco deles. Hoje vamos trabalhar a armadilha da comparação.",
-    reflection: "Quando você se compara, perde de vista o que é único em você. Cada mulher tem uma jornada diferente, com pontos de partida diferentes, desafios diferentes. Sua medida não é a outra — é você mesma.",
-    affirmation: "Minha jornada é única. Me comparo apenas com quem eu era ontem.",
+    soraiaMessage:
+      "As redes sociais tornaram a comparação uma epidemia. Mas comparar sua vida com a vida dos outros é comparar seu bastidor com o palco deles. Hoje vamos trabalhar a armadilha da comparação.",
+    reflection:
+      "Quando você se compara, perde de vista o que é único em você. Cada mulher tem uma jornada diferente, com pontos de partida diferentes, desafios diferentes. Sua medida não é a outra — é você mesma.",
+    affirmation:
+      "Minha jornada é única. Me comparo apenas com quem eu era ontem.",
     exercise: {
       title: "Desintoxicação de comparações",
       description: "Identifique e transforme o hábito de se comparar.",
@@ -791,14 +938,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Singularidade",
     meditationDuration: "10 min",
-    meditationDescription: "Meditação para celebrar sua unicidade e soltar a armadilha das comparações.",
+    meditationDescription:
+      "Meditação para celebrar sua unicidade e soltar a armadilha das comparações.",
   },
   {
-    day: 26, week: 4, theme: "Prosperidade",
+    day: 26,
+    week: 4,
+    theme: "Prosperidade",
     title: "Você merece prosperar",
     subtitle: "Prosperidade começa na sua mente.",
-    soraiaMessage: "Prosperidade não é só dinheiro. É abundância em todas as áreas — saúde, relacionamentos, amor, paz, realização. Hoje vamos trabalhar sua relação com o merecimento e com a abundância.",
-    reflection: "Muitas mulheres sabotam sua própria prosperidade porque no fundo acreditam que não merecem. Que é egoísmo querer mais. Que outras pessoas precisam mais. Hoje vamos desafiar essa crença.",
+    soraiaMessage:
+      "Prosperidade não é só dinheiro. É abundância em todas as áreas — saúde, relacionamentos, amor, paz, realização. Hoje vamos trabalhar sua relação com o merecimento e com a abundância.",
+    reflection:
+      "Muitas mulheres sabotam sua própria prosperidade porque no fundo acreditam que não merecem. Que é egoísmo querer mais. Que outras pessoas precisam mais. Hoje vamos desafiar essa crença.",
     affirmation: "Mereço prosperar em todas as áreas da minha vida.",
     exercise: {
       title: "Mapa da prosperidade",
@@ -817,15 +969,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Abundância",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de abundância para abrir sua mente e coração para receber o que você merece.",
+    meditationDescription:
+      "Meditação de abundância para abrir sua mente e coração para receber o que você merece.",
   },
   {
-    day: 27, week: 4, theme: "Visão de Futuro",
+    day: 27,
+    week: 4,
+    theme: "Visão de Futuro",
     title: "Que mulher você quer ser?",
     subtitle: "Visão sem ação é sonho. Ação sem visão é esforço.",
-    soraiaMessage: "Você chegou até aqui. Conheceu a si mesma, soltou o que não era seu, construiu confiança e começou a se ver de forma diferente. Agora é hora de olhar para frente — não com ansiedade, mas com esperança e intenção.",
-    reflection: "Uma visão clara do futuro não é uma fantasia. É um mapa. Quando você sabe para onde quer ir, cada decisão do presente se torna mais clara.",
-    affirmation: "Tenho uma visão clara de quem quero ser e caminho em direção a ela todos os dias.",
+    soraiaMessage:
+      "Você chegou até aqui. Conheceu a si mesma, soltou o que não era seu, construiu confiança e começou a se ver de forma diferente. Agora é hora de olhar para frente — não com ansiedade, mas com esperança e intenção.",
+    reflection:
+      "Uma visão clara do futuro não é uma fantasia. É um mapa. Quando você sabe para onde quer ir, cada decisão do presente se torna mais clara.",
+    affirmation:
+      "Tenho uma visão clara de quem quero ser e caminho em direção a ela todos os dias.",
     exercise: {
       title: "Visão de futuro",
       description: "Crie uma visão clara e inspiradora do seu futuro.",
@@ -843,14 +1001,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Visualizando o futuro",
     meditationDuration: "20 min",
-    meditationDescription: "Meditação de visualização criativa para conectar com sua visão de futuro e ativar sua intenção.",
+    meditationDescription:
+      "Meditação de visualização criativa para conectar com sua visão de futuro e ativar sua intenção.",
   },
   {
-    day: 28, week: 4, theme: "Gratidão Profunda",
+    day: 28,
+    week: 4,
+    theme: "Gratidão Profunda",
     title: "Obrigada por ter chegado até aqui",
     subtitle: "Gratidão pela jornada — não só pelo destino.",
-    soraiaMessage: "Faltam apenas 3 dias. Quero que você saiba: o fato de você ter chegado até aqui já é uma transformação. Não importa quantos dias você completou — o que importa é que você se escolheu. E isso muda tudo.",
-    reflection: "Gratidão pela jornada — não só pelo destino. Cada dia difícil, cada insight doloroso, cada momento de resistência fez parte da sua transformação.",
+    soraiaMessage:
+      "Faltam apenas 3 dias. Quero que você saiba: o fato de você ter chegado até aqui já é uma transformação. Não importa quantos dias você completou — o que importa é que você se escolheu. E isso muda tudo.",
+    reflection:
+      "Gratidão pela jornada — não só pelo destino. Cada dia difícil, cada insight doloroso, cada momento de resistência fez parte da sua transformação.",
     affirmation: "Sou grata pela jornada que me trouxe até aqui.",
     exercise: {
       title: "Carta de gratidão para a jornada",
@@ -869,15 +1032,21 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Gratidão pela jornada",
     meditationDuration: "15 min",
-    meditationDescription: "Meditação de gratidão profunda para honrar tudo que você viveu e aprendeu.",
+    meditationDescription:
+      "Meditação de gratidão profunda para honrar tudo que você viveu e aprendeu.",
   },
   {
-    day: 29, week: 4, theme: "Integração Final",
+    day: 29,
+    week: 4,
+    theme: "Integração Final",
     title: "Você não é mais a mesma",
     subtitle: "A transformação já aconteceu.",
-    soraiaMessage: "Você começou esta jornada como uma mulher que se sentia desconectada de si mesma. Hoje, você é uma mulher que se conhece melhor, que tem mais clareza sobre o que importa, que sabe que merece cuidado e amor. Isso é real. Isso é seu.",
-    reflection: "Transformação não é chegar a um destino. É tornar-se. E você está em processo de se tornar — a cada dia, a cada escolha, a cada vez que se trata com gentileza.",
-    affirmation: "Sou uma mulher em transformação. Cada dia me torno mais eu mesma.",
+    soraiaMessage:
+      "Você começou esta jornada como uma mulher que se sentia desconectada de si mesma. Hoje, você é uma mulher que se conhece melhor, que tem mais clareza sobre o que importa, que sabe que merece cuidado e amor. Isso é real. Isso é seu.",
+    reflection:
+      "Transformação não é chegar a um destino. É tornar-se. E você está em processo de se tornar — a cada dia, a cada escolha, a cada vez que se trata com gentileza.",
+    affirmation:
+      "Sou uma mulher em transformação. Cada dia me torno mais eu mesma.",
     exercise: {
       title: "Antes e depois",
       description: "Compare quem você era com quem você é agora.",
@@ -895,14 +1064,19 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "A nova você",
     meditationDuration: "20 min",
-    meditationDescription: "Meditação de integração final para honrar sua transformação e celebrar quem você se tornou.",
+    meditationDescription:
+      "Meditação de integração final para honrar sua transformação e celebrar quem você se tornou.",
   },
   {
-    day: 30, week: 4, theme: "Celebração",
+    day: 30,
+    week: 4,
+    theme: "Celebração",
     title: "30 dias. Você fez isso.",
     subtitle: "Este é apenas o começo.",
-    soraiaMessage: "Você chegou. 30 dias de coragem, honestidade e amor-próprio. Você se escolheu todos os dias — e isso é extraordinário. Hoje não é um fim. É um novo começo. Você tem ferramentas, clareza e uma relação diferente com você mesma. O que você faz com isso agora é sua escolha.",
-    reflection: "Esta jornada foi sobre você se reencontrar. E você encontrou. Agora é sobre continuar escolhendo ser você — todos os dias, em cada decisão, em cada limite que estabelece, em cada vez que se trata com gentileza.",
+    soraiaMessage:
+      "Você chegou. 30 dias de coragem, honestidade e amor-próprio. Você se escolheu todos os dias — e isso é extraordinário. Hoje não é um fim. É um novo começo. Você tem ferramentas, clareza e uma relação diferente com você mesma. O que você faz com isso agora é sua escolha.",
+    reflection:
+      "Esta jornada foi sobre você se reencontrar. E você encontrou. Agora é sobre continuar escolhendo ser você — todos os dias, em cada decisão, em cada limite que estabelece, em cada vez que se trata com gentileza.",
     affirmation: "Eu me escolho. Hoje e todos os dias.",
     exercise: {
       title: "Manifesto pessoal",
@@ -922,7 +1096,8 @@ export const dailyContent: DayContent[] = [
     ],
     meditationTitle: "Celebração e novo começo",
     meditationDuration: "20 min",
-    meditationDescription: "Meditação de celebração e intenção para honrar sua jornada e abrir o coração para o que vem a seguir.",
+    meditationDescription:
+      "Meditação de celebração e intenção para honrar sua jornada e abrir o coração para o que vem a seguir.",
   },
 ];
 
@@ -930,18 +1105,33 @@ export const dailyContent: DayContent[] = [
 
 export const scannerQuestions: ScannerQuestion[] = [
   {
-    id: "id1", area: "identidade",
+    id: "id1",
+    area: "identidade",
     question: "Quando alguém te pergunta 'quem você é?', como você responde?",
     options: [
-      { label: "Me defino pelos meus papéis: mãe, esposa, profissional...", value: 1 },
-      { label: "Tenho dificuldade de responder — não sei bem quem sou", value: 2 },
-      { label: "Consigo falar sobre mim além dos papéis, mas com dificuldade", value: 3 },
-      { label: "Tenho clareza sobre quem sou além dos papéis que desempenho", value: 5 },
+      {
+        label: "Me defino pelos meus papéis: mãe, esposa, profissional...",
+        value: 1,
+      },
+      {
+        label: "Tenho dificuldade de responder — não sei bem quem sou",
+        value: 2,
+      },
+      {
+        label: "Consigo falar sobre mim além dos papéis, mas com dificuldade",
+        value: 3,
+      },
+      {
+        label: "Tenho clareza sobre quem sou além dos papéis que desempenho",
+        value: 5,
+      },
     ],
   },
   {
-    id: "id2", area: "identidade",
-    question: "Com que frequência você faz coisas que refletem seus valores e desejos reais?",
+    id: "id2",
+    area: "identidade",
+    question:
+      "Com que frequência você faz coisas que refletem seus valores e desejos reais?",
     options: [
       { label: "Raramente — vivo para os outros", value: 1 },
       { label: "Às vezes, quando sobra tempo", value: 2 },
@@ -950,8 +1140,10 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "em1", area: "emocional",
-    question: "Como você lida com suas emoções difíceis (tristeza, raiva, ansiedade)?",
+    id: "em1",
+    area: "emocional",
+    question:
+      "Como você lida com suas emoções difíceis (tristeza, raiva, ansiedade)?",
     options: [
       { label: "Evito sentir — me ocupo ou me distraio", value: 1 },
       { label: "Sinto, mas me julgo muito por isso", value: 2 },
@@ -960,7 +1152,8 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "em2", area: "emocional",
+    id: "em2",
+    area: "emocional",
     question: "Com que frequência você se sente emocionalmente esgotada?",
     options: [
       { label: "Quase sempre — estou no limite", value: 1 },
@@ -970,8 +1163,10 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "ac1", area: "autocuidado",
-    question: "Quando foi a última vez que você fez algo só para você, sem culpa?",
+    id: "ac1",
+    area: "autocuidado",
+    question:
+      "Quando foi a última vez que você fez algo só para você, sem culpa?",
     options: [
       { label: "Não me lembro — sempre me sinto culpada", value: 1 },
       { label: "Faz muito tempo", value: 2 },
@@ -980,18 +1175,24 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "ac2", area: "autocuidado",
+    id: "ac2",
+    area: "autocuidado",
     question: "Como você se trata quando comete um erro?",
     options: [
       { label: "Me critico duramente — sou muito exigente comigo", value: 1 },
       { label: "Me culpo bastante, mas eventualmente me perdoo", value: 2 },
       { label: "Consigo me tratar com alguma gentileza", value: 3 },
-      { label: "Me trato com a mesma compaixão que trataria uma amiga", value: 5 },
+      {
+        label: "Me trato com a mesma compaixão que trataria uma amiga",
+        value: 5,
+      },
     ],
   },
   {
-    id: "rel1", area: "relacionamentos",
-    question: "Nas suas relações, você consegue expressar suas necessidades e estabelecer limites?",
+    id: "rel1",
+    area: "relacionamentos",
+    question:
+      "Nas suas relações, você consegue expressar suas necessidades e estabelecer limites?",
     options: [
       { label: "Não — tenho muito medo do conflito ou da rejeição", value: 1 },
       { label: "Raramente — me calo para não criar problemas", value: 2 },
@@ -1000,7 +1201,8 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "rel2", area: "relacionamentos",
+    id: "rel2",
+    area: "relacionamentos",
     question: "Como você se sente na maioria das suas relações próximas?",
     options: [
       { label: "Invisível, sobrecarregada ou não valorizada", value: 1 },
@@ -1010,7 +1212,8 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "prop1", area: "proposito",
+    id: "prop1",
+    area: "proposito",
     question: "Você tem clareza sobre o que dá sentido à sua vida?",
     options: [
       { label: "Não — me sinto perdida e sem direção", value: 1 },
@@ -1020,7 +1223,8 @@ export const scannerQuestions: ScannerQuestion[] = [
     ],
   },
   {
-    id: "prop2", area: "proposito",
+    id: "prop2",
+    area: "proposito",
     question: "Como você se sente em relação ao seu futuro?",
     options: [
       { label: "Com medo e sem esperança — não vejo saída", value: 1 },
@@ -1032,9 +1236,19 @@ export const scannerQuestions: ScannerQuestion[] = [
 ];
 
 export function calculateScannerResults(answers: Record<string, number>) {
-  const areas = ["identidade", "emocional", "autocuidado", "relacionamentos", "proposito"] as const;
+  const areas = [
+    "identidade",
+    "emocional",
+    "autocuidado",
+    "relacionamentos",
+    "proposito",
+  ] as const;
   const areaScores: Record<string, number[]> = {
-    identidade: [], emocional: [], autocuidado: [], relacionamentos: [], proposito: [],
+    identidade: [],
+    emocional: [],
+    autocuidado: [],
+    relacionamentos: [],
+    proposito: [],
   };
 
   scannerQuestions.forEach(q => {
@@ -1050,20 +1264,29 @@ export function calculateScannerResults(answers: Record<string, number>) {
 
   areas.forEach(area => {
     const scores = areaScores[area];
-    if (scores.length === 0) { percentages[area] = 50; return; }
+    if (scores.length === 0) {
+      percentages[area] = 50;
+      return;
+    }
     const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
     const pct = Math.round((avg / 5) * 100);
     percentages[area] = pct;
     totalScore += pct;
-    if (pct < minScore) { minScore = pct; criticalArea = area; }
+    if (pct < minScore) {
+      minScore = pct;
+      criticalArea = area;
+    }
   });
 
   const avgScore = Math.round(totalScore / areas.length);
   const abandonmentLevel = 100 - avgScore;
 
   const abandonmentLabel =
-    abandonmentLevel >= 70 ? "Alto" :
-    abandonmentLevel >= 40 ? "Moderado" : "Baixo";
+    abandonmentLevel >= 70
+      ? "Alto"
+      : abandonmentLevel >= 40
+        ? "Moderado"
+        : "Baixo";
 
   const areaNames: Record<string, string> = {
     identidade: "Identidade",
@@ -1074,19 +1297,29 @@ export function calculateScannerResults(answers: Record<string, number>) {
   };
 
   const explanations: Record<string, string> = {
-    identidade: "Você está desconectada de quem você realmente é. Seus papéis (mãe, esposa, profissional) tomaram tanto espaço que a mulher por trás deles ficou invisível. O trabalho mais urgente é se reencontrar — descobrir seus valores, desejos e identidade além do que você faz pelos outros.",
-    emocional: "Sua vida emocional está sobrecarregada. Você pode estar evitando sentir, se julgando por suas emoções ou operando no limite do esgotamento. O trabalho mais urgente é aprender a acolher suas emoções com compaixão e cuidar da sua saúde emocional.",
-    autocuidado: "Você está no final da sua própria lista de prioridades. O autocuidado foi substituído por obrigações, e a culpa aparece quando você tenta se cuidar. O trabalho mais urgente é se colocar como prioridade — não como luxo, mas como necessidade.",
-    relacionamentos: "Suas relações estão te drenando mais do que te nutrindo. Você pode estar com dificuldade de estabelecer limites, expressar suas necessidades ou se sentindo invisível nas relações. O trabalho mais urgente é aprender a se comunicar com assertividade e proteger sua energia.",
-    proposito: "Você está sem direção e sem sentido. Pode estar vivendo no piloto automático, sem clareza sobre o que realmente importa para você. O trabalho mais urgente é reconectar com seus valores, sonhos e o que dá sentido à sua vida.",
+    identidade:
+      "Você está desconectada de quem você realmente é. Seus papéis (mãe, esposa, profissional) tomaram tanto espaço que a mulher por trás deles ficou invisível. O trabalho mais urgente é se reencontrar — descobrir seus valores, desejos e identidade além do que você faz pelos outros.",
+    emocional:
+      "Sua vida emocional está sobrecarregada. Você pode estar evitando sentir, se julgando por suas emoções ou operando no limite do esgotamento. O trabalho mais urgente é aprender a acolher suas emoções com compaixão e cuidar da sua saúde emocional.",
+    autocuidado:
+      "Você está no final da sua própria lista de prioridades. O autocuidado foi substituído por obrigações, e a culpa aparece quando você tenta se cuidar. O trabalho mais urgente é se colocar como prioridade — não como luxo, mas como necessidade.",
+    relacionamentos:
+      "Suas relações estão te drenando mais do que te nutrindo. Você pode estar com dificuldade de estabelecer limites, expressar suas necessidades ou se sentindo invisível nas relações. O trabalho mais urgente é aprender a se comunicar com assertividade e proteger sua energia.",
+    proposito:
+      "Você está sem direção e sem sentido. Pode estar vivendo no piloto automático, sem clareza sobre o que realmente importa para você. O trabalho mais urgente é reconectar com seus valores, sonhos e o que dá sentido à sua vida.",
   };
 
   const recommendations: Record<string, string> = {
-    identidade: "Esta semana, reserve 15 minutos por dia para escrever sobre quem você é além dos seus papéis. Comece com: 'Quando ninguém está olhando, eu sou...' Não censure. Deixe fluir.",
-    emocional: "Hoje, identifique uma emoção que você tem evitado sentir. Sente-se em silêncio por 5 minutos e permita que ela esteja presente — sem julgamento, sem tentar resolver. Apenas observe.",
-    autocuidado: "Hoje, escolha uma coisa pequena que você faria só para você — um chá, uma caminhada, 10 minutos de silêncio. Faça isso sem pedir permissão e sem se justificar para ninguém.",
-    relacionamentos: "Esta semana, pratique dizer não para uma coisa que você normalmente diria sim por obrigação. Observe como você se sente antes, durante e depois.",
-    proposito: "Hoje, escreva 3 coisas que te fazem perder a noção do tempo quando você as faz. Essas atividades contêm pistas importantes sobre o que dá sentido à sua vida.",
+    identidade:
+      "Esta semana, reserve 15 minutos por dia para escrever sobre quem você é além dos seus papéis. Comece com: 'Quando ninguém está olhando, eu sou...' Não censure. Deixe fluir.",
+    emocional:
+      "Hoje, identifique uma emoção que você tem evitado sentir. Sente-se em silêncio por 5 minutos e permita que ela esteja presente — sem julgamento, sem tentar resolver. Apenas observe.",
+    autocuidado:
+      "Hoje, escolha uma coisa pequena que você faria só para você — um chá, uma caminhada, 10 minutos de silêncio. Faça isso sem pedir permissão e sem se justificar para ninguém.",
+    relacionamentos:
+      "Esta semana, pratique dizer não para uma coisa que você normalmente diria sim por obrigação. Observe como você se sente antes, durante e depois.",
+    proposito:
+      "Hoje, escreva 3 coisas que te fazem perder a noção do tempo quando você as faz. Essas atividades contêm pistas importantes sobre o que dá sentido à sua vida.",
   };
 
   return {

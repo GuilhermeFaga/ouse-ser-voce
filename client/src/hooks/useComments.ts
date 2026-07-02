@@ -96,12 +96,12 @@ export function useComments(storyId: string) {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const allComments = stored ? JSON.parse(stored) : [];
-      
+
       // Remover comentário e todas as suas respostas
       const filtered = allComments.filter(
         (c: Comment) => c.id !== commentId && c.parentCommentId !== commentId
       );
-      
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
       setComments(organizeComments(filtered));
     } catch (error) {
@@ -110,7 +110,10 @@ export function useComments(storyId: string) {
   };
 
   // Curtir comentário (evitar duplicatas)
-  const likeComment = (commentId: string, userId: string = "user-" + Date.now()) => {
+  const likeComment = (
+    commentId: string,
+    userId: string = "user-" + Date.now()
+  ) => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const allComments = stored ? JSON.parse(stored) : [];

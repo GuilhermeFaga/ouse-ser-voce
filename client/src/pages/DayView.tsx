@@ -8,13 +8,23 @@ import { dailyContent, weekModules } from "@/lib/journeyData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { CheckCircle2, ChevronLeft, ChevronRight, Play, Pause, BookOpen, PenLine, Heart } from "lucide-react";
+import {
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Pause,
+  BookOpen,
+  PenLine,
+  Heart,
+} from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
 import MeditationPlayer from "@/components/MeditationPlayer";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
 import { meditationAudios } from "@/lib/meditationAudios";
 
-const JOURNAL_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/journal-writing-NfZ4kj7jHsTA3NaK7eidFt.webp";
+const JOURNAL_IMG =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/journal-writing-NfZ4kj7jHsTA3NaK7eidFt.webp";
 
 // Use meditationAudios from the separate file
 const meditationUrls = meditationAudios;
@@ -24,10 +34,30 @@ interface DayViewProps {
 }
 
 const weekColors = {
-  1: { bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", accent: "#E11D48" },
-  2: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", accent: "#D97706" },
-  3: { bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", accent: "#0D9488" },
-  4: { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", accent: "#7C3AED" },
+  1: {
+    bg: "bg-rose-50",
+    border: "border-rose-200",
+    text: "text-rose-700",
+    accent: "#E11D48",
+  },
+  2: {
+    bg: "bg-amber-50",
+    border: "border-amber-200",
+    text: "text-amber-700",
+    accent: "#D97706",
+  },
+  3: {
+    bg: "bg-teal-50",
+    border: "border-teal-200",
+    text: "text-teal-700",
+    accent: "#0D9488",
+  },
+  4: {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    text: "text-purple-700",
+    accent: "#7C3AED",
+  },
 };
 
 type TabType = "reflexao" | "exercicio" | "diario" | "audio";
@@ -37,18 +67,28 @@ export default function DayView({ onNavigate }: DayViewProps) {
   const [activeTab, setActiveTab] = useState<TabType>("reflexao");
   const [mood, setMood] = useState(3);
   const [notes, setNotes] = useState("");
-  const [journalAnswers, setJournalAnswers] = useState<Record<string, string>>({});
+  const [journalAnswers, setJournalAnswers] = useState<Record<string, string>>(
+    {}
+  );
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
   const [meditationPlaying, setMeditationPlaying] = useState(false);
   const [meditationListened, setMeditationListened] = useState(false);
   const [checkinDone, setCheckinDone] = useState(false);
 
-  const today = dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
+  const today =
+    dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
   const isCompleted = state.completedDays.includes(today.day);
   const weekColor = weekColors[today.week as keyof typeof weekColors];
   const currentWeek = weekModules.find(w => w.week === today.week)!;
 
-  const moodLabels = ["", "Muito pesado", "Pesado", "Neutro", "Leve", "Muito leve"];
+  const moodLabels = [
+    "",
+    "Muito pesado",
+    "Pesado",
+    "Neutro",
+    "Leve",
+    "Muito leve",
+  ];
   const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
 
   const handleComplete = () => {
@@ -75,8 +115,16 @@ export default function DayView({ onNavigate }: DayViewProps) {
   };
 
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
-    { id: "reflexao", label: "Reflexão", icon: <BookOpen className="w-4 h-4" /> },
-    { id: "exercicio", label: "Exercício", icon: <Heart className="w-4 h-4" /> },
+    {
+      id: "reflexao",
+      label: "Reflexão",
+      icon: <BookOpen className="w-4 h-4" />,
+    },
+    {
+      id: "exercicio",
+      label: "Exercício",
+      icon: <Heart className="w-4 h-4" />,
+    },
     { id: "diario", label: "Diário", icon: <PenLine className="w-4 h-4" /> },
     { id: "audio", label: "Áudio", icon: <Play className="w-4 h-4" /> },
   ];
@@ -97,7 +145,9 @@ export default function DayView({ onNavigate }: DayViewProps) {
           <CheckCircle2 className="w-10 h-10 text-[#C4856A]" />
         </motion.div>
         <div>
-          <h2 className="font-serif text-2xl text-[#2C1810] mb-2">Dia {today.day} concluído.</h2>
+          <h2 className="font-serif text-2xl text-[#2C1810] mb-2">
+            Dia {today.day} concluído.
+          </h2>
           <p className="text-[#8B6E5A] max-w-sm mx-auto leading-relaxed">
             {today.affirmation}
           </p>
@@ -139,8 +189,12 @@ export default function DayView({ onNavigate }: DayViewProps) {
           <ChevronLeft className="w-4 h-4" />
           Todos os dias
         </button>
-        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${weekColor.bg} border ${weekColor.border} mb-3`}>
-          <span className={`text-xs font-medium ${weekColor.text}`}>{currentWeek.subtitle} · {today.theme}</span>
+        <div
+          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${weekColor.bg} border ${weekColor.border} mb-3`}
+        >
+          <span className={`text-xs font-medium ${weekColor.text}`}>
+            {currentWeek.subtitle} · {today.theme}
+          </span>
         </div>
         <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] leading-tight mb-1">
           {today.title}
@@ -150,7 +204,9 @@ export default function DayView({ onNavigate }: DayViewProps) {
 
       {/* Soraya's message */}
       <div className="bg-[#F5EDE8] rounded-2xl p-5 border-l-4 border-[#C4856A]">
-        <p className="text-xs text-[#B08070] font-medium mb-2 uppercase tracking-wide">Soraya Farias</p>
+        <p className="text-xs text-[#B08070] font-medium mb-2 uppercase tracking-wide">
+          Soraya Farias
+        </p>
         <p className="text-[#4A3728] leading-relaxed text-sm lg:text-base">
           {today.soraiaMessage}
         </p>
@@ -201,21 +257,33 @@ export default function DayView({ onNavigate }: DayViewProps) {
           {activeTab === "exercicio" && (
             <div className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden">
               <div className="relative h-40 overflow-hidden">
-                <img src={JOURNAL_IMG} alt="" className="w-full h-full object-cover" />
+                <img
+                  src={JOURNAL_IMG}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2C1810]/60 to-transparent" />
                 <div className="absolute bottom-4 left-5">
-                  <p className="text-white font-serif text-lg">{today.exercise.title}</p>
+                  <p className="text-white font-serif text-lg">
+                    {today.exercise.title}
+                  </p>
                 </div>
               </div>
               <div className="p-6">
-                <p className="text-[#8B6E5A] text-sm mb-5 leading-relaxed">{today.exercise.description}</p>
+                <p className="text-[#8B6E5A] text-sm mb-5 leading-relaxed">
+                  {today.exercise.description}
+                </p>
                 <div className="space-y-3">
                   {today.exercise.steps.map((step, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <div className="w-6 h-6 rounded-full bg-[#F5EDE8] flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-bold text-[#C4856A]">{i + 1}</span>
+                        <span className="text-xs font-bold text-[#C4856A]">
+                          {i + 1}
+                        </span>
                       </div>
-                      <p className="text-[#4A3728] text-sm leading-relaxed">{step}</p>
+                      <p className="text-[#4A3728] text-sm leading-relaxed">
+                        {step}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -228,7 +296,9 @@ export default function DayView({ onNavigate }: DayViewProps) {
                   }`}
                 >
                   {exerciseCompleted ? (
-                    <><CheckCircle2 className="w-4 h-4" /> Exercício concluído</>
+                    <>
+                      <CheckCircle2 className="w-4 h-4" /> Exercício concluído
+                    </>
                   ) : (
                     "Marcar como concluído"
                   )}
@@ -240,20 +310,30 @@ export default function DayView({ onNavigate }: DayViewProps) {
           {activeTab === "diario" && (
             <div className="space-y-4">
               {today.journalPrompts.map((prompt, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm">
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm"
+                >
                   <p className="text-[#4A3728] font-medium text-sm mb-3 leading-relaxed">
                     {prompt}
                   </p>
                   <Textarea
                     value={journalAnswers[`p${i}`] || ""}
-                    onChange={e => setJournalAnswers(prev => ({ ...prev, [`p${i}`]: e.target.value }))}
+                    onChange={e =>
+                      setJournalAnswers(prev => ({
+                        ...prev,
+                        [`p${i}`]: e.target.value,
+                      }))
+                    }
                     placeholder="Escreva aqui o que vier..."
                     className="min-h-[100px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm text-[#4A3728] placeholder:text-[#C4B0A4]"
                   />
                 </div>
               ))}
               <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm">
-                <p className="text-[#4A3728] font-medium text-sm mb-3">Anotações livres</p>
+                <p className="text-[#4A3728] font-medium text-sm mb-3">
+                  Anotações livres
+                </p>
                 <Textarea
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
@@ -279,8 +359,12 @@ export default function DayView({ onNavigate }: DayViewProps) {
       {/* Check-in & Complete */}
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-5">
         <div>
-          <p className="font-semibold text-[#2C1810] mb-1 text-sm">Como você está se sentindo agora?</p>
-          <p className="text-xs text-[#8B6E5A] mb-4">Depois de completar as práticas do dia</p>
+          <p className="font-semibold text-[#2C1810] mb-1 text-sm">
+            Como você está se sentindo agora?
+          </p>
+          <p className="text-xs text-[#8B6E5A] mb-4">
+            Depois de completar as práticas do dia
+          </p>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-2xl">{moodEmojis[mood]}</span>

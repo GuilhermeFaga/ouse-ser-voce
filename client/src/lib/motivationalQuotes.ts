@@ -210,7 +210,7 @@ export const quoteCategories: QuoteCategory[] = [
 export function getRandomQuoteFromCategory(categoryId: string): string {
   const category = quoteCategories.find(c => c.id === categoryId);
   if (!category) return "Você é mais forte do que pensa.";
-  
+
   const randomIndex = Math.floor(Math.random() * category.quotes.length);
   return category.quotes[randomIndex];
 }

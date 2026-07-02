@@ -7,9 +7,17 @@ import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, BookOpen, Heart, Star, Shield, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Heart,
+  Star,
+  Shield,
+  CheckCircle2,
+} from "lucide-react";
 
-const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/hero-woman-YaCZVbHUiWAFQX2m6hz48Q.webp";
+const HERO_IMG =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/hero-woman-YaCZVbHUiWAFQX2m6hz48Q.webp";
 const LOGO_IMG = "/manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
 
 const steps = [
@@ -17,27 +25,43 @@ const steps = [
     id: "welcome",
     title: "Bem-vinda.",
     subtitle: "Esta jornada foi criada para você.",
-    cta: "Quero começar"
+    cta: "Quero começar",
   },
   {
     id: "about",
     title: "O que você vai encontrar aqui",
     subtitle: "30 dias de acompanhamento próximo com a psicóloga Soraya Farias",
-    cta: "Continuar"
+    cta: "Continuar",
   },
   {
     id: "name",
     title: "Como posso te chamar?",
     subtitle: "Quero que cada mensagem seja pessoal",
-    cta: "Começar minha jornada"
-  }
+    cta: "Começar minha jornada",
+  },
 ];
 
 const features = [
-  { icon: <BookOpen className="w-4 h-4" />, title: "Exercícios reflexivos diários", desc: "Práticas guiadas pela psicóloga Soraya Farias" },
-  { icon: <Heart className="w-4 h-4" />, title: "Diário emocional", desc: "Espaço seguro para registrar o que sente" },
-  { icon: <Star className="w-4 h-4" />, title: "Scanner de Essência", desc: "Diagnóstico personalizado do seu estado emocional" },
-  { icon: <Shield className="w-4 h-4" />, title: "Progresso e conquistas", desc: "Acompanhe sua evolução dia a dia" },
+  {
+    icon: <BookOpen className="w-4 h-4" />,
+    title: "Exercícios reflexivos diários",
+    desc: "Práticas guiadas pela psicóloga Soraya Farias",
+  },
+  {
+    icon: <Heart className="w-4 h-4" />,
+    title: "Diário emocional",
+    desc: "Espaço seguro para registrar o que sente",
+  },
+  {
+    icon: <Star className="w-4 h-4" />,
+    title: "Scanner de Essência",
+    desc: "Diagnóstico personalizado do seu estado emocional",
+  },
+  {
+    icon: <Shield className="w-4 h-4" />,
+    title: "Progresso e conquistas",
+    desc: "Acompanhe sua evolução dia a dia",
+  },
 ];
 
 const journeyWeeks = [
@@ -82,14 +106,18 @@ export default function Onboarding() {
           <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-xl border border-white/50">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-[#F5EDE8] flex items-center justify-center flex-shrink-0 border-2 border-[#C4856A]/30">
-                <span className="text-[#C4856A] font-serif text-lg font-bold">S</span>
+                <span className="text-[#C4856A] font-serif text-lg font-bold">
+                  S
+                </span>
               </div>
               <div>
                 <p className="font-serif text-sm text-[#2C1810] italic leading-relaxed mb-1.5">
                   "Você não perdeu quem você é. Só parou de procurar."
                 </p>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs text-[#C4856A] font-semibold">Soraya Farias</p>
+                  <p className="text-xs text-[#C4856A] font-semibold">
+                    Soraya Farias
+                  </p>
                   <span className="text-[#D4C4BC]">·</span>
                   <p className="text-xs text-[#8B6E5A]">Psicóloga Clínica</p>
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400 ml-1" />
@@ -107,13 +135,22 @@ export default function Onboarding() {
                 key={i}
                 className="w-1.5 h-1.5 rounded-full transition-all"
                 style={{
-                  backgroundColor: i < 7 ? "#E8A090" : i < 14 ? "#D4956A" : i < 21 ? "#C4856A" : "#A06040",
+                  backgroundColor:
+                    i < 7
+                      ? "#E8A090"
+                      : i < 14
+                        ? "#D4956A"
+                        : i < 21
+                          ? "#C4856A"
+                          : "#A06040",
                   opacity: 0.6 + (i / 30) * 0.4,
                 }}
               />
             ))}
           </div>
-          <p className="text-white/80 text-xs mt-1.5 font-medium tracking-wide">30 dias · 4 módulos</p>
+          <p className="text-white/80 text-xs mt-1.5 font-medium tracking-wide">
+            30 dias · 4 módulos
+          </p>
         </div>
       </div>
 
@@ -122,10 +159,18 @@ export default function Onboarding() {
         {/* Logo & Brand */}
         <div className="mb-8 flex flex-col items-center">
           <div className="flex items-center gap-3 mb-1">
-            <img src={LOGO_IMG} alt="Ouse Ser Você" className="w-12 h-12 object-contain" />
+            <img
+              src={LOGO_IMG}
+              alt="Ouse Ser Você"
+              className="w-12 h-12 object-contain"
+            />
             <div>
-              <p className="font-serif text-base font-bold text-[#2C1810] tracking-wide leading-none">OUSE SER VOCÊ</p>
-              <p className="text-[9px] tracking-[0.3em] uppercase text-[#C4856A] font-medium mt-0.5">30 Dias Para Mudar</p>
+              <p className="font-serif text-base font-bold text-[#2C1810] tracking-wide leading-none">
+                OUSE SER VOCÊ
+              </p>
+              <p className="text-[9px] tracking-[0.3em] uppercase text-[#C4856A] font-medium mt-0.5">
+                30 Dias Para Mudar
+              </p>
             </div>
           </div>
         </div>
@@ -144,7 +189,9 @@ export default function Onboarding() {
                 />
               ))}
             </div>
-            <p className="text-xs text-[#B08070] text-right">Etapa {step + 1} de {steps.length}</p>
+            <p className="text-xs text-[#B08070] text-right">
+              Etapa {step + 1} de {steps.length}
+            </p>
           </div>
 
           <div key={step}>
@@ -156,12 +203,16 @@ export default function Onboarding() {
               <h1 className="font-serif text-3xl lg:text-4xl text-[#2C1810] mb-2 leading-tight">
                 {currentStep.title}
               </h1>
-              <p className="text-[#8B6E5A] mb-6 text-sm leading-relaxed">{currentStep.subtitle}</p>
+              <p className="text-[#8B6E5A] mb-6 text-sm leading-relaxed">
+                {currentStep.subtitle}
+              </p>
 
               {currentStep.id === "welcome" && (
                 <div className="space-y-4">
                   <p className="text-[#4A3728] leading-relaxed text-sm lg:text-base">
-                    Nos próximos 30 dias, você vai se reconectar com quem você realmente é — além dos papéis que desempenha, além das responsabilidades, além do que os outros esperam de você.
+                    Nos próximos 30 dias, você vai se reconectar com quem você
+                    realmente é — além dos papéis que desempenha, além das
+                    responsabilidades, além do que os outros esperam de você.
                   </p>
                   <p className="text-[#4A3728] leading-relaxed text-sm lg:text-base">
                     Não é sobre ser perfeita. É sobre ser honesta consigo mesma.
@@ -175,15 +226,24 @@ export default function Onboarding() {
                           className="w-full h-1.5 rounded-full mb-1.5"
                           style={{ backgroundColor: w.color }}
                         />
-                        <p className="text-[10px] text-[#8B6E5A] font-medium leading-tight">{w.title}</p>
-                        <p className="text-[9px] text-[#B08070]">Semana {w.week}</p>
+                        <p className="text-[10px] text-[#8B6E5A] font-medium leading-tight">
+                          {w.title}
+                        </p>
+                        <p className="text-[9px] text-[#B08070]">
+                          Semana {w.week}
+                        </p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-2 p-4 bg-[#F5EDE8] rounded-xl border-l-3 border-[#C4856A]" style={{ borderLeftWidth: "3px" }}>
+                  <div
+                    className="mt-2 p-4 bg-[#F5EDE8] rounded-xl border-l-3 border-[#C4856A]"
+                    style={{ borderLeftWidth: "3px" }}
+                  >
                     <p className="text-xs text-[#6B4C3B] leading-relaxed">
-                      Esta jornada foi desenvolvida pela psicóloga <strong>Soraya Farias</strong> para mulheres entre 30 e 60 anos que se sentem desconectadas de si mesmas.
+                      Esta jornada foi desenvolvida pela psicóloga{" "}
+                      <strong>Soraya Farias</strong> para mulheres entre 30 e 60
+                      anos que se sentem desconectadas de si mesmas.
                     </p>
                   </div>
                 </div>
@@ -203,8 +263,12 @@ export default function Onboarding() {
                         {f.icon}
                       </div>
                       <div>
-                        <p className="font-semibold text-[#2C1810] text-xs">{f.title}</p>
-                        <p className="text-[#8B6E5A] text-[11px] mt-0.5">{f.desc}</p>
+                        <p className="font-semibold text-[#2C1810] text-xs">
+                          {f.title}
+                        </p>
+                        <p className="text-[#8B6E5A] text-[11px] mt-0.5">
+                          {f.desc}
+                        </p>
                       </div>
                       <CheckCircle2 className="w-4 h-4 text-[#C4856A] ml-auto flex-shrink-0" />
                     </motion.div>
@@ -218,15 +282,23 @@ export default function Onboarding() {
                     className="mt-2 flex items-center gap-3 p-4 bg-gradient-to-r from-[#F5EDE8] to-[#FAF6F1] rounded-xl border border-[#E8D5CC]"
                   >
                     <div className="w-10 h-10 rounded-full bg-[#E8D5CC] flex items-center justify-center flex-shrink-0 border-2 border-[#C4856A]/30">
-                      <span className="text-[#C4856A] font-serif text-base font-bold">S</span>
+                      <span className="text-[#C4856A] font-serif text-base font-bold">
+                        S
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <p className="text-xs font-semibold text-[#2C1810]">Soraya Farias</p>
+                        <p className="text-xs font-semibold text-[#2C1810]">
+                          Soraya Farias
+                        </p>
                         <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                        <span className="text-[10px] text-green-600 font-medium">Disponível</span>
+                        <span className="text-[10px] text-green-600 font-medium">
+                          Disponível
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[#8B6E5A]">Psicóloga Clínica · CRP 06/157053</p>
+                      <p className="text-[11px] text-[#8B6E5A]">
+                        Psicóloga Clínica · CRP 06/157053
+                      </p>
                     </div>
                   </motion.div>
                 </div>
@@ -235,13 +307,16 @@ export default function Onboarding() {
               {currentStep.id === "name" && (
                 <div className="space-y-4">
                   <p className="text-[#4A3728] leading-relaxed text-sm">
-                    Antes de começar, me diga seu nome. Quero que cada mensagem seja pessoal — como uma conversa entre nós.
+                    Antes de começar, me diga seu nome. Quero que cada mensagem
+                    seja pessoal — como uma conversa entre nós.
                   </p>
                   <div className="space-y-2">
                     <Input
                       value={name}
                       onChange={e => setName(e.target.value)}
-                      onKeyDown={e => e.key === "Enter" && name.trim() && handleNext()}
+                      onKeyDown={e =>
+                        e.key === "Enter" && name.trim() && handleNext()
+                      }
                       placeholder="Seu primeiro nome"
                       className="h-12 text-base border-[#E8D5CC] focus:border-[#C4856A] bg-white rounded-xl"
                       autoFocus
@@ -254,7 +329,9 @@ export default function Onboarding() {
                       className="flex items-center gap-2 p-3 bg-[#F5EDE8] rounded-xl"
                     >
                       <div className="w-6 h-6 rounded-full bg-[#C4856A]/20 flex items-center justify-center">
-                        <span className="text-[#C4856A] font-serif text-sm font-bold">S</span>
+                        <span className="text-[#C4856A] font-serif text-sm font-bold">
+                          S
+                        </span>
                       </div>
                       <p className="text-[#C4856A] text-sm font-medium">
                         Olá, {name.trim()}. Estou aqui com você.
@@ -278,7 +355,9 @@ export default function Onboarding() {
           </div>
 
           <p className="text-center text-xs text-[#B08070] mt-5 leading-relaxed">
-            Seus dados ficam apenas no seu dispositivo.<br />Nenhuma informação é compartilhada.
+            Seus dados ficam apenas no seu dispositivo.
+            <br />
+            Nenhuma informação é compartilhada.
           </p>
         </div>
       </div>

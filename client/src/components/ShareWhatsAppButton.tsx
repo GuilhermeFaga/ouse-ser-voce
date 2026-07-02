@@ -38,7 +38,14 @@ export default function ShareWhatsAppButton({
   size = "md",
   variant = "primary",
 }: ShareWhatsAppButtonProps) {
-  const { shareDayCompletion, shareAchievement, shareProgress, shareWeekCompletion, shareJourneyCompletion, openWhatsApp } = useWhatsAppShare();
+  const {
+    shareDayCompletion,
+    shareAchievement,
+    shareProgress,
+    shareWeekCompletion,
+    shareJourneyCompletion,
+    openWhatsApp,
+  } = useWhatsAppShare();
 
   const handleShare = () => {
     let message = "";
@@ -52,19 +59,36 @@ export default function ShareWhatsAppButton({
         break;
       case "achievement":
         if (achievementName && achievementDescription) {
-          const { text } = shareAchievement(achievementName, achievementDescription);
+          const { text } = shareAchievement(
+            achievementName,
+            achievementDescription
+          );
           message = text;
         }
         break;
       case "progress":
-        if (completedDays !== undefined && totalDays && currentWeek && weekTheme) {
-          const { text } = shareProgress(completedDays, totalDays, currentWeek, weekTheme);
+        if (
+          completedDays !== undefined &&
+          totalDays &&
+          currentWeek &&
+          weekTheme
+        ) {
+          const { text } = shareProgress(
+            completedDays,
+            totalDays,
+            currentWeek,
+            weekTheme
+          );
           message = text;
         }
         break;
       case "week":
         if (currentWeek && weekTheme && daysCompleted) {
-          const { text } = shareWeekCompletion(currentWeek, weekTheme, daysCompleted);
+          const { text } = shareWeekCompletion(
+            currentWeek,
+            weekTheme,
+            daysCompleted
+          );
           message = text;
         }
         break;
@@ -89,8 +113,10 @@ export default function ShareWhatsAppButton({
 
   const variantClasses = {
     primary: "bg-[#25D366] hover:bg-[#1FAD56] text-white shadow-md",
-    secondary: "bg-[#F0F0F0] hover:bg-[#E0E0E0] text-[#25D366] border border-[#E8D5CC]",
-    ghost: "bg-transparent hover:bg-[#F5EDE8] text-[#25D366] border border-[#25D366]",
+    secondary:
+      "bg-[#F0F0F0] hover:bg-[#E0E0E0] text-[#25D366] border border-[#E8D5CC]",
+    ghost:
+      "bg-transparent hover:bg-[#F5EDE8] text-[#25D366] border border-[#25D366]",
   };
 
   const labels = {

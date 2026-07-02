@@ -16,14 +16,28 @@ interface SharePageProps {
 
 export default function Share({ onNavigate }: SharePageProps) {
   const { state } = useApp();
-  const [activeTab, setActiveTab] = useState<"dias" | "conquistas" | "progresso">("dias");
+  const [activeTab, setActiveTab] = useState<
+    "dias" | "conquistas" | "progresso"
+  >("dias");
 
   const completedDays = state.completedDays.sort((a, b) => b - a);
-  const unlockedAchievements = achievements.filter(a => state.unlockedAchievements.includes(a.id));
+  const unlockedAchievements = achievements.filter(a =>
+    state.unlockedAchievements.includes(a.id)
+  );
 
   const tabs = [
-    { id: "dias", label: "Dias Completados", icon: "📅", count: completedDays.length },
-    { id: "conquistas", label: "Conquistas", icon: "🏆", count: unlockedAchievements.length },
+    {
+      id: "dias",
+      label: "Dias Completados",
+      icon: "📅",
+      count: completedDays.length,
+    },
+    {
+      id: "conquistas",
+      label: "Conquistas",
+      icon: "🏆",
+      count: unlockedAchievements.length,
+    },
     { id: "progresso", label: "Progresso Geral", icon: "📊", count: 1 },
   ];
 
@@ -37,8 +51,12 @@ export default function Share({ onNavigate }: SharePageProps) {
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">Compartilhe sua jornada</h1>
-        <p className="text-[#8B6E5A] text-sm">Inspire outras mulheres com sua transformação</p>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">
+          Compartilhe sua jornada
+        </h1>
+        <p className="text-[#8B6E5A] text-sm">
+          Inspire outras mulheres com sua transformação
+        </p>
       </div>
 
       {/* Tabs */}
@@ -53,7 +71,16 @@ export default function Share({ onNavigate }: SharePageProps) {
                 : "border-transparent text-[#B08070] hover:text-[#8B6E5A]"
             }`}
           >
-            <span>{tab.icon}</span> <span className="hidden sm:inline">{tab.label}</span><span className="sm:hidden">{tab.id === "dias" ? "Dias" : tab.id === "conquistas" ? "Conquistas" : "Progresso"}</span> <span className="text-xs ml-1">({tab.count})</span>
+            <span>{tab.icon}</span>{" "}
+            <span className="hidden sm:inline">{tab.label}</span>
+            <span className="sm:hidden">
+              {tab.id === "dias"
+                ? "Dias"
+                : tab.id === "conquistas"
+                  ? "Conquistas"
+                  : "Progresso"}
+            </span>{" "}
+            <span className="text-xs ml-1">({tab.count})</span>
           </button>
         ))}
       </div>
@@ -66,8 +93,12 @@ export default function Share({ onNavigate }: SharePageProps) {
               <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-7 h-7 text-[#C4856A]" />
               </div>
-              <p className="font-serif text-lg text-[#2C1810] mb-2">Nenhum dia completado ainda</p>
-              <p className="text-[#8B6E5A] text-sm">Complete um dia para começar a compartilhar</p>
+              <p className="font-serif text-lg text-[#2C1810] mb-2">
+                Nenhum dia completado ainda
+              </p>
+              <p className="text-[#8B6E5A] text-sm">
+                Complete um dia para começar a compartilhar
+              </p>
             </div>
           ) : (
             completedDays.map((dayNum, idx) => {
@@ -82,8 +113,12 @@ export default function Share({ onNavigate }: SharePageProps) {
                   className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between gap-3"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[#2C1810] text-sm truncate">Dia {dayNum}</p>
-                    <p className="text-xs text-[#8B6E5A] truncate">{day.theme}</p>
+                    <p className="font-semibold text-[#2C1810] text-sm truncate">
+                      Dia {dayNum}
+                    </p>
+                    <p className="text-xs text-[#8B6E5A] truncate">
+                      {day.theme}
+                    </p>
                   </div>
                   <div className="flex-shrink-0">
                     <ShareInstagramButton
@@ -110,8 +145,12 @@ export default function Share({ onNavigate }: SharePageProps) {
               <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
                 <Heart className="w-7 h-7 text-[#C4856A]" />
               </div>
-              <p className="font-serif text-lg text-[#2C1810] mb-2">Nenhuma conquista desbloqueada</p>
-              <p className="text-[#8B6E5A] text-sm">Continue a jornada para desbloquear conquistas</p>
+              <p className="font-serif text-lg text-[#2C1810] mb-2">
+                Nenhuma conquista desbloqueada
+              </p>
+              <p className="text-[#8B6E5A] text-sm">
+                Continue a jornada para desbloquear conquistas
+              </p>
             </div>
           ) : (
             unlockedAchievements.map((achievement, idx) => (
@@ -127,8 +166,12 @@ export default function Share({ onNavigate }: SharePageProps) {
                     {achievement.icon}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-[#2C1810] text-sm truncate">{achievement.title}</p>
-                    <p className="text-xs text-[#8B6E5A] truncate">{achievement.description}</p>
+                    <p className="font-semibold text-[#2C1810] text-sm truncate">
+                      {achievement.title}
+                    </p>
+                    <p className="text-xs text-[#8B6E5A] truncate">
+                      {achievement.description}
+                    </p>
                   </div>
                 </div>
                 <div className="flex-shrink-0">
@@ -152,15 +195,21 @@ export default function Share({ onNavigate }: SharePageProps) {
           {/* Stats Cards */}
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
-              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">{state.completedDays.length}</p>
+              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
+                {state.completedDays.length}
+              </p>
               <p className="text-xs text-[#8B6E5A]">Dias</p>
             </div>
             <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
-              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">{progressPercent}%</p>
+              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
+                {progressPercent}%
+              </p>
               <p className="text-xs text-[#8B6E5A]">Progresso</p>
             </div>
             <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
-              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">{unlockedAchievements.length}</p>
+              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
+                {unlockedAchievements.length}
+              </p>
               <p className="text-xs text-[#8B6E5A]">Conquistas</p>
             </div>
           </div>
@@ -168,8 +217,12 @@ export default function Share({ onNavigate }: SharePageProps) {
           {/* Share Buttons */}
           <div className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-6 space-y-4">
             <div>
-              <h3 className="font-semibold text-[#2C1810] mb-2">Compartilhe seu progresso</h3>
-              <p className="text-sm text-[#8B6E5A] mb-4">Inspire outras mulheres com sua transformação</p>
+              <h3 className="font-semibold text-[#2C1810] mb-2">
+                Compartilhe seu progresso
+              </h3>
+              <p className="text-sm text-[#8B6E5A] mb-4">
+                Inspire outras mulheres com sua transformação
+              </p>
             </div>
 
             {currentWeek && (
@@ -195,7 +248,10 @@ export default function Share({ onNavigate }: SharePageProps) {
           {/* Motivational Message */}
           <div className="bg-[#F5EDE8] rounded-xl p-4 border border-[#E8D5CC]">
             <p className="text-sm text-[#6B4C3B] leading-relaxed">
-              💫 <strong>Cada compartilhamento é um ato de coragem.</strong> Quando você compartilha sua jornada, você não apenas celebra sua transformação — você também abre caminho para que outras mulheres encontrem sua própria força.
+              💫 <strong>Cada compartilhamento é um ato de coragem.</strong>{" "}
+              Quando você compartilha sua jornada, você não apenas celebra sua
+              transformação — você também abre caminho para que outras mulheres
+              encontrem sua própria força.
             </p>
           </div>
         </div>

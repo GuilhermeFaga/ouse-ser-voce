@@ -1,7 +1,10 @@
 // OUSE SER VOCÊ – Achievement Image Generator Hook
 // Gera imagens visuais de conquistas para compartilhamento em Stories
 
-import { getRandomMotivationalQuote, getRandomQuoteFromCategory } from "@/lib/motivationalQuotes";
+import {
+  getRandomMotivationalQuote,
+  getRandomQuoteFromCategory,
+} from "@/lib/motivationalQuotes";
 
 export interface AchievementImageOptions {
   title: string;
@@ -13,17 +16,19 @@ export interface AchievementImageOptions {
 }
 
 export function useAchievementImage() {
-  const generateAchievementImage = (options: AchievementImageOptions): Promise<string> => {
-    return new Promise((resolve) => {
+  const generateAchievementImage = (
+    options: AchievementImageOptions
+  ): Promise<string> => {
+    return new Promise(resolve => {
       const canvas = document.createElement("canvas");
-      
+
       // Dimensões para Stories (1080x1920 é ideal, mas usaremos 1080x1350 para melhor compatibilidade)
       const width = 1080;
       const height = 1350;
-      
+
       canvas.width = width;
       canvas.height = height;
-      
+
       const ctx = canvas.getContext("2d");
       if (!ctx) {
         resolve("");
@@ -95,12 +100,12 @@ export function useAchievementImage() {
       ctx.fillStyle = "#2C1810";
       ctx.font = "bold 64px 'Playfair Display', serif";
       ctx.textAlign = "center";
-      
+
       // Word wrap for title
       const titleMaxWidth = width - 200;
       const titleLines = wrapText(ctx, options.title, titleMaxWidth, 64);
       let titleY = height * 0.55;
-      
+
       titleLines.forEach((line, index) => {
         ctx.fillText(line, width / 2, titleY + index * 80);
       });
@@ -109,18 +114,18 @@ export function useAchievementImage() {
       ctx.fillStyle = "#8B6E5A";
       ctx.font = "32px 'DM Sans', sans-serif";
       ctx.textAlign = "center";
-      
+
       const descMaxWidth = width - 200;
       const descLines = wrapText(ctx, options.description, descMaxWidth, 32);
       let descY = titleY + titleLines.length * 80 + 60;
-      
+
       descLines.slice(0, 3).forEach((line, index) => {
         ctx.fillText(line, width / 2, descY + index * 50);
       });
 
       // Motivational quote section
       const quoteY = height - 280;
-      
+
       // Quote background
       ctx.fillStyle = accentColor;
       ctx.globalAlpha = 0.1;
@@ -140,10 +145,15 @@ export function useAchievementImage() {
       ctx.fillStyle = "#2C1810";
       ctx.font = "italic 28px 'DM Sans', sans-serif";
       ctx.textAlign = "center";
-      
-      const quoteLines = wrapText(ctx, `"${motivationalQuote}"`, width - 200, 28);
+
+      const quoteLines = wrapText(
+        ctx,
+        `"${motivationalQuote}"`,
+        width - 200,
+        28
+      );
       let quoteTextY = quoteY + 10;
-      
+
       quoteLines.slice(0, 2).forEach((line, index) => {
         ctx.fillText(line, width / 2, quoteTextY + index * 40);
       });
@@ -185,7 +195,7 @@ export function useAchievementImage() {
     const lines: string[] = [];
     let currentLine = "";
 
-    words.forEach((word) => {
+    words.forEach(word => {
       const testLine = currentLine + (currentLine ? " " : "") + word;
       const metrics = ctx.measureText(testLine);
 

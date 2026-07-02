@@ -24,15 +24,30 @@ import type { AppPage } from "./components/AppLayout";
 
 function AppContent() {
   const { state, updateState } = useApp();
-  
+
   // Support deep-linking via URL hash
   const getInitialPage = (): AppPage => {
-    const hash = window.location.hash.replace('#', '');
-    const validPages: AppPage[] = ['home', 'journey', 'day', 'journal', 'notes', 'calendar', 'achievements', 'scanner', 'assessment', 'settings', 'share', 'community', 'favorites', 'profile'];
+    const hash = window.location.hash.replace("#", "");
+    const validPages: AppPage[] = [
+      "home",
+      "journey",
+      "day",
+      "journal",
+      "notes",
+      "calendar",
+      "achievements",
+      "scanner",
+      "assessment",
+      "settings",
+      "share",
+      "community",
+      "favorites",
+      "profile",
+    ];
     if (validPages.includes(hash as AppPage)) return hash as AppPage;
-    return 'home';
+    return "home";
   };
-  
+
   const [currentPage, setCurrentPage] = useState<AppPage>(getInitialPage);
 
   const handleNavigate = (page: AppPage, extra?: unknown) => {
@@ -50,21 +65,36 @@ function AppContent() {
 
   const renderPage = () => {
     switch (currentPage) {
-      case "home": return <Dashboard onNavigate={handleNavigate} />;
-      case "journey": return <Journey onNavigate={handleNavigate} />;
-      case "day": return <DayView onNavigate={handleNavigate} />;
-      case "journal": return <Journal />;
-      case "notes": return <Notes />;
-      case "calendar": return <CalendarView />;
-      case "achievements": return <Achievements />;
-      case "scanner": return <Scanner />;
-      case "assessment": return <Assessment />;
-      case "settings": return <SettingsPage />;
-      case "share": return <Share onNavigate={handleNavigate} />;
-      case "community": return <Community />;
-      case "favorites": return <Favorites onNavigate={handleNavigate} />;
-      case "profile": return <ProfileSoraya />;
-      default: return <Dashboard onNavigate={handleNavigate} />;
+      case "home":
+        return <Dashboard onNavigate={handleNavigate} />;
+      case "journey":
+        return <Journey onNavigate={handleNavigate} />;
+      case "day":
+        return <DayView onNavigate={handleNavigate} />;
+      case "journal":
+        return <Journal />;
+      case "notes":
+        return <Notes />;
+      case "calendar":
+        return <CalendarView />;
+      case "achievements":
+        return <Achievements />;
+      case "scanner":
+        return <Scanner />;
+      case "assessment":
+        return <Assessment />;
+      case "settings":
+        return <SettingsPage />;
+      case "share":
+        return <Share onNavigate={handleNavigate} />;
+      case "community":
+        return <Community />;
+      case "favorites":
+        return <Favorites onNavigate={handleNavigate} />;
+      case "profile":
+        return <ProfileSoraya />;
+      default:
+        return <Dashboard onNavigate={handleNavigate} />;
     }
   };
 

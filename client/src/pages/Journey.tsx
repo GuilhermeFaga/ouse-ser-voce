@@ -13,10 +13,34 @@ interface JourneyProps {
 }
 
 const weekColors = {
-  1: { bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", dot: "bg-rose-400", header: "bg-rose-100" },
-  2: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", dot: "bg-amber-400", header: "bg-amber-100" },
-  3: { bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", dot: "bg-teal-400", header: "bg-teal-100" },
-  4: { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", dot: "bg-purple-400", header: "bg-purple-100" },
+  1: {
+    bg: "bg-rose-50",
+    border: "border-rose-200",
+    text: "text-rose-700",
+    dot: "bg-rose-400",
+    header: "bg-rose-100",
+  },
+  2: {
+    bg: "bg-amber-50",
+    border: "border-amber-200",
+    text: "text-amber-700",
+    dot: "bg-amber-400",
+    header: "bg-amber-100",
+  },
+  3: {
+    bg: "bg-teal-50",
+    border: "border-teal-200",
+    text: "text-teal-700",
+    dot: "bg-teal-400",
+    header: "bg-teal-100",
+  },
+  4: {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    text: "text-purple-700",
+    dot: "bg-purple-400",
+    header: "bg-purple-100",
+  },
 };
 
 export default function Journey({ onNavigate }: JourneyProps) {
@@ -31,7 +55,9 @@ export default function Journey({ onNavigate }: JourneyProps) {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">Sua Jornada</h1>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">
+          Sua Jornada
+        </h1>
         <p className="text-[#8B6E5A] text-sm">
           {state.completedDays.length} de 30 dias concluídos
         </p>
@@ -41,7 +67,9 @@ export default function Journey({ onNavigate }: JourneyProps) {
       <div className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm">
         <div className="flex justify-between text-sm text-[#8B6E5A] mb-2">
           <span>Progresso total</span>
-          <span className="font-medium text-[#C4856A]">{Math.round((state.completedDays.length / 30) * 100)}%</span>
+          <span className="font-medium text-[#C4856A]">
+            {Math.round((state.completedDays.length / 30) * 100)}%
+          </span>
         </div>
         <div className="h-2 bg-[#F0E4DC] rounded-full overflow-hidden">
           <motion.div
@@ -60,10 +88,10 @@ export default function Journey({ onNavigate }: JourneyProps) {
                 state.completedDays.includes(day)
                   ? "bg-[#C4856A] text-white"
                   : day === state.currentDay
-                  ? "bg-[#F5EDE8] border-2 border-[#C4856A] text-[#C4856A]"
-                  : day < state.currentDay
-                  ? "bg-[#F0E4DC] text-[#B08070]"
-                  : "bg-[#FAF6F1] text-[#D4C4BC]"
+                    ? "bg-[#F5EDE8] border-2 border-[#C4856A] text-[#C4856A]"
+                    : day < state.currentDay
+                      ? "bg-[#F0E4DC] text-[#B08070]"
+                      : "bg-[#FAF6F1] text-[#D4C4BC]"
               }`}
             >
               {day}
@@ -75,10 +103,13 @@ export default function Journey({ onNavigate }: JourneyProps) {
       {/* Weeks */}
       {weekModules.map(week => {
         const weekDays = dailyContent.filter(d => d.week === week.week);
-        const completedCount = weekDays.filter(d => state.completedDays.includes(d.day)).length;
+        const completedCount = weekDays.filter(d =>
+          state.completedDays.includes(d.day)
+        ).length;
         const isExpanded = expandedWeek === week.week;
         const wc = weekColors[week.week as keyof typeof weekColors];
-        const isLocked = week.week > 1 && !weekDays.some(d => d.day <= state.currentDay);
+        const isLocked =
+          week.week > 1 && !weekDays.some(d => d.day <= state.currentDay);
 
         return (
           <motion.div
@@ -94,16 +125,24 @@ export default function Journey({ onNavigate }: JourneyProps) {
               className={`w-full flex items-center justify-between p-3 sm:p-5 ${wc.header} transition-colors`}
             >
               <div className="flex items-center gap-2 sm:gap-3 text-left">
-                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${wc.dot} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
+                <div
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${wc.dot} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}
+                >
                   {week.week}
                 </div>
                 <div>
-                  <p className={`font-semibold text-sm ${wc.text}`}>{week.subtitle}</p>
-                  <p className="font-serif text-base text-[#2C1810]">{week.title}</p>
+                  <p className={`font-semibold text-sm ${wc.text}`}>
+                    {week.subtitle}
+                  </p>
+                  <p className="font-serif text-base text-[#2C1810]">
+                    {week.title}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`text-xs font-medium ${wc.text}`}>{completedCount}/{weekDays.length}</span>
+                <span className={`text-xs font-medium ${wc.text}`}>
+                  {completedCount}/{weekDays.length}
+                </span>
                 <motion.div
                   animate={{ rotate: isExpanded ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
@@ -118,7 +157,9 @@ export default function Journey({ onNavigate }: JourneyProps) {
             <div className="h-1 bg-[#F0E4DC]">
               <div
                 className={`h-full ${wc.dot} transition-all duration-700`}
-                style={{ width: `${(completedCount / weekDays.length) * 100}%` }}
+                style={{
+                  width: `${(completedCount / weekDays.length) * 100}%`,
+                }}
               />
             </div>
 
@@ -131,7 +172,9 @@ export default function Journey({ onNavigate }: JourneyProps) {
                 transition={{ duration: 0.25 }}
               >
                 <div className={`px-5 py-3 ${wc.bg} border-b border-[#F0E4DC]`}>
-                  <p className="text-sm text-[#6B4C3B] leading-relaxed">{week.description}</p>
+                  <p className="text-sm text-[#6B4C3B] leading-relaxed">
+                    {week.description}
+                  </p>
                 </div>
 
                 {/* Days list */}
@@ -144,10 +187,14 @@ export default function Journey({ onNavigate }: JourneyProps) {
                     return (
                       <button
                         key={day.day}
-                        onClick={() => isAccessible && onNavigate("day", day.day)}
+                        onClick={() =>
+                          isAccessible && onNavigate("day", day.day)
+                        }
                         disabled={!isAccessible}
                         className={`w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 text-left transition-colors ${
-                          isAccessible ? "hover:bg-[#FAF6F1]" : "opacity-50 cursor-not-allowed"
+                          isAccessible
+                            ? "hover:bg-[#FAF6F1]"
+                            : "opacity-50 cursor-not-allowed"
                         } ${isCurrent ? "bg-[#FAF6F1]" : ""}`}
                       >
                         <div className="flex-shrink-0">
@@ -163,18 +210,24 @@ export default function Journey({ onNavigate }: JourneyProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
-                            <span className="text-xs text-[#B08070] font-medium">Dia {day.day}</span>
+                            <span className="text-xs text-[#B08070] font-medium">
+                              Dia {day.day}
+                            </span>
                             <span className="text-[#E8D5CC]">·</span>
-                            <span className="text-xs text-[#B08070]">{day.theme}</span>
+                            <span className="text-xs text-[#B08070]">
+                              {day.theme}
+                            </span>
                             {isCurrent && (
                               <span className="text-[10px] bg-[#C4856A] text-white px-2 py-0.5 rounded-full font-medium">
                                 Hoje
                               </span>
                             )}
                           </div>
-                          <p className={`text-sm font-medium truncate ${
-                            isAccessible ? "text-[#2C1810]" : "text-[#B08070]"
-                          }`}>
+                          <p
+                            className={`text-sm font-medium truncate ${
+                              isAccessible ? "text-[#2C1810]" : "text-[#B08070]"
+                            }`}
+                          >
                             {day.title}
                           </p>
                         </div>

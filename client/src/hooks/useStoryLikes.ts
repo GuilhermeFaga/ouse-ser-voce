@@ -17,7 +17,8 @@ const USER_ID_KEY = "ouse-user-id";
 const getUserId = (): string => {
   let userId = localStorage.getItem(USER_ID_KEY);
   if (!userId) {
-    userId = "user-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
+    userId =
+      "user-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
     localStorage.setItem(USER_ID_KEY, userId);
   }
   return userId;
@@ -34,7 +35,7 @@ export function useStoryLikes(storyId: string) {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const allLikes: StoryLike[] = stored ? JSON.parse(stored) : [];
-      const storyLikes = allLikes.find((l) => l.storyId === storyId);
+      const storyLikes = allLikes.find(l => l.storyId === storyId);
 
       if (storyLikes) {
         setLikes(storyLikes.totalLikes);
@@ -55,7 +56,7 @@ export function useStoryLikes(storyId: string) {
       const stored = localStorage.getItem(STORAGE_KEY);
       let allLikes: StoryLike[] = stored ? JSON.parse(stored) : [];
 
-      let storyLikes = allLikes.find((l) => l.storyId === storyId);
+      let storyLikes = allLikes.find(l => l.storyId === storyId);
 
       if (!storyLikes) {
         storyLikes = {
@@ -69,7 +70,7 @@ export function useStoryLikes(storyId: string) {
 
       if (storyLikes.likedBy.includes(userId)) {
         // Remover like
-        storyLikes.likedBy = storyLikes.likedBy.filter((id) => id !== userId);
+        storyLikes.likedBy = storyLikes.likedBy.filter(id => id !== userId);
         storyLikes.totalLikes = Math.max(0, storyLikes.totalLikes - 1);
         setIsLiked(false);
         setLikes(storyLikes.totalLikes);

@@ -26,7 +26,9 @@ export default function SettingsPage() {
   };
 
   const handleReset = () => {
-    if (window.confirm("Tem certeza? Todos os dados da jornada serão apagados.")) {
+    if (
+      window.confirm("Tem certeza? Todos os dados da jornada serão apagados.")
+    ) {
       localStorage.removeItem("ouse-ser-voce-state");
       window.location.reload();
     }
@@ -35,7 +37,9 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
       <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">Configurações</h1>
+        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
+          Configurações
+        </h1>
         <p className="text-[#8B6E5A] text-sm">Personalize sua experiência</p>
       </div>
 
@@ -76,8 +80,12 @@ export default function SettingsPage() {
         </div>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-[#4A3728] font-medium">Ativar lembretes diários</p>
-            <p className="text-xs text-[#8B6E5A]">Receba uma notificação para praticar</p>
+            <p className="text-sm text-[#4A3728] font-medium">
+              Ativar lembretes diários
+            </p>
+            <p className="text-xs text-[#8B6E5A]">
+              Receba uma notificação para praticar
+            </p>
           </div>
           <Switch
             checked={reminderEnabled}
@@ -86,7 +94,9 @@ export default function SettingsPage() {
         </div>
         {reminderEnabled && (
           <div className="space-y-2">
-            <label className="text-xs text-[#8B6E5A] font-medium">Horário do lembrete</label>
+            <label className="text-xs text-[#8B6E5A] font-medium">
+              Horário do lembrete
+            </label>
             <Input
               type="time"
               value={reminderTime}
@@ -113,25 +123,38 @@ export default function SettingsPage() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
-            <p className="font-serif text-2xl font-bold text-[#C4856A]">{state.completedDays.length}</p>
+            <p className="font-serif text-2xl font-bold text-[#C4856A]">
+              {state.completedDays.length}
+            </p>
             <p className="text-xs text-[#8B6E5A]">Dias concluídos</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
-            <p className="font-serif text-2xl font-bold text-[#C4856A]">{state.journalEntries.length}</p>
+            <p className="font-serif text-2xl font-bold text-[#C4856A]">
+              {state.journalEntries.length}
+            </p>
             <p className="text-xs text-[#8B6E5A]">Entradas no diário</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
-            <p className="font-serif text-2xl font-bold text-[#C4856A]">{state.notes.length}</p>
+            <p className="font-serif text-2xl font-bold text-[#C4856A]">
+              {state.notes.length}
+            </p>
             <p className="text-xs text-[#8B6E5A]">Anotações</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
-            <p className="font-serif text-2xl font-bold text-[#C4856A]">{state.unlockedAchievements.length}</p>
+            <p className="font-serif text-2xl font-bold text-[#C4856A]">
+              {state.unlockedAchievements.length}
+            </p>
             <p className="text-xs text-[#8B6E5A]">Conquistas</p>
           </div>
         </div>
         {state.startDate && (
           <p className="text-xs text-[#B08070] text-center mt-3">
-            Jornada iniciada em {new Date(state.startDate).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}
+            Jornada iniciada em{" "}
+            {new Date(state.startDate).toLocaleDateString("pt-BR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
         )}
       </div>
@@ -145,7 +168,8 @@ export default function SettingsPage() {
           <h3 className="font-semibold text-[#2C1810]">Privacidade</h3>
         </div>
         <p className="text-sm text-[#8B6E5A] leading-relaxed mb-4">
-          Todos os seus dados são armazenados apenas no seu dispositivo. Nenhuma informação é enviada para servidores externos.
+          Todos os seus dados são armazenados apenas no seu dispositivo. Nenhuma
+          informação é enviada para servidores externos.
         </p>
       </div>
 
@@ -158,7 +182,8 @@ export default function SettingsPage() {
           <h3 className="font-semibold text-[#2C1810]">Reiniciar jornada</h3>
         </div>
         <p className="text-sm text-[#8B6E5A] leading-relaxed mb-4">
-          Apaga todos os dados e reinicia a jornada do zero. Esta ação não pode ser desfeita.
+          Apaga todos os dados e reinicia a jornada do zero. Esta ação não pode
+          ser desfeita.
         </p>
         <button
           onClick={handleReset}

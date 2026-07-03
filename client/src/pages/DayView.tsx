@@ -81,7 +81,8 @@ function formatDate(isoString: string): string {
 }
 
 export default function DayView({ onNavigate }: DayViewProps) {
-  const { currentDay, completedDays, checkins, completeDay, updateDayCheckin } = useJourney();
+  const { currentDay, completedDays, checkins, completeDay, updateDayCheckin } =
+    useJourney();
   const { journalEntries, addJournalEntry } = useJournal();
   const [activeTab, setActiveTab] = useState<TabType>("reflexao");
   const [mood, setMood] = useState(3);
@@ -94,8 +95,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [isFirstCompletion, setIsFirstCompletion] = useState(false);
 
-  const today =
-    dailyContent.find(d => d.day === currentDay) || dailyContent[0];
+  const today = dailyContent.find(d => d.day === currentDay) || dailyContent[0];
   const isCompleted = completedDays.includes(today.day);
   const weekColor = weekColors[today.week as keyof typeof weekColors];
   const currentWeek = weekModules.find(w => w.week === today.week)!;
@@ -136,9 +136,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
   const saveRevisitChanges = () => {
     if (!isCompleted) return;
 
-    const hasJournalContent = Object.values(journalAnswers).some(v =>
-      v.trim()
-    );
+    const hasJournalContent = Object.values(journalAnswers).some(v => v.trim());
     const entry = journalEntries.find(e => e.dayNumber === today.day);
     if (hasJournalContent) {
       addJournalEntry({
@@ -158,9 +156,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
   };
 
   const handleComplete = () => {
-    const hasJournalContent = Object.values(journalAnswers).some(v =>
-      v.trim()
-    );
+    const hasJournalContent = Object.values(journalAnswers).some(v => v.trim());
     if (hasJournalContent) {
       addJournalEntry({
         dayNumber: today.day,

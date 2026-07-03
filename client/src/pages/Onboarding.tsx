@@ -16,8 +16,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const HERO_IMG =
-  "/hero.webp";
+const HERO_IMG = "/hero.webp";
 const LOGO_IMG = "/manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
 
 const steps = [
@@ -242,7 +241,8 @@ export default function Onboarding() {
                   >
                     <p className="text-xs text-[#6B4C3B] leading-relaxed">
                       Esta jornada foi desenvolvida pela psicóloga{" "}
-                      <strong>Soraya Farias</strong> para mulheres que se sentem desconectadas de si mesmas.
+                      <strong>Soraya Farias</strong> para mulheres que se sentem
+                      desconectadas de si mesmas.
                     </p>
                   </div>
                 </div>

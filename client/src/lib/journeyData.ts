@@ -1315,4 +1315,3 @@ export function calculateScannerResults(answers: Record<string, number>) {
     recommendation: recommendations[criticalArea],
   };
 }
-

@@ -180,9 +180,7 @@ export default function AppLayout({
         {/* User greeting */}
         <div className="px-6 py-4 border-b border-[#F0E4DC]">
           <p className="text-xs text-[#B08070] mb-1">Olá,</p>
-          <p className="font-semibold text-[#2C1810] text-sm">
-            {userName}
-          </p>
+          <p className="font-semibold text-[#2C1810] text-sm">{userName}</p>
           <div className="mt-3 flex items-center gap-3">
             <div className="flex-1">
               <div className="flex justify-between text-xs text-[#8B6E5A] mb-1">
@@ -287,9 +285,7 @@ export default function AppLayout({
             <div className="p-4 border-b border-[#F0E4DC] flex items-center justify-between">
               <div>
                 <p className="font-semibold text-[#2C1810]">{userName}</p>
-                <p className="text-xs text-[#8B6E5A]">
-                  Dia {currentDay} de 30
-                </p>
+                <p className="text-xs text-[#8B6E5A]">Dia {currentDay} de 30</p>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}

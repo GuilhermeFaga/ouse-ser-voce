@@ -10,7 +10,12 @@ import { Slider } from "@/components/ui/slider";
 import { ClipboardList, CheckCircle2 } from "lucide-react";
 
 export default function Assessment() {
-  const { initialAssessment, finalAssessment, saveInitialAssessment, saveFinalAssessment } = useAssessments();
+  const {
+    initialAssessment,
+    finalAssessment,
+    saveInitialAssessment,
+    saveFinalAssessment,
+  } = useAssessments();
   const { completedDays } = useJourney();
   const [activeTab, setActiveTab] = useState<"initial" | "final">("initial");
 

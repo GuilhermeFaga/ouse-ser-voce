@@ -73,9 +73,7 @@ export default function Journal() {
       </div>
 
       {/* Mood Chart */}
-      {journalEntries.length > 0 && (
-        <MoodChart entries={journalEntries} />
-      )}
+      {journalEntries.length > 0 && <MoodChart entries={journalEntries} />}
 
       {/* New Entry Form */}
       {showNew && (

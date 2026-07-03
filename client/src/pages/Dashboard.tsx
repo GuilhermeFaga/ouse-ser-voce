@@ -7,11 +7,7 @@ import { useJourney } from "@/hooks/useJourney";
 import { useJournal } from "@/hooks/useJournal";
 import { useAchievements } from "@/hooks/useAchievements";
 import { useAssessments } from "@/hooks/useAssessments";
-import {
-  dailyContent,
-  dailyQuotes,
-  weekModules,
-} from "@/lib/journeyData";
+import { dailyContent, dailyQuotes, weekModules } from "@/lib/journeyData";
 import { achievements } from "@/lib/achievements";
 import {
   ArrowRight,
@@ -60,12 +56,12 @@ const weekColors = {
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const { userName } = useProfile();
-  const { currentDay, completedDays, currentStreak, progressPercent } = useJourney();
+  const { currentDay, completedDays, currentStreak, progressPercent } =
+    useJourney();
   const { journalEntries } = useJournal();
   const { unlockedAchievements } = useAchievements();
   const { scannerResult } = useAssessments();
-  const today =
-    dailyContent.find(d => d.day === currentDay) || dailyContent[0];
+  const today = dailyContent.find(d => d.day === currentDay) || dailyContent[0];
   const todayQuote = dailyQuotes[(currentDay - 1) % dailyQuotes.length];
   const todayCompleted = completedDays.includes(currentDay);
   const currentWeek = weekModules.find(w => w.week === today.week)!;

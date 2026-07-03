@@ -122,9 +122,6 @@ export function evaluateAchievements(
   progress: AppProgress
 ): string[] {
   return achievements
-    .filter(
-      a =>
-        !currentUnlocked.includes(a.id) && a.condition(progress)
-    )
+    .filter(a => !currentUnlocked.includes(a.id) && a.condition(progress))
     .map(a => a.id);
 }

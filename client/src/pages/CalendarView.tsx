@@ -19,9 +19,7 @@ const moodColors = [
 export default function CalendarView() {
   const { currentDay, completedDays, checkins } = useJourney();
   const { startDate: profileStartDate } = useProfile();
-  const [selectedDay, setSelectedDay] = useState<number | null>(
-    currentDay
-  );
+  const [selectedDay, setSelectedDay] = useState<number | null>(currentDay);
 
   const selectedDayContent = selectedDay
     ? dailyContent.find(d => d.day === selectedDay)

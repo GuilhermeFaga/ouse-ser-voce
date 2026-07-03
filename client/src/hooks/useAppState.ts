@@ -176,7 +176,10 @@ export function useAppState() {
           assessmentFinalDone: !!prev.finalAssessment,
         };
 
-        const newUnlocked = evaluateAchievements(prev.unlockedAchievements, progress);
+        const newUnlocked = evaluateAchievements(
+          prev.unlockedAchievements,
+          progress
+        );
 
         return {
           ...newState,
@@ -188,7 +191,10 @@ export function useAppState() {
   );
 
   const updateDayCheckin = useCallback(
-    (dayNumber: number, updates: Partial<Omit<DayCheckin, "dayNumber" | "completedAt">>) => {
+    (
+      dayNumber: number,
+      updates: Partial<Omit<DayCheckin, "dayNumber" | "completedAt">>
+    ) => {
       setState(prev => {
         const existing = prev.checkins[dayNumber];
         if (!existing) return prev;
@@ -239,7 +245,10 @@ export function useAppState() {
           assessmentFinalDone: !!prev.finalAssessment,
         };
 
-        const newUnlocked = evaluateAchievements(prev.unlockedAchievements, progress);
+        const newUnlocked = evaluateAchievements(
+          prev.unlockedAchievements,
+          progress
+        );
 
         return {
           ...prev,
@@ -323,7 +332,10 @@ export function useAppState() {
           assessmentFinalDone: !!prev.finalAssessment,
         };
 
-        const newUnlocked = evaluateAchievements(prev.unlockedAchievements, progress);
+        const newUnlocked = evaluateAchievements(
+          prev.unlockedAchievements,
+          progress
+        );
 
         return {
           ...prev,
@@ -354,7 +366,10 @@ export function useAppState() {
           assessmentInitialDone: true,
           assessmentFinalDone: !!newState.finalAssessment,
         };
-        const newUnlocked = evaluateAchievements(newState.unlockedAchievements, progress);
+        const newUnlocked = evaluateAchievements(
+          newState.unlockedAchievements,
+          progress
+        );
         return {
           ...newState,
           unlockedAchievements: [
@@ -386,7 +401,10 @@ export function useAppState() {
           assessmentInitialDone: !!newState.initialAssessment,
           assessmentFinalDone: true,
         };
-        const newUnlocked = evaluateAchievements(newState.unlockedAchievements, progress);
+        const newUnlocked = evaluateAchievements(
+          newState.unlockedAchievements,
+          progress
+        );
         return {
           ...newState,
           unlockedAchievements: [

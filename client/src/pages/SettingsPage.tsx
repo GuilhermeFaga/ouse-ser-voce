@@ -14,7 +14,13 @@ import { toast } from "sonner";
 
 export default function SettingsPage() {
   const { updateState } = useApp();
-  const { userName, reminderTime: savedReminderTime, reminderEnabled: savedReminderEnabled, startDate, updateSettings } = useProfile();
+  const {
+    userName,
+    reminderTime: savedReminderTime,
+    reminderEnabled: savedReminderEnabled,
+    startDate,
+    updateSettings,
+  } = useProfile();
   const { completedDays } = useJourney();
   const { journalEntries } = useJournal();
   const { notes } = useNotes();

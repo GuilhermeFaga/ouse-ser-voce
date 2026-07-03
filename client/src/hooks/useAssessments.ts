@@ -1,7 +1,12 @@
 import { useApp } from "@/contexts/AppContext";
 
 export function useAssessments() {
-  const { state, saveScannerResult, saveInitialAssessment, saveFinalAssessment } = useApp();
+  const {
+    state,
+    saveScannerResult,
+    saveInitialAssessment,
+    saveFinalAssessment,
+  } = useApp();
 
   return {
     scannerResult: state.scannerResult,

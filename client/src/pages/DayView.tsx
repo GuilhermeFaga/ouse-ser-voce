@@ -1,7 +1,7 @@
 // OUSE SER VOCÊ – Visualização do Dia
 // Design: Clínica Emocional Sofisticada | Exercícios + Check-in + Meditação
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "@/contexts/AppContext";
 import { dailyContent, weekModules } from "@/lib/journeyData";
@@ -13,7 +13,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Play,
-  Pause,
   BookOpen,
   PenLine,
   Heart,
@@ -62,8 +61,26 @@ const weekColors = {
 
 type TabType = "reflexao" | "exercicio" | "diario" | "audio";
 
+const moodLabels = [
+  "",
+  "Muito pesado",
+  "Pesado",
+  "Neutro",
+  "Leve",
+  "Muito leve",
+];
+const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
+
+function formatDate(isoString: string): string {
+  return new Date(isoString).toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
 export default function DayView({ onNavigate }: DayViewProps) {
-  const { state, completeDay, addJournalEntry } = useApp();
+  const { state, completeDay, addJournalEntry, updateDayCheckin } = useApp();
   const [activeTab, setActiveTab] = useState<TabType>("reflexao");
   const [mood, setMood] = useState(3);
   const [notes, setNotes] = useState("");
@@ -71,29 +88,77 @@ export default function DayView({ onNavigate }: DayViewProps) {
     {}
   );
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
-  const [meditationPlaying, setMeditationPlaying] = useState(false);
   const [meditationListened, setMeditationListened] = useState(false);
-  const [checkinDone, setCheckinDone] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [isFirstCompletion, setIsFirstCompletion] = useState(false);
 
   const today =
     dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
   const isCompleted = state.completedDays.includes(today.day);
   const weekColor = weekColors[today.week as keyof typeof weekColors];
   const currentWeek = weekModules.find(w => w.week === today.week)!;
+  const checkin = state.checkins[today.day];
 
-  const moodLabels = [
-    "",
-    "Muito pesado",
-    "Pesado",
-    "Neutro",
-    "Leve",
-    "Muito leve",
-  ];
-  const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
+  // Load saved state or reset when entering a new day
+  useEffect(() => {
+    if (isCompleted) {
+      const entry = state.journalEntries.find(e => e.dayNumber === today.day);
+      const ck = state.checkins[today.day];
+      if (ck) {
+        setMood(ck.mood);
+        setNotes(ck.notes || "");
+        setExerciseCompleted(ck.exerciseCompleted);
+        setMeditationListened(ck.meditationListened);
+      }
+      if (entry) {
+        setJournalAnswers(entry.prompts || {});
+      } else {
+        setJournalAnswers({});
+        setNotes("");
+      }
+    } else {
+      setMood(3);
+      setNotes("");
+      setJournalAnswers({});
+      setExerciseCompleted(false);
+      setMeditationListened(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [today.day, isCompleted]);
+
+  // Reset celebration when navigating to a different day
+  useEffect(() => {
+    setShowCelebration(false);
+  }, [today.day]);
+
+  const saveRevisitChanges = () => {
+    if (!isCompleted) return;
+
+    const hasJournalContent = Object.values(journalAnswers).some(v =>
+      v.trim()
+    );
+    const entry = state.journalEntries.find(e => e.dayNumber === today.day);
+    if (hasJournalContent) {
+      addJournalEntry({
+        dayNumber: today.day,
+        date: entry?.date || new Date().toDateString(),
+        mood,
+        text: notes,
+        prompts: journalAnswers,
+      });
+    }
+
+    updateDayCheckin(today.day, {
+      exerciseCompleted,
+      meditationListened,
+      notes,
+    });
+  };
 
   const handleComplete = () => {
-    // Save journal entry if there are answers
-    const hasJournalContent = Object.values(journalAnswers).some(v => v.trim());
+    const hasJournalContent = Object.values(journalAnswers).some(v =>
+      v.trim()
+    );
     if (hasJournalContent) {
       addJournalEntry({
         dayNumber: today.day,
@@ -111,7 +176,30 @@ export default function DayView({ onNavigate }: DayViewProps) {
       notes,
     });
 
-    setCheckinDone(true);
+    setShowCelebration(true);
+    setIsFirstCompletion(true);
+  };
+
+  const handleExerciseToggle = () => {
+    const nextValue = !exerciseCompleted;
+    setExerciseCompleted(nextValue);
+    if (isCompleted) {
+      updateDayCheckin(today.day, { exerciseCompleted: nextValue });
+    }
+  };
+
+  const handleMeditationComplete = () => {
+    setMeditationListened(true);
+    if (isCompleted) {
+      updateDayCheckin(today.day, { meditationListened: true });
+    }
+  };
+
+  const handleTabChange = (tab: TabType) => {
+    if (isCompleted && activeTab === "diario") {
+      saveRevisitChanges();
+    }
+    setActiveTab(tab);
   };
 
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
@@ -129,7 +217,8 @@ export default function DayView({ onNavigate }: DayViewProps) {
     { id: "audio", label: "Áudio", icon: <Play className="w-4 h-4" /> },
   ];
 
-  if (checkinDone || isCompleted) {
+  // Celebration screen
+  if (showCelebration) {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
@@ -161,18 +250,28 @@ export default function DayView({ onNavigate }: DayViewProps) {
             variant="primary"
           />
           <Button
-            onClick={() => onNavigate("home")}
+            onClick={() => setShowCelebration(false)}
             className="bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl"
           >
-            Voltar ao início
+            Voltar ao conteúdo
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => onNavigate("journal")}
-            className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl hover:bg-[#F5EDE8]"
-          >
-            Ver meu diário
-          </Button>
+          {isFirstCompletion ? (
+            <Button
+              variant="outline"
+              onClick={() => onNavigate("journal")}
+              className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl hover:bg-[#F5EDE8]"
+            >
+              Ver meu diário
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={() => onNavigate("home")}
+              className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl hover:bg-[#F5EDE8]"
+            >
+              Voltar ao início
+            </Button>
+          )}
         </div>
       </motion.div>
     );
@@ -217,7 +316,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-medium transition-all duration-200 ${
               activeTab === tab.id
                 ? "bg-white text-[#C4856A] shadow-sm"
@@ -288,7 +387,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
                   ))}
                 </div>
                 <button
-                  onClick={() => setExerciseCompleted(!exerciseCompleted)}
+                  onClick={handleExerciseToggle}
                   className={`mt-6 w-full flex items-center justify-center gap-2 h-11 rounded-xl font-medium text-sm transition-all duration-200 ${
                     exerciseCompleted
                       ? "bg-[#F5EDE8] text-[#C4856A] border border-[#E8D5CC]"
@@ -350,55 +449,102 @@ export default function DayView({ onNavigate }: DayViewProps) {
               duration={today.meditationDuration}
               audioUrl={meditationUrls[today.day] || ""}
               dayNumber={today.day}
-              onComplete={() => setMeditationListened(true)}
+              onComplete={handleMeditationComplete}
             />
           )}
         </motion.div>
       </div>
 
-      {/* Check-in & Complete */}
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-5">
-        <div>
-          <p className="font-semibold text-[#2C1810] mb-1 text-sm">
-            Como você está se sentindo agora?
-          </p>
-          <p className="text-xs text-[#8B6E5A] mb-4">
-            Depois de completar as práticas do dia
-          </p>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-2xl">{moodEmojis[mood]}</span>
-              <span className="text-sm text-[#8B6E5A]">{moodLabels[mood]}</span>
+      {/* Bottom section: Check-in for incomplete days, compact footer for completed days */}
+      {isCompleted ? (
+        <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#F5EDE8] flex-shrink-0 flex items-center justify-center">
+                <CheckCircle2 className="w-5 h-5 text-[#C4856A]" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-[#2C1810]">
+                  Dia concluído
+                </p>
+                {checkin && (
+                  <p className="text-xs text-[#B08070] flex items-center gap-1.5">
+                    <span>{moodEmojis[checkin.mood]}</span>
+                    <span>{formatDate(checkin.completedAt)}</span>
+                  </p>
+                )}
+              </div>
             </div>
-            <Slider
-              value={[mood]}
-              onValueChange={([v]) => setMood(v)}
-              min={1}
-              max={5}
-              step={1}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-[#B08070]">
-              <span>Muito pesado</span>
-              <span>Muito leve</span>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <ShareInstagramButton
+                type="day"
+                dayNumber={today.day}
+                theme={today.theme}
+                mood={mood}
+                variant="ghost"
+              />
+              <Button
+                variant="outline"
+                onClick={() => {
+                  saveRevisitChanges();
+                  setShowCelebration(true);
+                  setIsFirstCompletion(false);
+                }}
+                className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl hover:bg-[#F5EDE8] text-sm flex-1 sm:flex-none"
+                size="sm"
+              >
+                Ver celebração
+              </Button>
             </div>
           </div>
         </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-5">
+          <div>
+            <p className="font-semibold text-[#2C1810] mb-1 text-sm">
+              Como você está se sentindo agora?
+            </p>
+            <p className="text-xs text-[#8B6E5A] mb-4">
+              Depois de completar as práticas do dia
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">{moodEmojis[mood]}</span>
+                <span className="text-sm text-[#8B6E5A]">
+                  {moodLabels[mood]}
+                </span>
+              </div>
+              <Slider
+                value={[mood]}
+                onValueChange={([v]) => setMood(v)}
+                min={1}
+                max={5}
+                step={1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-[#B08070]">
+                <span>Muito pesado</span>
+                <span>Muito leve</span>
+              </div>
+            </div>
+          </div>
 
-        <Button
-          onClick={handleComplete}
-          className="w-full h-12 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl font-medium text-base transition-all duration-200 active:scale-[0.97] shadow-md shadow-[#C4856A]/20"
-        >
-          <CheckCircle2 className="mr-2 w-5 h-5" />
-          Concluir o Dia {today.day}
-        </Button>
-      </div>
+          <Button
+            onClick={handleComplete}
+            className="w-full h-12 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl font-medium text-base transition-all duration-200 active:scale-[0.97] shadow-md shadow-[#C4856A]/20"
+          >
+            <CheckCircle2 className="mr-2 w-5 h-5" />
+            Concluir o Dia {today.day}
+          </Button>
+        </div>
+      )}
 
       {/* Navigation between days */}
       <div className="flex items-center justify-between">
         <button
           onClick={() => {
             if (today.day > 1) {
+              saveRevisitChanges();
               onNavigate("day", today.day - 1);
             }
           }}
@@ -410,10 +556,14 @@ export default function DayView({ onNavigate }: DayViewProps) {
         </button>
         <span className="text-xs text-[#B08070]">Dia {today.day} de 30</span>
         <button
-          onClick={() => onNavigate("journey")}
-          className="flex items-center gap-1 text-sm text-[#B08070] hover:text-[#C4856A] transition-colors"
+          onClick={() => {
+            saveRevisitChanges();
+            onNavigate("day", today.day + 1);
+          }}
+          disabled={today.day >= 30}
+          className="flex items-center gap-1 text-sm text-[#B08070] hover:text-[#C4856A] disabled:opacity-30 transition-colors"
         >
-          Ver jornada
+          Dia seguinte
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>

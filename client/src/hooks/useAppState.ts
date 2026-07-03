@@ -192,16 +192,48 @@ export function useAppState() {
     []
   );
 
+  const updateDayCheckin = useCallback(
+    (dayNumber: number, updates: Partial<Omit<DayCheckin, "dayNumber" | "completedAt">>) => {
+      setState(prev => {
+        const existing = prev.checkins[dayNumber];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          checkins: {
+            ...prev.checkins,
+            [dayNumber]: { ...existing, ...updates },
+          },
+        };
+      });
+    },
+    []
+  );
+
   const addJournalEntry = useCallback(
     (entry: Omit<JournalEntry, "id" | "createdAt">) => {
       setState(prev => {
-        const newEntry: JournalEntry = {
-          ...entry,
-          id: `journal-${Date.now()}`,
-          createdAt: new Date().toISOString(),
-        };
+        const existingIndex = prev.journalEntries.findIndex(
+          e => e.dayNumber === entry.dayNumber
+        );
 
-        const newEntries = [...prev.journalEntries, newEntry];
+        let newEntries: JournalEntry[];
+        if (existingIndex !== -1) {
+          newEntries = [...prev.journalEntries];
+          newEntries[existingIndex] = {
+            ...newEntries[existingIndex],
+            date: entry.date,
+            mood: entry.mood,
+            text: entry.text,
+            prompts: entry.prompts,
+          };
+        } else {
+          const newEntry: JournalEntry = {
+            ...entry,
+            id: `journal-${Date.now()}`,
+            createdAt: new Date().toISOString(),
+          };
+          newEntries = [...prev.journalEntries, newEntry];
+        }
         const progress: AppProgress = {
           completedDays: prev.completedDays,
           scannerCompleted: !!prev.scannerResult,
@@ -410,6 +442,7 @@ export function useAppState() {
     completeOnboarding,
     completeDay,
     addJournalEntry,
+    updateDayCheckin,
     updateJournalEntry,
     deleteJournalEntry,
     addNote,

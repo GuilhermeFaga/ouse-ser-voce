@@ -344,7 +344,7 @@ export default function AppLayout({
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-64 pt-14 lg:pt-0 min-h-screen pb-20 lg:pb-0">
-        <div className="max-w-3xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-10">
+        <div className="max-w-svw mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-10">
           {children}
         </div>
       </main>

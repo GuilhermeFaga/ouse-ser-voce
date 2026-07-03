@@ -2,13 +2,17 @@
 // Design: Clínica Emocional Sofisticada | Acolhimento + Progresso Visível
 
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useProfile } from "@/hooks/useProfile";
+import { useJourney } from "@/hooks/useJourney";
+import { useJournal } from "@/hooks/useJournal";
+import { useAchievements } from "@/hooks/useAchievements";
+import { useAssessments } from "@/hooks/useAssessments";
 import {
   dailyContent,
   dailyQuotes,
   weekModules,
-  achievements,
 } from "@/lib/journeyData";
+import { achievements } from "@/lib/achievements";
 import {
   ArrowRight,
   CheckCircle2,
@@ -55,17 +59,21 @@ const weekColors = {
 };
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
-  const { state, progressPercent, currentStreak } = useApp();
+  const { userName } = useProfile();
+  const { currentDay, completedDays, currentStreak, progressPercent } = useJourney();
+  const { journalEntries } = useJournal();
+  const { unlockedAchievements } = useAchievements();
+  const { scannerResult } = useAssessments();
   const today =
-    dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
-  const todayQuote = dailyQuotes[(state.currentDay - 1) % dailyQuotes.length];
-  const todayCompleted = state.completedDays.includes(state.currentDay);
+    dailyContent.find(d => d.day === currentDay) || dailyContent[0];
+  const todayQuote = dailyQuotes[(currentDay - 1) % dailyQuotes.length];
+  const todayCompleted = completedDays.includes(currentDay);
   const currentWeek = weekModules.find(w => w.week === today.week)!;
   const weekColor = weekColors[today.week as keyof typeof weekColors];
 
   // Recent achievements
   const recentAchievements = achievements
-    .filter(a => state.unlockedAchievements.includes(a.id))
+    .filter(a => unlockedAchievements.includes(a.id))
     .slice(-3);
 
   const fadeUp = {
@@ -79,7 +87,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       {/* Greeting */}
       <motion.div {...fadeUp}>
         <p className="text-[#B08070] text-sm mb-1">
-          {getGreeting()}, {state.userName}
+          {getGreeting()}, {userName}
         </p>
         <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] leading-tight">
           {todayCompleted
@@ -180,7 +188,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <BookOpen className="w-4 h-4 text-[#C4856A]" />
           </div>
           <p className="font-serif text-2xl font-bold text-[#C4856A]">
-            {state.journalEntries.length}
+            {journalEntries.length}
           </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Entradas no diário</p>
         </div>
@@ -189,7 +197,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <Star className="w-4 h-4 text-[#C4856A]" />
           </div>
           <p className="font-serif text-2xl font-bold text-[#C4856A]">
-            {state.unlockedAchievements.length}
+            {unlockedAchievements.length}
           </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Conquistas</p>
         </div>
@@ -206,7 +214,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <div className="flex items-center gap-2">
             <ShareInstagramButton
               type="progress"
-              completedDays={state.completedDays.length}
+              completedDays={completedDays.length}
               totalDays={30}
               currentWeek={today.week}
               weekTheme={currentWeek.theme}
@@ -214,7 +222,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               variant="secondary"
             />
             <span className="text-sm text-[#C4856A] font-medium">
-              {state.completedDays.length}/30 dias
+              {completedDays.length}/30 dias
             </span>
           </div>
         </div>
@@ -231,7 +239,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           {weekModules.map(week => {
             const weekDays = dailyContent.filter(d => d.week === week.week);
             const completed = weekDays.filter(d =>
-              state.completedDays.includes(d.day)
+              completedDays.includes(d.day)
             ).length;
             const pct = Math.round((completed / weekDays.length) * 100);
             const wc = weekColors[week.week as keyof typeof weekColors];
@@ -253,7 +261,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       </motion.div>
 
       {/* Scanner CTA (if not done) */}
-      {!state.scannerResult && (
+      {!scannerResult && (
         <motion.div
           {...fadeUp}
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.25 }}

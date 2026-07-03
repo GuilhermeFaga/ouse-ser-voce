@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { achievements, type AppProgress } from "@/lib/journeyData";
+import { type AppProgress, evaluateAchievements } from "@/lib/achievements";
 
 export interface JournalEntry {
   id: string;
@@ -176,12 +176,7 @@ export function useAppState() {
           assessmentFinalDone: !!prev.finalAssessment,
         };
 
-        const newUnlocked = achievements
-          .filter(
-            a =>
-              !prev.unlockedAchievements.includes(a.id) && a.condition(progress)
-          )
-          .map(a => a.id);
+        const newUnlocked = evaluateAchievements(prev.unlockedAchievements, progress);
 
         return {
           ...newState,
@@ -244,12 +239,7 @@ export function useAppState() {
           assessmentFinalDone: !!prev.finalAssessment,
         };
 
-        const newUnlocked = achievements
-          .filter(
-            a =>
-              !prev.unlockedAchievements.includes(a.id) && a.condition(progress)
-          )
-          .map(a => a.id);
+        const newUnlocked = evaluateAchievements(prev.unlockedAchievements, progress);
 
         return {
           ...prev,
@@ -333,12 +323,7 @@ export function useAppState() {
           assessmentFinalDone: !!prev.finalAssessment,
         };
 
-        const newUnlocked = achievements
-          .filter(
-            a =>
-              !prev.unlockedAchievements.includes(a.id) && a.condition(progress)
-          )
-          .map(a => a.id);
+        const newUnlocked = evaluateAchievements(prev.unlockedAchievements, progress);
 
         return {
           ...prev,
@@ -369,13 +354,7 @@ export function useAppState() {
           assessmentInitialDone: true,
           assessmentFinalDone: !!newState.finalAssessment,
         };
-        const newUnlocked = achievements
-          .filter(
-            a =>
-              !newState.unlockedAchievements.includes(a.id) &&
-              a.condition(progress)
-          )
-          .map(a => a.id);
+        const newUnlocked = evaluateAchievements(newState.unlockedAchievements, progress);
         return {
           ...newState,
           unlockedAchievements: [
@@ -407,13 +386,7 @@ export function useAppState() {
           assessmentInitialDone: !!newState.initialAssessment,
           assessmentFinalDone: true,
         };
-        const newUnlocked = achievements
-          .filter(
-            a =>
-              !newState.unlockedAchievements.includes(a.id) &&
-              a.condition(progress)
-          )
-          .map(a => a.id);
+        const newUnlocked = evaluateAchievements(newState.unlockedAchievements, progress);
         return {
           ...newState,
           unlockedAchievements: [

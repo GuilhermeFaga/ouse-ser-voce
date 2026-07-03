@@ -1,14 +1,17 @@
 // OUSE SER VOCÊ – Avaliação Inicial e Final
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useAssessments } from "@/hooks/useAssessments";
+import { useJourney } from "@/hooks/useJourney";
+import type { InitialAssessment, FinalAssessment } from "@/hooks/useAppState";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { ClipboardList, CheckCircle2 } from "lucide-react";
 
 export default function Assessment() {
-  const { state, saveInitialAssessment, saveFinalAssessment } = useApp();
+  const { initialAssessment, finalAssessment, saveInitialAssessment, saveFinalAssessment } = useAssessments();
+  const { completedDays } = useJourney();
   const [activeTab, setActiveTab] = useState<"initial" | "final">("initial");
 
   return (
@@ -55,14 +58,14 @@ export default function Assessment() {
         >
           {activeTab === "initial" ? (
             <InitialAssessmentForm
-              existing={state.initialAssessment}
+              existing={initialAssessment}
               onSave={saveInitialAssessment}
             />
           ) : (
             <FinalAssessmentForm
-              existing={state.finalAssessment}
+              existing={finalAssessment}
               onSave={saveFinalAssessment}
-              canComplete={state.completedDays.length >= 28}
+              canComplete={completedDays.length >= 28}
             />
           )}
         </motion.div>
@@ -75,7 +78,7 @@ function InitialAssessmentForm({
   existing,
   onSave,
 }: {
-  existing: ReturnType<typeof useApp>["state"]["initialAssessment"];
+  existing: InitialAssessment | null;
   onSave: (data: any) => void;
 }) {
   const [feeling, setFeeling] = useState(existing?.currentFeeling || 3);
@@ -269,7 +272,7 @@ function FinalAssessmentForm({
   onSave,
   canComplete,
 }: {
-  existing: ReturnType<typeof useApp>["state"]["finalAssessment"];
+  existing: FinalAssessment | null;
   onSave: (data: any) => void;
   canComplete: boolean;
 }) {

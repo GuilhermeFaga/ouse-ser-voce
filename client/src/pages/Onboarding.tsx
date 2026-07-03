@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useProfile } from "@/hooks/useProfile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -72,7 +72,7 @@ const journeyWeeks = [
 ];
 
 export default function Onboarding() {
-  const { completeOnboarding } = useApp();
+  const { completeOnboarding } = useProfile();
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
 

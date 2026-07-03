@@ -1,7 +1,8 @@
 // OUSE SER VOCÊ – Calendário de Evolução
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useJourney } from "@/hooks/useJourney";
+import { useProfile } from "@/hooks/useProfile";
 import { dailyContent } from "@/lib/journeyData";
 import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 
@@ -16,27 +17,28 @@ const moodColors = [
 ];
 
 export default function CalendarView() {
-  const { state } = useApp();
+  const { currentDay, completedDays, checkins } = useJourney();
+  const { startDate: profileStartDate } = useProfile();
   const [selectedDay, setSelectedDay] = useState<number | null>(
-    state.currentDay
+    currentDay
   );
 
   const selectedDayContent = selectedDay
     ? dailyContent.find(d => d.day === selectedDay)
     : null;
-  const selectedCheckin = selectedDay ? state.checkins[selectedDay] : null;
+  const selectedCheckin = selectedDay ? checkins[selectedDay] : null;
 
   // Build 30-day grid
-  const startDate = state.startDate ? new Date(state.startDate) : new Date();
+  const startDate = profileStartDate ? new Date(profileStartDate) : new Date();
   const days = Array.from({ length: 30 }, (_, i) => {
     const date = new Date(startDate);
     date.setDate(date.getDate() + i);
     return {
       day: i + 1,
       date,
-      completed: state.completedDays.includes(i + 1),
-      isCurrent: i + 1 === state.currentDay,
-      checkin: state.checkins[i + 1],
+      completed: completedDays.includes(i + 1),
+      isCurrent: i + 1 === currentDay,
+      checkin: checkins[i + 1],
     };
   });
 
@@ -60,7 +62,7 @@ export default function CalendarView() {
           Calendário de Evolução
         </h1>
         <p className="text-[#8B6E5A] text-sm">
-          {state.completedDays.length} dias concluídos
+          {completedDays.length} dias concluídos
         </p>
       </div>
 
@@ -82,7 +84,7 @@ export default function CalendarView() {
                   }
                   className={`p-2 flex flex-col items-center gap-1 transition-colors min-h-[64px] ${
                     selectedDay === day ? "bg-[#F5EDE8]" : "hover:bg-[#FAF6F1]"
-                  } ${day > state.currentDay ? "opacity-40" : ""}`}
+                  } ${day > currentDay ? "opacity-40" : ""}`}
                 >
                   <span className="text-[10px] text-[#B08070]">
                     {date
@@ -145,7 +147,7 @@ export default function CalendarView() {
                 {selectedDayContent.title}
               </h3>
             </div>
-            {state.completedDays.includes(selectedDay) && (
+            {completedDays.includes(selectedDay) && (
               <CheckCircle2 className="w-6 h-6 text-[#C4856A] flex-shrink-0" />
             )}
           </div>
@@ -190,9 +192,9 @@ export default function CalendarView() {
             </div>
           ) : (
             <p className="text-sm text-[#8B6E5A]">
-              {selectedDay < state.currentDay
+              {selectedDay < currentDay
                 ? "Dia não registrado."
-                : selectedDay === state.currentDay
+                : selectedDay === currentDay
                   ? "Você ainda não concluiu este dia."
                   : "Este dia ainda não chegou."}
             </p>
@@ -201,14 +203,14 @@ export default function CalendarView() {
       )}
 
       {/* Mood Summary */}
-      {Object.keys(state.checkins).length > 0 && (
+      {Object.keys(checkins).length > 0 && (
         <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
           <h3 className="font-semibold text-[#2C1810] mb-4">
             Evolução do humor
           </h3>
           <div className="flex items-end gap-1 h-16">
             {Array.from({ length: 30 }, (_, i) => {
-              const checkin = state.checkins[i + 1];
+              const checkin = checkins[i + 1];
               const height = checkin ? (checkin.mood / 5) * 100 : 0;
               return (
                 <div

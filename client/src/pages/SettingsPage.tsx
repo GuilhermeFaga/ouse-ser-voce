@@ -1,6 +1,11 @@
 // OUSE SER VOCÊ – Configurações
 import { useState } from "react";
 import { useApp } from "@/contexts/AppContext";
+import { useProfile } from "@/hooks/useProfile";
+import { useJourney } from "@/hooks/useJourney";
+import { useJournal } from "@/hooks/useJournal";
+import { useNotes } from "@/hooks/useNotes";
+import { useAchievements } from "@/hooks/useAchievements";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -8,10 +13,15 @@ import { Bell, User, Shield, RotateCcw, Heart } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
-  const { state, updateState, updateSettings } = useApp();
-  const [name, setName] = useState(state.userName);
-  const [reminderTime, setReminderTime] = useState(state.reminderTime);
-  const [reminderEnabled, setReminderEnabled] = useState(state.reminderEnabled);
+  const { updateState } = useApp();
+  const { userName, reminderTime: savedReminderTime, reminderEnabled: savedReminderEnabled, startDate, updateSettings } = useProfile();
+  const { completedDays } = useJourney();
+  const { journalEntries } = useJournal();
+  const { notes } = useNotes();
+  const { unlockedAchievements } = useAchievements();
+  const [name, setName] = useState(userName);
+  const [reminderTime, setReminderTime] = useState(savedReminderTime);
+  const [reminderEnabled, setReminderEnabled] = useState(savedReminderEnabled);
 
   const handleSaveName = () => {
     if (name.trim()) {
@@ -61,7 +71,7 @@ export default function SettingsPage() {
             />
             <Button
               onClick={handleSaveName}
-              disabled={!name.trim() || name === state.userName}
+              disabled={!name.trim() || name === userName}
               className="bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl px-4 text-sm"
             >
               Salvar
@@ -124,33 +134,33 @@ export default function SettingsPage() {
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {state.completedDays.length}
+              {completedDays.length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Dias concluídos</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {state.journalEntries.length}
+              {journalEntries.length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Entradas no diário</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {state.notes.length}
+              {notes.length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Anotações</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {state.unlockedAchievements.length}
+              {unlockedAchievements.length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Conquistas</p>
           </div>
         </div>
-        {state.startDate && (
+        {startDate && (
           <p className="text-xs text-[#B08070] text-center mt-3">
             Jornada iniciada em{" "}
-            {new Date(state.startDate).toLocaleDateString("pt-BR", {
+            {new Date(startDate).toLocaleDateString("pt-BR", {
               day: "numeric",
               month: "long",
               year: "numeric",

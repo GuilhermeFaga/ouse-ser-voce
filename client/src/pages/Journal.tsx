@@ -3,7 +3,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useJournal } from "@/hooks/useJournal";
+import { useJourney } from "@/hooks/useJourney";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PenLine, Trash2, ChevronDown, ChevronUp, Plus, X } from "lucide-react";
@@ -21,7 +22,8 @@ const moodLabels = [
 ];
 
 export default function Journal() {
-  const { state, addJournalEntry, deleteJournalEntry } = useApp();
+  const { journalEntries, addJournalEntry, deleteJournalEntry } = useJournal();
+  const { currentDay } = useJourney();
   const [showNew, setShowNew] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [newMood, setNewMood] = useState(3);
@@ -30,7 +32,7 @@ export default function Journal() {
   const handleSave = () => {
     if (!newText.trim()) return;
     addJournalEntry({
-      dayNumber: state.currentDay,
+      dayNumber: currentDay,
       date: new Date().toDateString(),
       mood: newMood,
       text: newText,
@@ -41,7 +43,7 @@ export default function Journal() {
     setShowNew(false);
   };
 
-  const sorted = [...state.journalEntries].sort(
+  const sorted = [...journalEntries].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
@@ -53,7 +55,7 @@ export default function Journal() {
             Diário Emocional
           </h1>
           <p className="text-[#8B6E5A] text-sm">
-            {state.journalEntries.length} entradas
+            {journalEntries.length} entradas
           </p>
         </div>
         <Button
@@ -71,8 +73,8 @@ export default function Journal() {
       </div>
 
       {/* Mood Chart */}
-      {state.journalEntries.length > 0 && (
-        <MoodChart entries={state.journalEntries} />
+      {journalEntries.length > 0 && (
+        <MoodChart entries={journalEntries} />
       )}
 
       {/* New Entry Form */}

@@ -3,8 +3,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useAssessments } from "@/hooks/useAssessments";
 import { scannerQuestions, calculateScannerResults } from "@/lib/journeyData";
+import type { ScannerResult } from "@/hooks/useAppState";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, RotateCcw, AlertTriangle } from "lucide-react";
 
@@ -41,11 +42,11 @@ const areaBgColors: Record<string, string> = {
 };
 
 export default function Scanner() {
-  const { state, saveScannerResult } = useApp();
+  const { scannerResult, saveScannerResult } = useAssessments();
   const [started, setStarted] = useState(false);
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [showResults, setShowResults] = useState(!!state.scannerResult);
+  const [showResults, setShowResults] = useState(!!scannerResult);
 
   const handleAnswer = (questionId: string, value: number) => {
     const newAnswers = { ...answers, [questionId]: value };
@@ -68,7 +69,7 @@ export default function Scanner() {
     setShowResults(false);
   };
 
-  const results = state.scannerResult;
+  const results = scannerResult;
 
   if (showResults && results) {
     return <ScannerResults results={results} onRestart={handleRestart} />;
@@ -125,7 +126,7 @@ export default function Scanner() {
           </Button>
         </div>
 
-        {state.scannerResult && (
+        {scannerResult && (
           <div className="text-center">
             <button
               onClick={() => setShowResults(true)}
@@ -213,7 +214,7 @@ function ScannerResults({
   results,
   onRestart,
 }: {
-  results: NonNullable<ReturnType<typeof useApp>["state"]["scannerResult"]>;
+  results: ScannerResult;
   onRestart: () => void;
 }) {
   const abandonmentColor =

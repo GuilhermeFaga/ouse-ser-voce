@@ -3,7 +3,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useProfile } from "@/hooks/useProfile";
+import { useJourney } from "@/hooks/useJourney";
 import {
   Home,
   BookOpen,
@@ -149,7 +150,8 @@ export default function AppLayout({
   onNavigate,
   children,
 }: AppLayoutProps) {
-  const { state, progressPercent, currentStreak } = useApp();
+  const { userName } = useProfile();
+  const { currentDay, progressPercent, currentStreak } = useJourney();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -179,7 +181,7 @@ export default function AppLayout({
         <div className="px-6 py-4 border-b border-[#F0E4DC]">
           <p className="text-xs text-[#B08070] mb-1">Olá,</p>
           <p className="font-semibold text-[#2C1810] text-sm">
-            {state.userName}
+            {userName}
           </p>
           <div className="mt-3 flex items-center gap-3">
             <div className="flex-1">
@@ -232,7 +234,7 @@ export default function AppLayout({
           <div className="bg-[#F5EDE8] rounded-xl p-3 text-center">
             <p className="text-xs text-[#8B6E5A]">Dia atual</p>
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {state.currentDay}
+              {currentDay}
             </p>
             <p className="text-xs text-[#8B6E5A]">de 30</p>
           </div>
@@ -284,9 +286,9 @@ export default function AppLayout({
           >
             <div className="p-4 border-b border-[#F0E4DC] flex items-center justify-between">
               <div>
-                <p className="font-semibold text-[#2C1810]">{state.userName}</p>
+                <p className="font-semibold text-[#2C1810]">{userName}</p>
                 <p className="text-xs text-[#8B6E5A]">
-                  Dia {state.currentDay} de 30
+                  Dia {currentDay} de 30
                 </p>
               </div>
               <button

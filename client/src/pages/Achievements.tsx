@@ -1,18 +1,18 @@
 // OUSE SER VOCÊ – Conquistas
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
-import { achievements } from "@/lib/journeyData";
+import { useAchievements } from "@/hooks/useAchievements";
+import { achievements } from "@/lib/achievements";
 import { Trophy, Download } from "lucide-react";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
 import AchievementImageModal from "@/components/AchievementImageModal";
 
 export default function Achievements() {
-  const { state } = useApp();
+  const { unlockedAchievements } = useAchievements();
   const [selectedAchievement, setSelectedAchievement] = useState<string | null>(
     null
   );
-  const unlocked = state.unlockedAchievements;
+  const unlocked = unlockedAchievements;
 
   const unlockedList = achievements.filter(a => unlocked.includes(a.id));
   const lockedList = achievements.filter(a => !unlocked.includes(a.id));

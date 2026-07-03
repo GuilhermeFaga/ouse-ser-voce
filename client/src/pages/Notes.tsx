@@ -1,7 +1,7 @@
 // OUSE SER VOCÊ – Anotações
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useNotes } from "@/hooks/useNotes";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Plus, Trash2, Edit3, Check, X, FileText } from "lucide-react";
 import type { Note } from "@/contexts/AppContext";
 
 export default function Notes() {
-  const { state, addNote, updateNote, deleteNote } = useApp();
+  const { notes, addNote, updateNote, deleteNote } = useNotes();
   const [showNew, setShowNew] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
@@ -36,7 +36,7 @@ export default function Notes() {
     setEditingId(null);
   };
 
-  const sorted = [...state.notes].sort(
+  const sorted = [...notes].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
 
@@ -47,7 +47,7 @@ export default function Notes() {
           <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
             Anotações
           </h1>
-          <p className="text-[#8B6E5A] text-sm">{state.notes.length} notas</p>
+          <p className="text-[#8B6E5A] text-sm">{notes.length} notas</p>
         </div>
         <Button
           onClick={() => setShowNew(!showNew)}

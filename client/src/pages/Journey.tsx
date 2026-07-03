@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useJourney } from "@/hooks/useJourney";
 import { dailyContent, weekModules } from "@/lib/journeyData";
 import { CheckCircle2, Lock, Circle } from "lucide-react";
 import type { AppPage } from "@/components/AppLayout";
@@ -44,11 +44,11 @@ const weekColors = {
 };
 
 export default function Journey({ onNavigate }: JourneyProps) {
-  const { state } = useApp();
+  const { currentDay, completedDays } = useJourney();
   const [expandedWeek, setExpandedWeek] = useState<number>(
     weekModules.find(w => {
       const days = dailyContent.filter(d => d.week === w.week);
-      return days.some(d => d.day === state.currentDay);
+      return days.some(d => d.day === currentDay);
     })?.week || 1
   );
 
@@ -59,7 +59,7 @@ export default function Journey({ onNavigate }: JourneyProps) {
           Sua Jornada
         </h1>
         <p className="text-[#8B6E5A] text-sm">
-          {state.completedDays.length} de 30 dias concluídos
+          {completedDays.length} de 30 dias concluídos
         </p>
       </div>
 
@@ -68,14 +68,14 @@ export default function Journey({ onNavigate }: JourneyProps) {
         <div className="flex justify-between text-sm text-[#8B6E5A] mb-2">
           <span>Progresso total</span>
           <span className="font-medium text-[#C4856A]">
-            {Math.round((state.completedDays.length / 30) * 100)}%
+            {Math.round((completedDays.length / 30) * 100)}%
           </span>
         </div>
         <div className="h-2 bg-[#F0E4DC] rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-[#C4856A] to-[#E8A090] rounded-full"
             initial={{ width: 0 }}
-            animate={{ width: `${(state.completedDays.length / 30) * 100}%` }}
+            animate={{ width: `${(completedDays.length / 30) * 100}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
           />
         </div>
@@ -85,11 +85,11 @@ export default function Journey({ onNavigate }: JourneyProps) {
             <div
               key={day}
               className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold transition-all ${
-                state.completedDays.includes(day)
+                completedDays.includes(day)
                   ? "bg-[#C4856A] text-white"
-                  : day === state.currentDay
+                  : day === currentDay
                     ? "bg-[#F5EDE8] border-2 border-[#C4856A] text-[#C4856A]"
-                    : day < state.currentDay
+                    : day < currentDay
                       ? "bg-[#F0E4DC] text-[#B08070]"
                       : "bg-[#FAF6F1] text-[#D4C4BC]"
               }`}
@@ -104,12 +104,12 @@ export default function Journey({ onNavigate }: JourneyProps) {
       {weekModules.map(week => {
         const weekDays = dailyContent.filter(d => d.week === week.week);
         const completedCount = weekDays.filter(d =>
-          state.completedDays.includes(d.day)
+          completedDays.includes(d.day)
         ).length;
         const isExpanded = expandedWeek === week.week;
         const wc = weekColors[week.week as keyof typeof weekColors];
         const isLocked =
-          week.week > 1 && !weekDays.some(d => d.day <= state.currentDay);
+          week.week > 1 && !weekDays.some(d => d.day <= currentDay);
 
         return (
           <motion.div
@@ -180,9 +180,9 @@ export default function Journey({ onNavigate }: JourneyProps) {
                 {/* Days list */}
                 <div className="divide-y divide-[#F0E4DC]">
                   {weekDays.map(day => {
-                    const isCompleted = state.completedDays.includes(day.day);
-                    const isCurrent = day.day === state.currentDay;
-                    const isAccessible = day.day <= state.currentDay;
+                    const isCompleted = completedDays.includes(day.day);
+                    const isCurrent = day.day === currentDay;
+                    const isAccessible = day.day <= currentDay;
 
                     return (
                       <button

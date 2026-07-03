@@ -3,8 +3,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
-import { dailyContent, weekModules, achievements } from "@/lib/journeyData";
+import { useJourney } from "@/hooks/useJourney";
+import { useAchievements } from "@/hooks/useAchievements";
+import { dailyContent, weekModules } from "@/lib/journeyData";
+import { achievements } from "@/lib/achievements";
 import { MessageCircle, Share2, TrendingUp, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
@@ -15,14 +17,15 @@ interface SharePageProps {
 }
 
 export default function Share({ onNavigate }: SharePageProps) {
-  const { state } = useApp();
+  const { completedDays: completedDayNumbers, currentDay } = useJourney();
+  const { unlockedAchievements: unlockedIds } = useAchievements();
   const [activeTab, setActiveTab] = useState<
     "dias" | "conquistas" | "progresso"
   >("dias");
 
-  const completedDays = state.completedDays.sort((a, b) => b - a);
+  const completedDays = completedDayNumbers.sort((a, b) => b - a);
   const unlockedAchievements = achievements.filter(a =>
-    state.unlockedAchievements.includes(a.id)
+    unlockedIds.includes(a.id)
   );
 
   const tabs = [
@@ -41,10 +44,10 @@ export default function Share({ onNavigate }: SharePageProps) {
     { id: "progresso", label: "Progresso Geral", icon: "📊", count: 1 },
   ];
 
-  const progressPercent = Math.round((state.completedDays.length / 30) * 100);
+  const progressPercent = Math.round((completedDayNumbers.length / 30) * 100);
   const currentWeek = weekModules.find(w => {
     const weekDays = dailyContent.filter(d => d.week === w.week);
-    return weekDays.some(d => d.day === state.currentDay);
+    return weekDays.some(d => d.day === currentDay);
   });
 
   return (
@@ -196,7 +199,7 @@ export default function Share({ onNavigate }: SharePageProps) {
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
               <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
-                {state.completedDays.length}
+                {completedDayNumbers.length}
               </p>
               <p className="text-xs text-[#8B6E5A]">Dias</p>
             </div>
@@ -228,7 +231,7 @@ export default function Share({ onNavigate }: SharePageProps) {
             {currentWeek && (
               <ShareInstagramButton
                 type="progress"
-                completedDays={state.completedDays.length}
+                completedDays={completedDayNumbers.length}
                 totalDays={30}
                 currentWeek={currentWeek.week}
                 weekTheme={currentWeek.theme}
@@ -236,7 +239,7 @@ export default function Share({ onNavigate }: SharePageProps) {
               />
             )}
 
-            {state.completedDays.length === 30 && (
+            {completedDayNumbers.length === 30 && (
               <ShareInstagramButton
                 type="journey"
                 finalMood={3}

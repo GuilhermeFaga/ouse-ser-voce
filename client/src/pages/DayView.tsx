@@ -3,7 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useApp } from "@/contexts/AppContext";
+import { useJourney } from "@/hooks/useJourney";
+import { useJournal } from "@/hooks/useJournal";
 import { dailyContent, weekModules } from "@/lib/journeyData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -80,7 +81,8 @@ function formatDate(isoString: string): string {
 }
 
 export default function DayView({ onNavigate }: DayViewProps) {
-  const { state, completeDay, addJournalEntry, updateDayCheckin } = useApp();
+  const { currentDay, completedDays, checkins, completeDay, updateDayCheckin } = useJourney();
+  const { journalEntries, addJournalEntry } = useJournal();
   const [activeTab, setActiveTab] = useState<TabType>("reflexao");
   const [mood, setMood] = useState(3);
   const [notes, setNotes] = useState("");
@@ -93,17 +95,17 @@ export default function DayView({ onNavigate }: DayViewProps) {
   const [isFirstCompletion, setIsFirstCompletion] = useState(false);
 
   const today =
-    dailyContent.find(d => d.day === state.currentDay) || dailyContent[0];
-  const isCompleted = state.completedDays.includes(today.day);
+    dailyContent.find(d => d.day === currentDay) || dailyContent[0];
+  const isCompleted = completedDays.includes(today.day);
   const weekColor = weekColors[today.week as keyof typeof weekColors];
   const currentWeek = weekModules.find(w => w.week === today.week)!;
-  const checkin = state.checkins[today.day];
+  const checkin = checkins[today.day];
 
   // Load saved state or reset when entering a new day
   useEffect(() => {
     if (isCompleted) {
-      const entry = state.journalEntries.find(e => e.dayNumber === today.day);
-      const ck = state.checkins[today.day];
+      const entry = journalEntries.find(e => e.dayNumber === today.day);
+      const ck = checkins[today.day];
       if (ck) {
         setMood(ck.mood);
         setNotes(ck.notes || "");
@@ -137,7 +139,7 @@ export default function DayView({ onNavigate }: DayViewProps) {
     const hasJournalContent = Object.values(journalAnswers).some(v =>
       v.trim()
     );
-    const entry = state.journalEntries.find(e => e.dayNumber === today.day);
+    const entry = journalEntries.find(e => e.dayNumber === today.day);
     if (hasJournalContent) {
       addJournalEntry({
         dayNumber: today.day,

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 const HERO_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/hero-woman-YaCZVbHUiWAFQX2m6hz48Q.webp";
+  "/hero.webp";
 const LOGO_IMG = "/manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
 
 const steps = [
@@ -95,7 +95,7 @@ export default function Onboarding() {
         <img
           src={HERO_IMG}
           alt="Mulher confiante e serena"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-svh object-cover object-center"
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#FAF6F1]/20" />

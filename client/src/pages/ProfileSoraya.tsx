@@ -17,8 +17,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const HERO_IMG =
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
+const HERO_IMG = "/images/soraya-profile.jpg";
 
 export default function ProfileSoraya() {
   return (

@@ -23,8 +23,7 @@ import MeditationPlayer from "@/components/MeditationPlayer";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
 import { meditationAudios } from "@/lib/meditationAudios";
 
-const JOURNAL_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/journal-writing-NfZ4kj7jHsTA3NaK7eidFt.webp";
+const JOURNAL_IMG = "/images/journal-writing.webp";
 
 // Use meditationAudios from the separate file
 const meditationUrls = meditationAudios;

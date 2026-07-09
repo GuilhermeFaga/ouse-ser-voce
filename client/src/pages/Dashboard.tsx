@@ -20,8 +20,7 @@ import {
 import type { AppPage } from "@/components/AppLayout";
 import ShareInstagramButton from "@/components/ShareInstagramButton";
 
-const MEDITATION_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663794059331/LaRnsfSwQVxkWuEqKwkmSE/meditation-calm-LSZxzQCsPGpdXyYLCrYptC.webp";
+const MEDITATION_IMG = "/images/meditation-calm.webp";
 
 interface DashboardProps {
   onNavigate: (page: AppPage, extra?: unknown) => void;

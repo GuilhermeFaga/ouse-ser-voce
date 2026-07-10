@@ -24,7 +24,7 @@ import {
   Bookmark,
 } from "lucide-react";
 
-const LOGO_IMG = "./manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
+const LOGO_IMG = "/images/logo-ouse-ser-voce.jpeg";
 
 export type AppPage =
   | "home"

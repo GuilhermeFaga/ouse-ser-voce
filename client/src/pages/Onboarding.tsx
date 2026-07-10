@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 const HERO_IMG = "./hero.webp";
-const LOGO_IMG = "./manus-storage/logo-ouse-ser-voce_d008ceae.jpeg";
+const LOGO_IMG = "/images/logo-ouse-ser-voce.jpeg";
 
 const steps = [
   {

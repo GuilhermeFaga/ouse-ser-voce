@@ -29,7 +29,7 @@ const steps = [
   {
     id: "about",
     title: "O que você vai encontrar aqui",
-    subtitle: "30 dias de acompanhamento próximo com a psicóloga Soraya Farias",
+    subtitle: "30 dias de reflexões e práticas com Soraya Farias",
     cta: "Continuar",
   },
   {
@@ -111,7 +111,7 @@ export default function Onboarding() {
               </div>
               <div>
                 <p className="font-serif text-sm text-[#2C1810] italic leading-relaxed mb-1.5">
-                  "Você não perdeu quem você é. Só parou de procurar."
+                  "No seu ritmo, com espaço para descobrir o que faz sentido para você."
                 </p>
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-[#C4856A] font-semibold">
@@ -119,7 +119,6 @@ export default function Onboarding() {
                   </p>
                   <span className="text-[#D4C4BC]">·</span>
                   <p className="text-xs text-[#8B6E5A]">Psicóloga Clínica</p>
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 ml-1" />
                 </div>
               </div>
             </div>
@@ -290,13 +289,9 @@ export default function Onboarding() {
                         <p className="text-xs font-semibold text-[#2C1810]">
                           Soraya Farias
                         </p>
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                        <span className="text-[10px] text-green-600 font-medium">
-                          Disponível
-                        </span>
                       </div>
                       <p className="text-[11px] text-[#8B6E5A]">
-                        Psicóloga Clínica · CRP 06/157053
+                        Psicóloga clínica
                       </p>
                     </div>
                   </motion.div>

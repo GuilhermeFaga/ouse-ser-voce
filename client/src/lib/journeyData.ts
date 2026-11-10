@@ -420,7 +420,7 @@ export const dailyContent: DayContent[] = [
     soraiaMessage:
       "Algumas relações nos nutrem. Outras nos drenam. Hoje vamos olhar honestamente para os vínculos da sua vida — não para destruí-los, mas para entender o que eles fazem com você.",
     reflection:
-      "Uma relação desgastante não precisa ser abusiva para ser prejudicial. Pode ser simplesmente uma relação onde você dá muito mais do que recebe, onde você se sente pequena, invisível ou constantemente culpada.",
+      "Uma relação desgastante não precisa ser abusiva para ser prejudicial. Pode ser simplesmente uma relação em que você dá muito mais do que recebe, em que você se sente pequena, invisível ou constantemente culpada.",
     affirmation: "Mereço relações que me nutrem e me fazem crescer.",
     exercise: {
       title: "Mapa de energia relacional",
@@ -433,7 +433,7 @@ export const dailyContent: DayContent[] = [
       ],
     },
     journalPrompts: [
-      "Qual relação na sua vida mais te cansa? Por quê você ainda mantém?",
+      "Qual relação na sua vida mais te cansa? Por que você ainda mantém?",
       "Com quem você se sente mais você mesma? O que essa relação tem de diferente?",
       "O que você teme que aconteça se você estabelecer limites nas relações desgastantes?",
     ],
@@ -460,14 +460,14 @@ export const dailyContent: DayContent[] = [
         "Escreva: 'Quando me cuido bem, me sinto...'",
         "Liste 10 formas de autocuidado que te fazem bem (pequenas e grandes).",
         "Escolha 3 que você pode praticar esta semana.",
-        "Agende na sua agenda como compromisso — não como 'se der tempo'.",
+        "Reserve na agenda como compromisso — não como 'se der tempo'.",
         "Escreva o que você precisa soltar para ter espaço para esse cuidado.",
       ],
     },
     journalPrompts: [
       "Qual é o maior obstáculo para você se cuidar? É real ou é uma crença?",
       "O que você diria para uma amiga que nunca se coloca em primeiro lugar?",
-      "Que forma de autocuidado você abandonou que sente falta?",
+      "Que forma de autocuidado você abandonou e de que sente falta?",
     ],
     meditationTitle: "Voltando para casa",
     meditationDuration: "10 min",
@@ -531,7 +531,7 @@ export const dailyContent: DayContent[] = [
     journalPrompts: [
       "No final da sua vida, o que você quer ter vivido? Amado? Realizado?",
       "Existe algo que você faz por obrigação que poderia soltar?",
-      "O que você diria não se soubesse o que realmente importa para você?",
+      "O que você faria diferente se soubesse o que realmente importa para você?",
     ],
     meditationTitle: "Clareza interior",
     meditationDuration: "12 min",
@@ -629,7 +629,7 @@ export const dailyContent: DayContent[] = [
     journalPrompts: [
       "Em quais situações você mais cala o que sente? Por quê?",
       "Qual é o seu maior medo ao se expressar com honestidade?",
-      "O que você gostaria de dizer para alguém que ainda não disse?",
+      "O que você gostaria de dizer a alguém, mas ainda não disse?",
     ],
     meditationTitle: "Encontrando sua voz",
     meditationDuration: "10 min",
@@ -787,7 +787,7 @@ export const dailyContent: DayContent[] = [
     },
     journalPrompts: [
       "Qual foi a maior mudança que você percebeu em si mesma até agora?",
-      "O que você fez nessas 3 semanas que a versão de você antes da jornada não faria?",
+      "O que você fez nessas 3 semanas que a versão de você de antes da jornada não faria?",
       "O que você mais quer trabalhar na última semana?",
     ],
     meditationTitle: "Encontrando a nova você",
@@ -804,7 +804,7 @@ export const dailyContent: DayContent[] = [
     title: "Para que você veio ao mundo?",
     subtitle: "Propósito não é destino. É direção.",
     soraiaMessage:
-      "Propósito não é uma grande missão grandiosa que você precisa descobrir. É a direção que faz sua vida fazer sentido — o que te move, o que te dá energia, o que você faz que faz o mundo um pouco melhor.",
+      "Propósito não é uma missão grandiosa que você precisa descobrir. É a direção que faz sua vida fazer sentido — o que te move, o que te dá energia, o que você faz que faz o mundo um pouco melhor.",
     reflection:
       "Muitas mulheres acreditam que não têm propósito porque não encontraram 'a grande missão'. Mas propósito pode estar nos pequenos atos — na forma como você cuida, cria, conecta, inspira.",
     affirmation: "Minha vida tem propósito. Estou aqui por uma razão.",
@@ -813,7 +813,7 @@ export const dailyContent: DayContent[] = [
       description: "Descubra o que te move.",
       steps: [
         "Responda: O que você faz que faz o tempo passar sem perceber?",
-        "Responda: O que as pessoas sempre pedem sua ajuda ou conselho?",
+        "Responda: Em que as pessoas sempre pedem sua ajuda ou conselho?",
         "Responda: O que te indigna no mundo? (Indignação aponta para valores.)",
         "Responda: O que você faria de graça se pudesse?",
         "Encontre o fio que conecta essas respostas — esse é seu propósito.",
@@ -842,7 +842,7 @@ export const dailyContent: DayContent[] = [
     affirmation: "Sou resiliente. Cada desafio me fortalece e me ensina.",
     exercise: {
       title: "Mapa da resiliência",
-      description: "Reconheça sua força através das suas histórias.",
+      description: "Reconheça sua força por meio das suas histórias.",
       steps: [
         "Escreva os 3 momentos mais difíceis da sua vida.",
         "Para cada um, escreva: 'Como eu sobrevivi a isso?'",
@@ -1165,7 +1165,7 @@ export const scannerQuestions: ScannerQuestion[] = [
       { label: "Me culpo bastante, mas eventualmente me perdoo", value: 2 },
       { label: "Consigo me tratar com alguma gentileza", value: 3 },
       {
-        label: "Me trato com a mesma compaixão que trataria uma amiga",
+        label: "Me trato com a mesma compaixão com que trataria uma amiga",
         value: 5,
       },
     ],

@@ -138,8 +138,8 @@ export default function Journal() {
             Seu diário está vazio
           </p>
           <p className="text-[#8B6E5A] text-sm max-w-xs mx-auto">
-            Escreva sua primeira entrada. Não precisa ser perfeito — só precisa
-            ser honesto.
+            Escreva sua primeira entrada. Não precisa ser perfeita — só precisa
+            ser honesta.
           </p>
         </div>
       ) : (

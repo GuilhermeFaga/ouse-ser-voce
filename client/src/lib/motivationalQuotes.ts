@@ -107,7 +107,7 @@ export const quoteCategories: QuoteCategory[] = [
     emoji: "🌊",
     description: "Superação e persistência",
     quotes: [
-      "Você já superou 100% das piores dias.",
+      "Você já superou 100% dos piores dias.",
       "Resiliência é sua natureza.",
       "Você é mais resiliente do que pensa.",
       "Cada obstáculo é uma oportunidade.",

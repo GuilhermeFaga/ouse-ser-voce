@@ -35,8 +35,8 @@ export const communityStories: CommunityStory[] = [
     highlights: [
       "Estabeleceu limites saudáveis com a família",
       "Voltou a fazer yoga (sua paixão abandonada)",
-      "Recebeu promoção no trabalho com mais confiança",
-      "Melhorou relacionamento com seu parceiro",
+      "Recebeu uma promoção no trabalho com mais confiança",
+      "Melhorou o relacionamento com seu parceiro",
     ],
     likes: 247,
     timestamp: "Há 2 dias",
@@ -60,12 +60,12 @@ export const communityStories: CommunityStory[] = [
     mainTransformation: "Descobriu seu propósito além dos negócios",
     quote: "Construí um império, mas tinha perdido a mim mesma no caminho.",
     fullStory:
-      "Fernanda era uma empresária de sucesso, mas se sentia vazia. A jornada de 30 dias a ajudou a reconectar com seus valores e descobrir que seu propósito ia além de lucros. Agora usa sua empresa para impactar positivamente a vida de suas colaboradoras.",
+      "Fernanda era uma empresária de sucesso, mas se sentia vazia. A jornada de 30 dias a ajudou a reconectar com seus valores e descobrir que seu propósito ia além de lucros. Agora, ela usa sua empresa para impactar positivamente a vida de suas colaboradoras.",
     highlights: [
-      "Implementou programa de bem-estar para equipe",
-      "Redescobriu paixão por mentoria de mulheres",
-      "Criou espaço de acolhimento no trabalho",
-      "Melhorou saúde mental e disposição",
+      "Implementou um programa de bem-estar para a equipe",
+      "Redescobriu a paixão por mentoria de mulheres",
+      "Criou um espaço de acolhimento no trabalho",
+      "Melhorou a saúde mental e a disposição",
     ],
     likes: 189,
     timestamp: "Há 5 dias",
@@ -90,9 +90,9 @@ export const communityStories: CommunityStory[] = [
     fullStory:
       "Carla passava horas se criticando por não ser 'boa o suficiente'. A prática diária de autorreflexão e meditação a transformou. Hoje, ela olha no espelho com compaixão e gratidão, e essa mudança impactou todas as suas relações.",
     highlights: [
-      "Parou de comparar-se com outras mulheres",
-      "Desenvolveu rotina de autocuidado genuína",
-      "Melhorou relacionamento com filhos",
+      "Parou de se comparar com outras mulheres",
+      "Desenvolveu uma rotina de autocuidado genuína",
+      "Melhorou o relacionamento com os filhos",
       "Voltou a investir em sua aparência com amor",
     ],
     likes: 312,
@@ -115,11 +115,11 @@ export const communityStories: CommunityStory[] = [
     role: "Designer e Mãe Solo",
     daysCompleted: 20,
     mainTransformation:
-      "Aprendendo a equilibrar maternidade com identidade pessoal",
+      "Aprendendo a equilibrar a maternidade com a identidade pessoal",
     quote:
       "Ser mãe não significa deixar de ser eu. Estou aprendendo isso agora.",
     fullStory:
-      "Juliana é mãe solo de duas crianças e trabalha como designer freelancer. Sentia-se constantemente culpada por não estar 100% em nenhum lugar. A jornada a ajudou a entender que sua presença presente é mais valiosa que sua disponibilidade total.",
+      "Juliana é mãe solo de duas crianças e trabalha como designer freelancer. Sentia-se constantemente culpada por não estar 100% em nenhum lugar. A jornada a ajudou a entender que sua presença é mais valiosa que sua disponibilidade total.",
     highlights: [
       "Estabeleceu horários de trabalho definidos",
       "Criou momentos de qualidade com os filhos",
@@ -139,15 +139,15 @@ export const communityStories: CommunityStory[] = [
     avatar: "👩‍🦱",
     role: "Executiva",
     daysCompleted: 30,
-    mainTransformation: "Redescobriu a vida após síndrome do ninho vazio",
+    mainTransformation: "Redescobriu a vida após a síndrome do ninho vazio",
     quote: "Criei uma vida para meus filhos, agora estou criando uma para mim.",
     fullStory:
-      "Com os filhos saindo de casa, Beatriz se viu diante de um espelho e não reconheceu quem estava ali. A jornada de 30 dias foi seu ponto de virada. Ela está redescubrindo hobbies, viajando, e se permitindo sonhar novamente.",
+      "Com os filhos saindo de casa, Beatriz se viu diante de um espelho e não reconheceu quem estava ali. A jornada de 30 dias foi seu ponto de virada. Ela está redescubrindo hobbies, viajando e se permitindo sonhar novamente.",
     highlights: [
-      "Planejou viagem dos sonhos",
-      "Voltou a estudar (fez curso de fotografia)",
+      "Planejou a viagem dos sonhos",
+      "Voltou a estudar (fez um curso de fotografia)",
       "Fortaleceu amizades antigas",
-      "Sente-se viva novamente",
+      "Voltou a se sentir viva",
     ],
     likes: 428,
     timestamp: "Há 1 semana",
@@ -173,7 +173,7 @@ export const communityStories: CommunityStory[] = [
     fullStory:
       "Sofia é psicóloga, mas descobriu que estava tão focada em cuidar dos outros que negligenciava a si mesma. A jornada OUSE SER VOCÊ a ajudou a vivenciar na pele o que seus pacientes experimentam, tornando-a uma profissional mais empática e integrada.",
     highlights: [
-      "Melhorou qualidade de suas sessões terapêuticas",
+      "Melhorou a qualidade de suas sessões terapêuticas",
       "Desenvolveu maior compaixão por si mesma",
       "Estabeleceu limites profissionais saudáveis",
       "Inspirou pacientes a fazer a jornada também",

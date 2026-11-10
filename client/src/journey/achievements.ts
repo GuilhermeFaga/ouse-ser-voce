@@ -75,14 +75,14 @@ export const achievements: Achievement[] = [
   {
     id: "streak-7",
     title: "7 Dias Seguidos",
-    description: "Você manteve 7 dias consecutivos na jornada.",
+    description: "Você manteve uma sequência de 7 dias na jornada.",
     icon: "🔥",
     condition: p => p.currentStreak >= 7,
   },
   {
     id: "streak-14",
     title: "14 Dias Seguidos",
-    description: "Você manteve 14 dias consecutivos na jornada.",
+    description: "Você manteve uma sequência de 14 dias na jornada.",
     icon: "⚡",
     condition: p => p.currentStreak >= 14,
   },

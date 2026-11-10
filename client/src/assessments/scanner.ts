@@ -45,16 +45,16 @@ export const SCANNER_AREAS: ScannerArea[] = [
     label: "Relacionamentos",
     palette: PALETTE.blue,
     explanation:
-      "Suas relações estão te drenando mais do que te nutrindo. Você pode estar com dificuldade de estabelecer limites, expressar suas necessidades ou se sentindo invisível nas relações. O trabalho mais urgente é aprender a se comunicar com assertividade e proteger sua energia.",
+      "Suas relações estão te drenando mais do que te nutrindo. Você pode estar com dificuldade de estabelecer limites ou expressar suas necessidades, ou se sentindo invisível nas relações. O trabalho mais urgente é aprender a se comunicar com assertividade e proteger sua energia.",
     recommendation:
-      "Esta semana, pratique dizer não para uma coisa que você normalmente diria sim por obrigação. Observe como você se sente antes, durante e depois.",
+      "Esta semana, pratique dizer não a algo a que você normalmente diria sim por obrigação. Observe como você se sente antes, durante e depois.",
   },
   {
     id: "proposito",
     label: "Propósito",
     palette: PALETTE.purple,
     explanation:
-      "Você está sem direção e sem sentido. Pode estar vivendo no piloto automático, sem clareza sobre o que realmente importa para você. O trabalho mais urgente é reconectar com seus valores, sonhos e o que dá sentido à sua vida.",
+      "Você está sem direção e sem sentido. Pode estar vivendo no piloto automático, sem clareza sobre o que realmente importa para você. O trabalho mais urgente é se reconectar com seus valores, sonhos e o que dá sentido à sua vida.",
     recommendation:
       "Hoje, escreva 3 coisas que te fazem perder a noção do tempo quando você as faz. Essas atividades contêm pistas importantes sobre o que dá sentido à sua vida.",
   },

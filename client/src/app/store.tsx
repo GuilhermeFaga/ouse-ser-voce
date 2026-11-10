@@ -116,7 +116,9 @@ function withDay(
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AppState>(loadState);
+  const [state, setState] = useState<AppState>(() =>
+    withAchievements(loadState())
+  );
   const saveFailed = useRef(false);
 
   useEffect(() => {

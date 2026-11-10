@@ -89,10 +89,10 @@ export const scannerQuestions: ScannerQuestion[] = [
     question: "Como você se trata quando comete um erro?",
     options: [
       { label: "Me critico duramente — sou muito exigente comigo", value: 1 },
-      { label: "Me culpo bastante, mas eventualmente me perdoo", value: 2 },
+      { label: "Me culpo bastante, mas com o tempo me perdoo", value: 2 },
       { label: "Consigo me tratar com alguma gentileza", value: 3 },
       {
-        label: "Me trato com a mesma compaixão que trataria uma amiga",
+        label: "Me trato com a mesma compaixão com que trataria uma amiga",
         value: 5,
       },
     ],

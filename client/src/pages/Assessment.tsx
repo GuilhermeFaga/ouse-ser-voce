@@ -701,10 +701,10 @@ function AssessmentForm({
           </Action>
           <p className="mt-2 text-center text-xs text-ink-muted">
             {attempted && missing.length > 0
-              ? `Faltam ${missing.length} ${
+              ? `${missing.length === 1 ? "Falta" : "Faltam"} ${missing.length} ${
                   missing.length === 1 ? "resposta" : "respostas"
                 } para salvar.`
-              : "Fica salvo neste dispositivo · dá para editar depois"}
+              : "Fica salvo neste dispositivo e na nuvem · dá para editar depois"}
           </p>
         </div>
       </Card>

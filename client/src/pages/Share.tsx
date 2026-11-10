@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 type Tab = "dias" | "conquistas" | "progresso";
 
 const TABS: { id: Tab; label: string; short: string; icon: LucideIcon }[] = [
-  { id: "dias", label: "Dias completados", short: "Dias", icon: Calendar },
+  { id: "dias", label: "Dias concluídos", short: "Dias", icon: Calendar },
   { id: "conquistas", label: "Conquistas", short: "Conquistas", icon: Trophy },
   { id: "progresso", label: "Progresso", short: "Progresso", icon: TrendingUp },
 ];
@@ -254,7 +254,7 @@ export default function Share() {
             <EmptyState
               icon={Trophy}
               title="Nenhuma conquista desbloqueada ainda"
-              body="As conquistas aparecem quando você fecha um marco da jornada. Elas ficam salvas neste dispositivo, mesmo que você pause."
+              body="As conquistas aparecem quando você fecha um marco da jornada. Elas ficam salvas neste dispositivo e na nuvem, mesmo que você pause."
               action={
                 <Action onClick={openCurrentDay}>
                   Abrir o dia {currentDay}
@@ -320,7 +320,7 @@ export default function Share() {
                 hint={
                   allDone
                     ? "Os 30 dias concluídos continuam guardados."
-                    : `Faltam ${remaining} ${
+                    : `${remaining === 1 ? "Falta" : "Faltam"} ${remaining} ${
                         remaining === 1 ? "dia" : "dias"
                       } para a jornada completa.`
                 }
@@ -390,7 +390,11 @@ export default function Share() {
                     subject={{ kind: "progress", completedDays }}
                     size={allDone ? "md" : "lg"}
                     variant={allDone ? "secondary" : "primary"}
-                    label={`Compartilhar meus ${sharedDays} dias`}
+                    label={
+                      sharedDays === 1
+                        ? "Compartilhar meu dia concluído"
+                        : `Compartilhar meus ${sharedDays} dias`
+                    }
                     className="w-full sm:w-auto"
                   />
                 </div>

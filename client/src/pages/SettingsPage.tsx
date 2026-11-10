@@ -87,9 +87,9 @@ export default function SettingsPage() {
   ].filter(loss => loss.count > 0);
 
   const otherLosses = [
-    state.scanner ? "do diagnóstico" : null,
-    state.initialAssessment || state.finalAssessment ? "das avaliações" : null,
-    state.favoriteAudioDays.length > 0 ? "dos áudios favoritos" : null,
+    state.scanner ? "diagnóstico" : null,
+    state.initialAssessment || state.finalAssessment ? "avaliações" : null,
+    state.favoriteAudioDays.length > 0 ? "áudios favoritos" : null,
   ].filter((item): item is string => item !== null);
 
   const hasRecord = losses.length > 0 || otherLosses.length > 0;
@@ -113,7 +113,7 @@ export default function SettingsPage() {
     setNameEdited(false);
     setTriedSave(false);
     toast.success(
-      "Dados apagados do aparelho e da nuvem. A jornada recomeça do dia 1."
+      "Dados apagados deste dispositivo. A exclusão será sincronizada com a nuvem. A jornada recomeça do dia 1."
     );
   };
 
@@ -122,7 +122,7 @@ export default function SettingsPage() {
       <ScreenHeader
         kicker="Seus dados"
         title="Configurações"
-        description="Seu nome, o que a jornada já guardou e onde ele fica salvo."
+        description="Seu nome, o que a jornada já guardou e onde esses dados ficam salvos."
       />
 
       {/* The one decision on this screen, and the one primary action. */}
@@ -159,7 +159,7 @@ export default function SettingsPage() {
             <p className="text-xs text-ink-muted">
               {unchanged && trimmed !== ""
                 ? "Este nome já está salvo."
-                : "Também aparece nos outros aparelhos onde você entrar."}
+                : "Também aparece nos outros dispositivos onde você entrar."}
             </p>
           </div>
         </form>
@@ -229,9 +229,8 @@ export default function SettingsPage() {
             Privacidade
           </p>
           <p className="text-sm leading-relaxed text-ink-soft">
-            Seu registro fica neste aparelho e na sua conta do Google. Só você
-            pode lê-lo, e apenas e-mails liberados pela administração podem
-            entrar.
+            Seu registro fica neste dispositivo e na nuvem. Só você pode lê-lo,
+            e apenas e-mails liberados pela administração podem entrar.
           </p>
         </div>
       </Card>
@@ -252,16 +251,16 @@ export default function SettingsPage() {
                 Apagar remove{" "}
                 {losses.length > 0 ? (
                   <>
-                    <LossList items={losses} /> deste aparelho e da sua conta na
-                    nuvem
+                    <LossList items={losses} /> deste dispositivo e da sua conta
+                    na nuvem
                     {otherLosses.length > 0 && (
-                      <>, além {joinWords(otherLosses)}</>
+                      <>, além dos registros de {joinWords(otherLosses)}</>
                     )}
                   </>
                 ) : (
                   <>
-                    o que está guardado neste aparelho e na sua conta na nuvem,
-                    incluindo {joinWords(otherLosses)}
+                    o que está guardado neste dispositivo e na sua conta na
+                    nuvem, incluindo os registros de {joinWords(otherLosses)}
                   </>
                 )}
                 . Não há como recuperar, e a jornada recomeça do zero.
@@ -293,7 +292,8 @@ export default function SettingsPage() {
                     Apagar tudo agora?
                   </p>
                   <p className="text-xs leading-relaxed text-ink-muted">
-                    Seu registro e seu diário somem deste aparelho e da nuvem.
+                    Seu registro e seu diário somem deste dispositivo e da
+                    nuvem.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row">

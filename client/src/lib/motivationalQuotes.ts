@@ -13,7 +13,7 @@ export const quoteCategories: QuoteCategory[] = [
     id: "self-knowledge",
     name: "Autoconhecimento",
     emoji: "🪞",
-    description: "Reconhecer-se e sua identidade",
+    description: "Reconhecer-se e reconhecer sua identidade",
     quotes: [
       "Você é mais forte do que pensa.",
       "Sua jornada é única e valiosa.",
@@ -95,7 +95,7 @@ export const quoteCategories: QuoteCategory[] = [
     quotes: [
       "Seus limites são saudáveis.",
       "Você merece relacionamentos respeitosos.",
-      "Dizer não é um ato de amor próprio.",
+      "Dizer não é um ato de amor-próprio.",
       "Seus limites protegem seu coração.",
       "Você escolhe com quem convive.",
     ],
@@ -106,7 +106,7 @@ export const quoteCategories: QuoteCategory[] = [
     emoji: "🌊",
     description: "Superação e persistência",
     quotes: [
-      "Você já superou 100% das piores dias.",
+      "Você já superou 100% dos piores dias.",
       "Resiliência é sua natureza.",
       "Você é mais resiliente do que pensa.",
       "Cada obstáculo é uma oportunidade.",
@@ -172,7 +172,7 @@ export const quoteCategories: QuoteCategory[] = [
     description: "Liberação e leveza",
     quotes: [
       "Você está se libertando do que não serve.",
-      "Soltar é um ato de amor próprio.",
+      "Soltar é um ato de amor-próprio.",
       "Você merece leveza.",
       "Liberdade começa dentro de você.",
       "Você está se desapegando do que dói.",

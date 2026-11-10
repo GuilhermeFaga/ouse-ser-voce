@@ -450,7 +450,7 @@ export default function AdminAccess() {
               {ADMIN_EMAILS.map(email => (
                 <li key={email} className="flex flex-wrap items-center gap-2">
                   <span className="text-sm text-ink">{email}</span>
-                  <Pill tone="brand">admin</Pill>
+                  <Pill tone="brand">administradora</Pill>
                 </li>
               ))}
             </ul>

@@ -122,7 +122,7 @@ export const dailyContent: DayContent[] = [
     reflection:
       "Desde criança, aprendemos a nos definir pelos papéis que ocupamos. Com o tempo, esses papéis se tornam nossa identidade — e esquecemos que existe uma mulher por trás de tudo isso. Hoje não é sobre o que você faz. É sobre quem você é.",
     affirmation:
-      "Eu sou mais do que os papéis que desempenho. Minha essência existe independente do que faço pelos outros.",
+      "Eu sou mais do que os papéis que desempenho. Minha essência existe independentemente do que faço pelos outros.",
     exercise: {
       title: "Carta para você mesma",
       description: "Um exercício simples e poderoso de autoconhecimento.",
@@ -188,7 +188,7 @@ export const dailyContent: DayContent[] = [
     soraiaMessage:
       "Existe uma versão de você que sonhava livremente — antes das responsabilidades, antes das decepções, antes do 'isso não é possível'. Hoje vamos encontrar essa mulher e ouvir o que ela tem a dizer.",
     reflection:
-      "Quando crescemos, aprendemos a 'ser realistas'. Mas muitas vezes confundimos realismo com resignação. Seus sonhos esquecidos carregam pistas importantes sobre quem você realmente é e o que sua alma precisa.",
+      "Quando crescemos, aprendemos a 'ser realistas'. Mas muitas vezes confundimos realismo com resignação. Seus sonhos esquecidos carregam pistas importantes sobre quem você realmente é e aquilo de que sua alma precisa.",
     affirmation:
       "Meus sonhos são válidos. Tenho permissão de querer mais para minha vida.",
     exercise: {
@@ -237,7 +237,7 @@ export const dailyContent: DayContent[] = [
     journalPrompts: [
       "Qual qualidade sua você costuma ignorar ou minimizar?",
       "Quem na sua vida merece mais reconhecimento do que você tem dado?",
-      "O que sua vida atual tem que sua versão de 5 anos atrás sonhava?",
+      "O que existe na sua vida hoje com que você sonhava há 5 anos?",
     ],
     meditationTitle: "Coração aberto",
     meditationDuration: "10 min",
@@ -422,7 +422,7 @@ export const dailyContent: DayContent[] = [
     soraiaMessage:
       "Algumas relações nos nutrem. Outras nos drenam. Hoje vamos olhar honestamente para os vínculos da sua vida — não para destruí-los, mas para entender o que eles fazem com você.",
     reflection:
-      "Uma relação desgastante não precisa ser abusiva para ser prejudicial. Pode ser simplesmente uma relação onde você dá muito mais do que recebe, onde você se sente pequena, invisível ou constantemente culpada.",
+      "Uma relação desgastante não precisa ser abusiva para ser prejudicial. Pode ser simplesmente uma relação em que você dá muito mais do que recebe, em que você se sente pequena, invisível ou constantemente culpada.",
     affirmation: "Mereço relações que me nutrem e me fazem crescer.",
     exercise: {
       title: "Mapa de energia relacional",
@@ -430,12 +430,12 @@ export const dailyContent: DayContent[] = [
       steps: [
         "Liste as 5 pessoas com quem você mais interage.",
         "Para cada uma, responda: 'Depois de estar com essa pessoa, me sinto...'",
-        "Classifique cada relação: Nutre / Neutro / Drena.",
+        "Classifique cada relação: Nutre / Neutra / Drena.",
         "Para as que drenam, pergunte: 'O que posso fazer para proteger minha energia nessa relação?'",
       ],
     },
     journalPrompts: [
-      "Qual relação na sua vida mais te cansa? Por quê você ainda mantém?",
+      "Qual relação na sua vida mais te cansa? Por que você ainda mantém?",
       "Com quem você se sente mais você mesma? O que essa relação tem de diferente?",
       "O que você teme que aconteça se você estabelecer limites nas relações desgastantes?",
     ],
@@ -452,7 +452,7 @@ export const dailyContent: DayContent[] = [
     title: "Você é a última da sua lista?",
     subtitle: "Autocuidado não é luxo. É sobrevivência.",
     soraiaMessage:
-      "Você cuida de todos — mas quando foi a última vez que cuidou de você com a mesma dedicação? Hoje vamos falar sobre autocuidado real: não apenas banhos relaxantes, mas sobre se colocar como prioridade.",
+      "Você cuida de todos — mas quando foi a última vez que cuidou de você com a mesma dedicação? Hoje vamos falar sobre autocuidado real: não apenas sobre banhos relaxantes, mas também sobre se colocar como prioridade.",
     reflection:
       "Autocuidado não é egoísmo. É a base de tudo. Quando você não se cuida, não tem nada para oferecer aos outros — só o que sobra, e sobras não nutrem ninguém.",
     affirmation: "Meu bem-estar é uma prioridade, não uma recompensa.",
@@ -463,14 +463,14 @@ export const dailyContent: DayContent[] = [
         "Escreva: 'Quando me cuido bem, me sinto...'",
         "Liste 10 formas de autocuidado que te fazem bem (pequenas e grandes).",
         "Escolha 3 que você pode praticar esta semana.",
-        "Agende na sua agenda como compromisso — não como 'se der tempo'.",
+        "Registre na agenda como compromisso — não como 'se der tempo'.",
         "Escreva o que você precisa soltar para ter espaço para esse cuidado.",
       ],
     },
     journalPrompts: [
       "Qual é o maior obstáculo para você se cuidar? É real ou é uma crença?",
       "O que você diria para uma amiga que nunca se coloca em primeiro lugar?",
-      "Que forma de autocuidado você abandonou que sente falta?",
+      "Que forma de autocuidado você abandonou e de que sente falta?",
     ],
     meditationTitle: "Voltando para casa",
     meditationDuration: "10 min",
@@ -486,7 +486,7 @@ export const dailyContent: DayContent[] = [
     title: "Para onde vai sua energia emocional?",
     subtitle: "Energia é um recurso finito. Use com sabedoria.",
     soraiaMessage:
-      "Sua energia emocional é um recurso precioso. Cada preocupação, cada conflito não resolvido, cada relação tóxica consome uma parte dela. Hoje vamos mapear onde sua energia está indo e recuperar o que foi desperdiçado.",
+      "Sua energia emocional é um recurso precioso. Cada preocupação, cada conflito não resolvido, cada relação tóxica consome uma parte dela. Hoje vamos mapear para onde sua energia está indo e recuperar o que foi desperdiçado.",
     reflection:
       "Você já se sentiu exausta sem ter feito nada físico? Isso é esgotamento emocional. Quando sua energia está fragmentada em mil preocupações, não sobra nada para o que realmente importa.",
     affirmation:
@@ -497,7 +497,7 @@ export const dailyContent: DayContent[] = [
       steps: [
         "Escreva tudo que está consumindo sua energia agora (preocupações, conflitos, pendências).",
         "Classifique cada item: 'Posso resolver agora' / 'Não posso controlar' / 'Preciso aceitar'.",
-        "Para o que não pode controlar, pratique: 'Solto isso. Não é meu para resolver.'",
+        "Para o que não pode controlar, pratique: 'Solto isso. Não cabe a mim resolver.'",
         "Escreva 3 coisas que você quer que recebam mais da sua energia.",
       ],
     },
@@ -523,7 +523,7 @@ export const dailyContent: DayContent[] = [
     reflection:
       "Foco não é sobre fazer mais. É sobre fazer o que importa. Quando você sabe o que realmente importa, fica mais fácil dizer não para o que não importa.",
     affirmation:
-      "Sei o que importa para mim e direciono minha vida nessa direção.",
+      "Sei o que importa para mim e oriento minhas escolhas por isso.",
     exercise: {
       title: "As 5 prioridades da sua vida",
       description: "Identifique o que realmente importa.",
@@ -537,7 +537,7 @@ export const dailyContent: DayContent[] = [
     journalPrompts: [
       "No final da sua vida, o que você quer ter vivido? Amado? Realizado?",
       "Existe algo que você faz por obrigação que poderia soltar?",
-      "O que você diria não se soubesse o que realmente importa para você?",
+      "A que você diria não se não soubesse o que realmente importa para você?",
     ],
     meditationTitle: "Clareza interior",
     meditationDuration: "12 min",
@@ -590,9 +590,9 @@ export const dailyContent: DayContent[] = [
     reflection:
       "A autoestima é construída ao longo da vida — e pode ser reconstruída. Cada vez que você se trata com respeito, cada vez que honra suas necessidades, cada vez que se defende, você está construindo autoestima.",
     affirmation:
-      "Tenho valor independente do que faço, do que tenho ou do que os outros pensam.",
+      "Tenho valor independentemente do que faço, do que tenho ou do que os outros pensam.",
     exercise: {
-      title: "Carta de amor próprio",
+      title: "Carta de amor-próprio",
       description: "Escreva para si mesma como escreveria para alguém que ama.",
       steps: [
         "Pense em uma pessoa que você ama incondicionalmente.",
@@ -628,17 +628,17 @@ export const dailyContent: DayContent[] = [
       title: "Praticando o não",
       description: "Exercite a assertividade em situações do dia a dia.",
       steps: [
-        "Pense em uma situação recente onde você disse sim quando queria dizer não.",
+        "Pense em uma situação recente em que você disse sim quando queria dizer não.",
         "Escreva o que você queria dizer de verdade.",
         "Pratique dizer isso em voz alta, sozinha.",
-        "Identifique uma situação esta semana onde você pode praticar ser mais assertiva.",
+        "Identifique uma situação esta semana em que você pode praticar ser mais assertiva.",
         "Prepare o que vai dizer: 'Eu sinto/penso/preciso... Por isso...'",
       ],
     },
     journalPrompts: [
       "Em quais situações você mais cala o que sente? Por quê?",
       "Qual é o seu maior medo ao se expressar com honestidade?",
-      "O que você gostaria de dizer para alguém que ainda não disse?",
+      "O que você gostaria de dizer a alguém, mas ainda não disse?",
     ],
     meditationTitle: "Encontrando sua voz",
     meditationDuration: "10 min",
@@ -695,7 +695,7 @@ export const dailyContent: DayContent[] = [
       title: "Definindo seus limites",
       description: "Identifique e pratique seus limites.",
       steps: [
-        "Escreva 3 situações onde você se sente invadida, desrespeitada ou sobrecarregada.",
+        "Escreva 3 situações em que você se sente invadida, desrespeitada ou sobrecarregada.",
         "Para cada uma, defina: 'O que eu preciso que seja diferente?'",
         "Escreva como você comunicaria esse limite: 'Quando X acontece, eu me sinto Y. Preciso que Z.'",
         "Pratique dizer isso em voz alta com firmeza e calma.",
@@ -818,7 +818,7 @@ export const dailyContent: DayContent[] = [
     title: "Para que você veio ao mundo?",
     subtitle: "Propósito não é destino. É direção.",
     soraiaMessage:
-      "Propósito não é uma grande missão grandiosa que você precisa descobrir. É a direção que faz sua vida fazer sentido — o que te move, o que te dá energia, o que você faz que faz o mundo um pouco melhor.",
+      "Propósito não é uma missão grandiosa que você precisa descobrir. É a direção que faz sua vida fazer sentido — o que te move, o que te dá energia, o que você faz que faz o mundo um pouco melhor.",
     reflection:
       "Muitas mulheres acreditam que não têm propósito porque não encontraram 'a grande missão'. Mas propósito pode estar nos pequenos atos — na forma como você cuida, cria, conecta, inspira.",
     affirmation: "Minha vida tem propósito. Estou aqui por uma razão.",
@@ -827,7 +827,7 @@ export const dailyContent: DayContent[] = [
       description: "Descubra o que te move.",
       steps: [
         "Responda: O que você faz que faz o tempo passar sem perceber?",
-        "Responda: O que as pessoas sempre pedem sua ajuda ou conselho?",
+        "Responda: Em que as pessoas sempre pedem sua ajuda ou conselho?",
         "Responda: O que te indigna no mundo? (Indignação aponta para valores.)",
         "Responda: O que você faria de graça se pudesse?",
         "Encontre o fio que conecta essas respostas — esse é seu propósito.",
@@ -836,7 +836,7 @@ export const dailyContent: DayContent[] = [
     journalPrompts: [
       "O que você faz que te faz sentir que está contribuindo com algo maior?",
       "Se você pudesse deixar uma mensagem para o mundo, qual seria?",
-      "O que você quer que as pessoas lembrem de você?",
+      "Do que você quer que as pessoas se lembrem a seu respeito?",
     ],
     meditationTitle: "Chamado interior",
     meditationDuration: "15 min",
@@ -857,7 +857,7 @@ export const dailyContent: DayContent[] = [
     affirmation: "Sou resiliente. Cada desafio me fortalece e me ensina.",
     exercise: {
       title: "Mapa da resiliência",
-      description: "Reconheça sua força através das suas histórias.",
+      description: "Reconheça sua força por meio das suas histórias.",
       steps: [
         "Escreva os 3 momentos mais difíceis da sua vida.",
         "Para cada um, escreva: 'Como eu sobrevivi a isso?'",
@@ -899,7 +899,7 @@ export const dailyContent: DayContent[] = [
     },
     journalPrompts: [
       "Quem você ainda não perdoou? O que essa mágoa te custa?",
-      "O que você precisa se perdoar? Por que é difícil?",
+      "Pelo que você precisa se perdoar? Por que é difícil?",
       "Como seria sua vida se você soltasse essa mágoa?",
     ],
     meditationTitle: "Libertação pelo perdão",
@@ -957,7 +957,7 @@ export const dailyContent: DayContent[] = [
       description: "Expanda sua visão de abundância.",
       steps: [
         "Escreva o que prosperidade significa para você em 5 áreas: saúde, relacionamentos, trabalho, finanças, espiritualidade.",
-        "Para cada área, escreva: 'Atualmente estou em...' e 'Quero chegar em...'",
+        "Para cada área, escreva: 'Atualmente estou em...' e 'Quero chegar a...'",
         "Identifique uma crença que te impede de prosperar em cada área.",
         "Reescreva cada crença em uma afirmação de abundância.",
       ],
@@ -1024,7 +1024,7 @@ export const dailyContent: DayContent[] = [
         "Escreva uma carta de gratidão para esta jornada.",
         "Agradeça pelos momentos difíceis e pelo que eles te ensinaram.",
         "Agradeça pelas descobertas, mesmo as que doeram.",
-        "Agradeça para você mesma por ter se escolhido.",
+        "Agradeça a si mesma por ter se escolhido.",
       ],
     },
     journalPrompts: [
@@ -1080,7 +1080,7 @@ export const dailyContent: DayContent[] = [
     soraiaMessage:
       "Você chegou. 30 dias de coragem, honestidade e amor-próprio. Você se escolheu todos os dias — e isso é extraordinário. Hoje não é um fim. É um novo começo. Você tem ferramentas, clareza e uma relação diferente com você mesma. O que você faz com isso agora é sua escolha.",
     reflection:
-      "Esta jornada foi sobre você se reencontrar. E você encontrou. Agora é sobre continuar escolhendo ser você — todos os dias, em cada decisão, em cada limite que estabelece, em cada vez que se trata com gentileza.",
+      "Esta jornada foi sobre você se reencontrar. E você se reencontrou. Agora é sobre continuar escolhendo ser você — todos os dias, em cada decisão, em cada limite que estabelece, em cada vez que se trata com gentileza.",
     affirmation: "Eu me escolho. Hoje e todos os dias.",
     exercise: {
       title: "Manifesto pessoal",

@@ -73,7 +73,7 @@ const countLabel = (count: number, singular: string, plural: string) =>
 const dayStep = (day: number): NextStep => ({
   day,
   label: `Fazer o dia ${day}`,
-  hint: `${getDay(day).meditationDuration} de áudio · salvo neste dispositivo`,
+  hint: `${getDay(day).meditationDuration} de áudio · salvo neste dispositivo e na nuvem`,
 });
 
 /**
@@ -150,7 +150,7 @@ function gapFor(achievement: Achievement, facts: Facts): Gap | null {
       step: {
         page: "journal",
         label: "Escrever no diário",
-        hint: "Uma entrada por dia · salvo neste dispositivo",
+        hint: "Uma entrada por dia · salvo neste dispositivo e na nuvem",
       },
     };
   }
@@ -215,8 +215,8 @@ function gapFor(achievement: Achievement, facts: Facts): Gap | null {
         detail: "É o retrato do seu antes, para comparar depois.",
         step: {
           page: "assessment",
-          label: "Salvar a avaliação inicial",
-          hint: "Respostas curtas · salvo neste dispositivo",
+          label: "Preencher a avaliação inicial",
+          hint: "Respostas curtas · salvo neste dispositivo e na nuvem",
         },
       };
     }
@@ -246,8 +246,8 @@ function gapFor(achievement: Achievement, facts: Facts): Gap | null {
         detail: "Ela compara o seu depois com o seu antes.",
         step: {
           page: "assessment",
-          label: "Salvar a avaliação final",
-          hint: "Respostas curtas · salvo neste dispositivo",
+          label: "Preencher a avaliação final",
+          hint: "Respostas curtas · salvo neste dispositivo e na nuvem",
         },
       };
     }
@@ -466,8 +466,8 @@ export default function Achievements() {
               Todas as conquistas estão desbloqueadas
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-              O registro fica salvo neste dispositivo. Você pode voltar a ele
-              quando quiser.
+              O registro fica salvo neste dispositivo e na nuvem. Você pode
+              voltar a ele quando quiser.
             </p>
             <ProgressRail
               className="mt-4"
@@ -529,7 +529,8 @@ export default function Achievements() {
             </div>
 
             <p className="mt-3 text-xs leading-relaxed text-ink-muted">
-              Fica salva neste dispositivo, mesmo que você pause a jornada.
+              Fica salva neste dispositivo e na nuvem, mesmo que você pause a
+              jornada.
             </p>
           </Card>
         </motion.section>
@@ -538,7 +539,7 @@ export default function Achievements() {
           <EmptyState
             icon={Trophy}
             title="Nenhuma conquista desbloqueada ainda"
-            body="As conquistas aparecem aqui conforme você avança e ficam salvas neste dispositivo."
+            body="As conquistas aparecem aqui conforme você avança e ficam salvas neste dispositivo e na nuvem."
           />
         </motion.section>
       )}

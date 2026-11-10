@@ -23,7 +23,7 @@ export default function CloudBadge({ className }: { className?: string }) {
         }
       : !online
         ? {
-            label: "Offline — salvo aqui",
+            label: "Sem conexão — salvo aqui",
             icon: CloudOff,
             iconClass: "text-amber-700",
           }

@@ -364,7 +364,7 @@ export default function Onboarding() {
           </div>
 
           <p className="mt-4 border-t border-line pt-4 text-xs leading-relaxed text-ink-muted">
-            Seu registro fica salvo na sua conta do Google e neste aparelho.
+            Seu registro fica salvo neste dispositivo e na nuvem.
           </p>
         </div>
       </main>

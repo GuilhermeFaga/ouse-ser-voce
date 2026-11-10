@@ -202,8 +202,8 @@ export default function Dashboard() {
             </Action>
             <p className="mt-2 text-center text-xs text-ink-muted">
               {allDone
-                ? "Tudo continua salvo neste dispositivo"
-                : `Começa pela reflexão · áudio de ${day.meditationDuration} · salvo neste dispositivo`}
+                ? "Tudo continua salvo neste dispositivo e na nuvem"
+                : `Começa pela reflexão · áudio de ${day.meditationDuration} · salvo neste dispositivo e na nuvem`}
             </p>
           </div>
         </Card>

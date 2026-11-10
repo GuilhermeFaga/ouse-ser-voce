@@ -118,3 +118,10 @@ export function buildStoriesCaption(achievementTitle: string): string {
 export function openWhatsApp(message: string): void {
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
 }
+
+/** Soraya's direct WhatsApp, in wa.me format (country + area + number). */
+export const SORAYA_WHATSAPP = "5511940558778";
+
+export function sorayaWhatsAppUrl(message: string): string {
+  return `https://wa.me/${SORAYA_WHATSAPP}?text=${encodeURIComponent(message)}`;
+}

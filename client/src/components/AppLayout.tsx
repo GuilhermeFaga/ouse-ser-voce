@@ -2,19 +2,27 @@ import { useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { APP_PAGES, useNavigation, type AppPage } from "@/app/navigation";
 import { useApp } from "@/app/store";
+import { useAccess } from "@/app/accessProvider";
 import { IMAGES } from "@/app/assets";
 import { DAY_COUNT } from "@/journey";
 import { Action, ProgressRail } from "@/components/ds";
+import CloudBadge from "@/components/CloudBadge";
 import { cn } from "@/lib/utils";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { state, currentDay, progressPercent, currentStreak } = useApp();
+  const { isAdmin } = useAccess();
   const { userName } = state;
   const { currentPage, navigate } = useNavigation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = APP_PAGES.filter(page => page.nav);
-  const bottomNavItems = APP_PAGES.filter(page => page.bottomBar);
+  // Only the admin entry declares the optional flag, so narrow with `in`.
+  const isVisible = (page: (typeof APP_PAGES)[number]) =>
+    !("adminOnly" in page) || page.adminOnly !== true || isAdmin;
+  const navItems = APP_PAGES.filter(page => page.nav && isVisible(page));
+  const bottomNavItems = APP_PAGES.filter(
+    page => page.bottomBar && isVisible(page)
+  );
 
   const go = (page: AppPage) => {
     navigate(page);
@@ -63,6 +71,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             </span>{" "}
             {currentStreak === 1 ? "dia seguido" : "dias seguidos"}
           </p>
+          <CloudBadge className="mt-3" />
         </div>
 
         <nav
@@ -180,6 +189,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 valueLabel={`${progressPercent}%`}
                 size="sm"
               />
+              <CloudBadge className="mt-2.5" />
             </div>
             <nav className="py-1" aria-label="Navegação principal">
               {navItems.map(item => {

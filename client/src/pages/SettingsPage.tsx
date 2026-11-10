@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShieldCheck, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useApp } from "@/app/store";
@@ -6,6 +6,7 @@ import { writtenDaysOf } from "@/app/state";
 import { formatLongDate } from "@/lib/dates";
 import { DAY_COUNT } from "@/journey";
 import { cn } from "@/lib/utils";
+import CloudAccountCard from "@/components/CloudAccountCard";
 import {
   Action,
   Card,
@@ -51,12 +52,19 @@ export default function SettingsPage() {
   const { state, completedDays, progressPercent, updateName, resetAll } =
     useApp();
   const [name, setName] = useState(state.userName);
+  const [nameEdited, setNameEdited] = useState(false);
   const [triedSave, setTriedSave] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [confirmSeen, setConfirmSeen] = useState(false);
 
   const trimmed = name.trim();
   const unchanged = trimmed === state.userName.trim();
+
+  // A sync can replace the record (and the name) while this screen is open.
+  // Follow it unless she is already typing a new name.
+  useEffect(() => {
+    if (!nameEdited) setName(state.userName);
+  }, [state.userName, nameEdited]);
   const nameError =
     triedSave && trimmed === "" ? "Escreva seu nome para salvar." : null;
 
@@ -94,6 +102,7 @@ export default function SettingsPage() {
     }
     updateName(trimmed);
     setTriedSave(false);
+    setNameEdited(false);
     toast.success("Nome atualizado");
   };
 
@@ -101,8 +110,11 @@ export default function SettingsPage() {
     resetAll();
     setConfirmingReset(false);
     setName("");
+    setNameEdited(false);
     setTriedSave(false);
-    toast.success("Dados apagados. A jornada recomeça do dia 1.");
+    toast.success(
+      "Dados apagados do aparelho e da nuvem. A jornada recomeça do dia 1."
+    );
   };
 
   return (
@@ -110,7 +122,7 @@ export default function SettingsPage() {
       <ScreenHeader
         kicker="Seus dados"
         title="Configurações"
-        description="Seu nome, o que a jornada já guardou e o que fica neste dispositivo."
+        description="Seu nome, o que a jornada já guardou e onde ele fica salvo."
       />
 
       {/* The one decision on this screen, and the one primary action. */}
@@ -130,6 +142,7 @@ export default function SettingsPage() {
               value={name}
               onChange={event => {
                 setName(event.target.value);
+                setNameEdited(true);
                 if (triedSave) setTriedSave(false);
               }}
               className={cn(fieldInputClass(Boolean(nameError)), "h-11")}
@@ -146,11 +159,13 @@ export default function SettingsPage() {
             <p className="text-xs text-ink-muted">
               {unchanged && trimmed !== ""
                 ? "Este nome já está salvo."
-                : "Fica salvo neste dispositivo, sem enviar para servidor."}
+                : "Também aparece nos outros aparelhos onde você entrar."}
             </p>
           </div>
         </form>
       </Card>
+
+      <CloudAccountCard />
 
       {/* The accumulated record, shown as the thing worth keeping. */}
       <Card>
@@ -214,8 +229,9 @@ export default function SettingsPage() {
             Privacidade
           </p>
           <p className="text-sm leading-relaxed text-ink-soft">
-            Tudo o que você escreve fica neste dispositivo — nada é enviado para
-            servidor.
+            Seu registro fica neste aparelho e na sua conta do Google. Só você
+            pode lê-lo, e apenas e-mails liberados pela administração podem
+            entrar.
           </p>
         </div>
       </Card>
@@ -236,15 +252,16 @@ export default function SettingsPage() {
                 Apagar remove{" "}
                 {losses.length > 0 ? (
                   <>
-                    <LossList items={losses} /> deste dispositivo
+                    <LossList items={losses} /> deste aparelho e da sua conta na
+                    nuvem
                     {otherLosses.length > 0 && (
                       <>, além {joinWords(otherLosses)}</>
                     )}
                   </>
                 ) : (
                   <>
-                    o que está guardado neste dispositivo, incluindo{" "}
-                    {joinWords(otherLosses)}
+                    o que está guardado neste aparelho e na sua conta na nuvem,
+                    incluindo {joinWords(otherLosses)}
                   </>
                 )}
                 . Não há como recuperar, e a jornada recomeça do zero.
@@ -276,7 +293,7 @@ export default function SettingsPage() {
                     Apagar tudo agora?
                   </p>
                   <p className="text-xs leading-relaxed text-ink-muted">
-                    Seu registro e seu diário somem deste dispositivo.
+                    Seu registro e seu diário somem deste aparelho e da nuvem.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row">

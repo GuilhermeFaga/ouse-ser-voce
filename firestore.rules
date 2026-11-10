@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Keep this list in sync with ADMIN_EMAILS in client/src/app/access.ts.
+    function isAdminEmail(email) {
+      return email in [
+        'guilhermefaaga@gmail.com',
+        'soraya.farias@gmail.com'
+      ];
+    }
+
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.email is string
+        && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return signedIn() && isAdminEmail(request.auth.token.email.lower());
+    }
+
+    function hasAccess() {
+      return signedIn() && exists(
+        /databases/$(database)/documents/access/$(request.auth.token.email.lower())
+      );
+    }
+
+    match /users/{uid} {
+      // The journey belongs to one account, and only an approved e-mail reads
+      // or writes its own document.
+      allow read, write: if signedIn()
+        && (isAdmin() || hasAccess())
+        && request.auth.uid == uid;
+    }
+
+    match /access/{email} {
+      // A person may check their own access; admins manage the whole list.
+      allow get: if signedIn() && request.auth.token.email.lower() == email;
+      allow list, create, update, delete: if isAdmin();
+    }
+  }
+}

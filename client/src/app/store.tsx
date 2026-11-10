@@ -47,6 +47,8 @@ export interface CommentDraft {
 
 export interface AppApi {
   state: AppState;
+  /** Increments on every local change, never on a state adopted from the cloud. */
+  localRevision: number;
   completedDays: number[];
   currentDay: number;
   currentStreak: number;
@@ -70,6 +72,8 @@ export interface AppApi {
   addComment(draft: CommentDraft): void;
   removeComment(id: string): void;
   toggleCommentLike(id: string): void;
+  /** Replaces the whole record without counting as a local change (cloud sync). */
+  replaceState(state: AppState): void;
   resetAll(): void;
 }
 
@@ -110,6 +114,7 @@ function withDay(
     ...existing,
     ...patch,
     day,
+    updatedAt: new Date().toISOString(),
     completedAt: existing.completedAt ?? completedAt ?? null,
   };
   return { ...state, days: { ...state.days, [day]: next } };
@@ -119,6 +124,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(() =>
     withAchievements(loadState())
   );
+  const [localRevision, setLocalRevision] = useState(0);
   const saveFailed = useRef(false);
 
   useEffect(() => {
@@ -132,7 +138,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [state]);
 
   const commit = useCallback((update: (state: AppState) => AppState) => {
-    setState(previous => withAchievements(update(previous)));
+    setState(previous => ({
+      ...withAchievements(update(previous)),
+      updatedAt: new Date().toISOString(),
+    }));
+    setLocalRevision(previous => previous + 1);
+  }, []);
+
+  const replaceState = useCallback((next: AppState) => {
+    // Not a local change: cloud sync must not echo this back to Firestore.
+    setState(withAchievements(next));
   }, []);
 
   const completeOnboarding = useCallback(
@@ -334,7 +349,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const resetAll = useCallback(() => {
     clearAllData();
-    setState(createDefaultState());
+    // `updatedAt` marks this as a deliberate clear, so cloud sync pushes the
+    // empty record instead of merging the old cloud copy back in.
+    setState({ ...createDefaultState(), updatedAt: new Date().toISOString() });
+    setLocalRevision(previous => previous + 1);
   }, []);
 
   const completedDays = useMemo(() => completedDaysOf(state), [state]);
@@ -351,6 +369,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AppApi>(
     () => ({
       state,
+      localRevision,
       completedDays,
       currentDay,
       currentStreak,
@@ -371,10 +390,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       addComment,
       removeComment,
       toggleCommentLike,
+      replaceState,
       resetAll,
     }),
     [
       state,
+      localRevision,
       completedDays,
       currentDay,
       currentStreak,
@@ -395,6 +416,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       addComment,
       removeComment,
       toggleCommentLike,
+      replaceState,
       resetAll,
     ]
   );

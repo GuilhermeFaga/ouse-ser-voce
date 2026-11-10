@@ -96,6 +96,7 @@ interface StoredState {
   userName?: string;
   onboardingComplete?: boolean;
   startDate?: string | null;
+  updatedAt?: string;
   days?: Record<number, DayRecord>;
   checkins?: Record<number, StoredCheckin>;
   journalEntries?: StoredJournalEntry[];
@@ -217,6 +218,7 @@ function fromStored(stored: StoredState | null): AppState {
         .map(favorite => favorite.day)
         .sort((a, b) => a - b),
     storyLikes: saved.storyLikes ?? storyLikes,
+    updatedAt: saved.updatedAt,
     comments:
       saved.comments ??
       (legacyComments ?? []).map(comment => ({

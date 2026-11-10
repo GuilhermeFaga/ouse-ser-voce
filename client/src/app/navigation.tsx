@@ -19,6 +19,7 @@ import {
   PenLine,
   Settings,
   Share2,
+  ShieldCheck,
   Sparkles,
   Trophy,
   Users,
@@ -34,6 +35,8 @@ export interface PageDefinition {
   nav: boolean;
   /** Shown in the mobile bottom bar. */
   bottomBar: boolean;
+  /** Hidden from everyone except the administrative e-mails. */
+  adminOnly?: boolean;
 }
 
 export const APP_PAGES = [
@@ -140,6 +143,15 @@ export const APP_PAGES = [
     icon: Settings,
     nav: true,
     bottomBar: false,
+  },
+  {
+    id: "admin",
+    label: "Acessos",
+    shortLabel: "Acessos",
+    icon: ShieldCheck,
+    nav: true,
+    bottomBar: false,
+    adminOnly: true,
   },
   {
     id: "day",

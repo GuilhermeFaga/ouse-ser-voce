@@ -15,6 +15,7 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "express": "^4.21.2",
+    "firebase": "^13.2.0",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.453.0",
     "nanoid": "^5.1.5",

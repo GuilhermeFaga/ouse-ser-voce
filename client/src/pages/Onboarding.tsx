@@ -364,8 +364,7 @@ export default function Onboarding() {
           </div>
 
           <p className="mt-4 border-t border-line pt-4 text-xs leading-relaxed text-ink-muted">
-            Seus dados ficam apenas no seu dispositivo. Nenhuma informação é
-            compartilhada.
+            Seu registro fica salvo na sua conta do Google e neste aparelho.
           </p>
         </div>
       </main>

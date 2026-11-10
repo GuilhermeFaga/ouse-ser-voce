@@ -10,6 +10,11 @@ export interface DayRecord {
   exerciseCompleted: boolean;
   meditationListened: boolean;
   completedAt: string | null;
+  /**
+   * Last local change to this day. Cloud sync uses it to decide which copy of a
+   * day is newer when this device and the cloud both have records.
+   */
+  updatedAt?: string;
 }
 
 export type DayPatch = Partial<Omit<DayRecord, "day">>;
@@ -60,6 +65,11 @@ export interface AppState {
   favoriteAudioDays: number[];
   storyLikes: Record<string, string[]>;
   comments: Comment[];
+  /**
+   * Set on every local change. It is the checkpoint cloud sync compares with
+   * the last copy it saved, so a clean cache is not merged again on reload.
+   */
+  updatedAt?: string;
 }
 
 export function createDayRecord(day: number): DayRecord {

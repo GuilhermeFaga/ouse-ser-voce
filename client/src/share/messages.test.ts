@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { achievements, getDay, weekOfDay } from "@/journey";
-import { buildShareMessage } from "./messages";
+import {
+  SORAYA_WHATSAPP,
+  buildShareMessage,
+  sorayaWhatsAppUrl,
+} from "./messages";
 
 const day = getDay(7);
 const achievement = achievements[0];
@@ -34,5 +38,13 @@ describe("mensagens de compartilhamento", () => {
     const text = buildShareMessage({ kind: "journey", mood: 4 });
     expect(text).toContain("30 DIAS COMPLETOS");
     expect(text).toContain("Leve");
+  });
+
+  it("monta o pedido de liberação no WhatsApp da Soraya", () => {
+    const url = sorayaWhatsAppUrl("Olá! Meu e-mail é ana@exemplo.com.");
+    expect(url.startsWith(`https://wa.me/${SORAYA_WHATSAPP}?text=`)).toBe(true);
+    expect(decodeURIComponent(url.split("?text=")[1] ?? "")).toContain(
+      "ana@exemplo.com"
+    );
   });
 });

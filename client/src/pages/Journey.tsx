@@ -1,16 +1,56 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { CheckCircle2, Circle, Lock } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Check, ChevronDown, Circle, Lock } from "lucide-react";
 import { useApp } from "@/app/store";
 import { useNavigation } from "@/app/navigation";
 import {
   DAY_COUNT,
   daysOfWeek,
+  getDay,
   isDayAccessible,
   weekModules,
   weekOfDay,
   weekProgress,
 } from "@/journey";
+import {
+  focusRing,
+  Action,
+  Card,
+  Pill,
+  ProgressRail,
+  Screen,
+  ScreenHeader,
+  Stat,
+} from "@/components/ds";
+import { cn } from "@/lib/utils";
+
+const rise = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.25, ease: "easeOut" as const },
+};
+
+function milestoneText({
+  allDone,
+  done,
+  week,
+  missingInWeek,
+  weekTotal,
+}: {
+  allDone: boolean;
+  done: number;
+  week: number;
+  missingInWeek: number;
+  weekTotal: number;
+}) {
+  if (allDone) return "Você pode revisitar qualquer dia.";
+  if (done === 0)
+    return `${weekTotal} dias fecham a semana 1, a partir de hoje.`;
+  if (missingInWeek === 1) return `Falta 1 dia para fechar a semana ${week}.`;
+  if (missingInWeek > 1)
+    return `Faltam ${missingInWeek} dias para fechar a semana ${week}.`;
+  return `Sua próxima semana começa no dia seguinte.`;
+}
 
 export default function Journey() {
   const { currentDay, completedDays, progressPercent } = useApp();
@@ -18,182 +58,388 @@ export default function Journey() {
   const [expandedWeek, setExpandedWeek] = useState<number>(
     weekOfDay(currentDay).week
   );
+  const reduceMotion = useReducedMotion();
+
+  const day = getDay(currentDay);
+  const week = weekOfDay(currentDay);
+  const done = completedDays.length;
+  const allDone = done >= DAY_COUNT;
+  const currentWeekProgress = weekProgress(week.week, completedDays);
+  const missingInWeek =
+    currentWeekProgress.total - currentWeekProgress.completed;
+  const milestone = milestoneText({
+    allDone,
+    done,
+    week: week.week,
+    missingInWeek,
+    weekTotal: currentWeekProgress.total,
+  });
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div>
-        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">
-          Sua Jornada
-        </h1>
-        <p className="text-[#8B6E5A] text-sm">
-          {completedDays.length} de {DAY_COUNT} dias concluídos
-        </p>
-      </div>
+    <Screen>
+      <ScreenHeader
+        kicker="Onde você está"
+        title="Sua jornada"
+        description={
+          allDone
+            ? `Os ${DAY_COUNT} dias estão completos.`
+            : `Semana ${week.week} de ${weekModules.length} · ${week.title}`
+        }
+      />
 
-      <div className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm">
-        <div className="flex justify-between text-sm text-[#8B6E5A] mb-2">
-          <span>Progresso total</span>
-          <span className="font-medium text-[#C4856A]">{progressPercent}%</span>
-        </div>
-        <div className="h-2 bg-[#F0E4DC] rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-[#C4856A] to-[#E8A090] rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progressPercent}%` }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          />
-        </div>
-        <div className="mt-3 sm:mt-4 grid grid-cols-10 gap-0.5 sm:gap-1">
-          {Array.from({ length: DAY_COUNT }, (_, index) => index + 1).map(
-            day => (
-              <div
-                key={day}
-                className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold transition-all ${
-                  completedDays.includes(day)
-                    ? "bg-[#C4856A] text-white"
-                    : day === currentDay
-                      ? "bg-[#F5EDE8] border-2 border-[#C4856A] text-[#C4856A]"
-                      : day < currentDay
-                        ? "bg-[#F0E4DC] text-[#B08070]"
-                        : "bg-[#FAF6F1] text-[#D4C4BC]"
-                }`}
-              >
-                {day}
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
-      {weekModules.map(module => {
-        const weekDays = daysOfWeek(module.week);
-        const progress = weekProgress(module.week, completedDays);
-        const isExpanded = expandedWeek === module.week;
-        return (
-          <motion.div
-            key={module.week}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: (module.week - 1) * 0.08 }}
-            className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden"
-          >
-            <button
-              onClick={() => setExpandedWeek(isExpanded ? 0 : module.week)}
-              className={`w-full flex items-center justify-between p-3 sm:p-5 ${module.palette.header} transition-colors`}
-            >
-              <div className="flex items-center gap-2 sm:gap-3 text-left">
-                <div
-                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${module.palette.dot} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}
-                >
-                  {module.week}
-                </div>
-                <div>
-                  <p className={`font-semibold text-sm ${module.palette.text}`}>
-                    {module.subtitle}
-                  </p>
-                  <p className="font-serif text-base text-[#2C1810]">
-                    {module.title}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className={`text-xs font-medium ${module.palette.text}`}>
-                  {progress.completed}/{progress.total}
-                </span>
-                <motion.div
-                  animate={{ rotate: isExpanded ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`w-5 h-5 ${module.palette.text}`}
-                >
-                  ↓
-                </motion.div>
-              </div>
-            </button>
-
-            <div className="h-1 bg-[#F0E4DC]">
-              <div
-                className={`h-full ${module.palette.dot} transition-all duration-700`}
-                style={{ width: `${progress.percent}%` }}
-              />
+      {/* Current day: the screen's only primary action and its dominant block. */}
+      <motion.section
+        {...(reduceMotion ? {} : rise)}
+        aria-labelledby="dia-atual"
+      >
+        <Card
+          as="div"
+          padding="none"
+          clip
+          className="border-brand/30 bg-brand-wash"
+        >
+          <div className={cn("h-1.5 w-full", week.palette.dot)} aria-hidden />
+          <div className="p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <Pill tone={allDone ? "success" : "brand"}>
+                {allDone ? "Concluído" : "Hoje"}
+              </Pill>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                {day.theme}
+              </span>
             </div>
 
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                transition={{ duration: 0.25 }}
+            <p className="mt-4 flex items-baseline gap-1.5 font-serif text-ink">
+              <span className="tabular-nums text-[38px] leading-none sm:text-[42px]">
+                {currentDay}
+              </span>
+              <span className="font-sans text-xs font-medium text-ink-muted">
+                de {DAY_COUNT} dias
+              </span>
+            </p>
+
+            <h2
+              id="dia-atual"
+              className="mt-3 font-serif text-[23px] leading-[1.2] text-ink sm:text-[27px]"
+            >
+              {day.title}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+              {day.subtitle}
+            </p>
+
+            <div className="mt-5">
+              <Action
+                size="lg"
+                block
+                onClick={() => openDay(currentDay)}
+                className="sm:w-auto"
               >
-                <div
-                  className={`px-5 py-3 ${module.palette.bg} border-b border-[#F0E4DC]`}
-                >
-                  <p className="text-sm text-[#6B4C3B] leading-relaxed">
-                    {module.description}
-                  </p>
-                </div>
+                {allDone
+                  ? `Rever o dia ${currentDay}`
+                  : `Fazer o dia ${currentDay}`}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Action>
+              <p className="mt-2 text-xs leading-relaxed text-ink-muted">
+                {allDone
+                  ? "O dia segue salvo, com a prática e o diário que você escreveu."
+                  : `Reflexão, exercício, diário e áudio (${day.meditationDuration}) · salvo neste dispositivo`}
+              </p>
+            </div>
+          </div>
+        </Card>
+      </motion.section>
 
-                <div className="divide-y divide-[#F0E4DC]">
-                  {weekDays.map(day => {
-                    const isCompleted = completedDays.includes(day.day);
-                    const isCurrent = day.day === currentDay;
-                    const isAccessible = isDayAccessible(day.day, currentDay);
+      {/* Progress: the whole 30 days, then each week at a glance. */}
+      <motion.div
+        {...(reduceMotion ? {} : rise)}
+        transition={{ ...rise.transition, delay: 0.05 }}
+      >
+        <Card>
+          <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+            <Stat
+              label="Dias concluídos"
+              value={done}
+              unit={`de ${DAY_COUNT}`}
+            />
+            <div className="max-w-[17rem]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+                {allDone ? "Sua trilha" : "Próximo marco"}
+              </p>
+              <p className="mt-1 text-sm leading-snug text-ink-soft">
+                {milestone}
+              </p>
+            </div>
+          </div>
 
-                    return (
-                      <button
-                        key={day.day}
-                        onClick={() => openDay(day.day)}
-                        disabled={!isAccessible}
-                        className={`w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 text-left transition-colors ${
-                          isAccessible
-                            ? "hover:bg-[#FAF6F1]"
-                            : "opacity-50 cursor-not-allowed"
-                        } ${isCurrent ? "bg-[#FAF6F1]" : ""}`}
-                      >
-                        <div className="flex-shrink-0">
-                          {isCompleted ? (
-                            <CheckCircle2 className="w-5 h-5 text-[#C4856A]" />
-                          ) : isCurrent ? (
-                            <div className="w-5 h-5 rounded-full border-2 border-[#C4856A] bg-[#F5EDE8]" />
-                          ) : isAccessible ? (
-                            <Circle className="w-5 h-5 text-[#D4C4BC]" />
-                          ) : (
-                            <Lock className="w-4 h-4 text-[#D4C4BC]" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <span className="text-xs text-[#B08070] font-medium">
-                              Dia {day.day}
-                            </span>
-                            <span className="text-[#E8D5CC]">·</span>
-                            <span className="text-xs text-[#B08070]">
-                              {day.theme}
-                            </span>
-                            {isCurrent && (
-                              <span className="text-[10px] bg-[#C4856A] text-white px-2 py-0.5 rounded-full font-medium">
-                                Hoje
-                              </span>
-                            )}
-                          </div>
-                          <p
-                            className={`text-sm font-medium truncate ${
-                              isAccessible ? "text-[#2C1810]" : "text-[#B08070]"
-                            }`}
-                          >
-                            {day.title}
-                          </p>
-                        </div>
-                        {isCurrent && (
-                          <span className="text-[#C4856A] text-sm">→</span>
+          <ProgressRail
+            className="mt-4"
+            value={progressPercent}
+            label="Trilha completa"
+          />
+
+          <ul
+            className="mt-5 grid grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-4"
+            aria-label="Progresso por semana"
+          >
+            {weekModules.map(module => {
+              const progress = weekProgress(module.week, completedDays);
+              const isCurrentWeek = module.week === week.week;
+              const opensOn = daysOfWeek(module.week)[0]?.day ?? DAY_COUNT;
+              const isOpen = opensOn <= currentDay;
+              return (
+                <li key={module.week} className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={cn(
+                        "h-1.5 w-1.5 shrink-0 rounded-full",
+                        module.palette.dot
+                      )}
+                      aria-hidden
+                    />
+                    <span
+                      className={cn(
+                        "truncate text-[11px] font-semibold uppercase tracking-[0.1em]",
+                        isCurrentWeek ? "text-ink" : "text-ink-subtle"
+                      )}
+                    >
+                      Semana {module.week}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs tabular-nums text-ink-soft">
+                    {isOpen ? (
+                      <>
+                        {progress.completed} de {progress.total}
+                        {isCurrentWeek && !allDone && (
+                          <span className="text-ink-muted"> · agora</span>
                         )}
-                      </button>
-                    );
-                  })}
+                      </>
+                    ) : (
+                      <span className="text-ink-muted">
+                        abre no dia {opensOn}
+                      </span>
+                    )}
+                  </p>
+                  <div
+                    className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-line"
+                    aria-hidden
+                  >
+                    <div
+                      className={cn("h-full rounded-full", module.palette.dot)}
+                      style={{ width: `${progress.percent}%` }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      </motion.div>
+
+      {/* Weeks: palettized modules, one disclosure each. */}
+      <div className="space-y-3 sm:space-y-4">
+        {weekModules.map((module, index) => {
+          const weekDays = daysOfWeek(module.week);
+          const progress = weekProgress(module.week, completedDays);
+          const isExpanded = expandedWeek === module.week;
+          const isCurrentWeek = module.week === week.week;
+          const opensOn = weekDays[0]?.day ?? DAY_COUNT;
+          const isOpen = opensOn <= currentDay;
+
+          return (
+            <motion.div
+              key={module.week}
+              initial={reduceMotion ? false : rise.initial}
+              animate={rise.animate}
+              transition={{
+                duration: 0.25,
+                ease: "easeOut",
+                delay: 0.08 + index * 0.04,
+              }}
+            >
+              <Card
+                as="div"
+                padding="none"
+                clip
+                className={cn(isCurrentWeek && "border-brand/30")}
+              >
+                <h3>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedWeek(isExpanded ? 0 : module.week)
+                    }
+                    aria-expanded={isExpanded}
+                    aria-controls={`semana-${module.week}`}
+                    className={cn(
+                      "flex min-h-[44px] w-full items-center gap-3 px-4 py-3.5 text-left transition-colors sm:px-5",
+                      focusRing,
+                      "focus-visible:ring-inset",
+                      module.palette.bg,
+                      "hover:bg-white/60"
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums text-ink",
+                        module.palette.dot
+                      )}
+                      aria-hidden
+                    >
+                      {module.week}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-baseline gap-x-1.5 text-[11px]">
+                        <span
+                          className={cn(
+                            "font-semibold uppercase tracking-[0.12em]",
+                            module.palette.text
+                          )}
+                        >
+                          Semana {module.week}
+                        </span>
+                        <span className="text-ink-faint" aria-hidden>
+                          ·
+                        </span>
+                        <span className="tabular-nums text-ink-muted">
+                          {isOpen
+                            ? `${progress.completed} de ${progress.total} dias`
+                            : `abre no dia ${opensOn}`}
+                        </span>
+                      </span>
+                      <span className="mt-1 block font-serif text-base leading-snug text-ink">
+                        {module.title}
+                      </span>
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 shrink-0 text-ink-subtle transition-transform duration-200 motion-reduce:transition-none",
+                        isExpanded && "rotate-180"
+                      )}
+                      aria-hidden
+                    />
+                  </button>
+                </h3>
+
+                <div className="h-1 bg-line" aria-hidden>
+                  <div
+                    className={cn(
+                      "h-full rounded-r-full transition-[width] duration-500",
+                      module.palette.dot
+                    )}
+                    style={{ width: `${progress.percent}%` }}
+                  />
                 </div>
-              </motion.div>
-            )}
-          </motion.div>
-        );
-      })}
-    </div>
+
+                <div id={`semana-${module.week}`} hidden={!isExpanded}>
+                  <div className="border-b border-line bg-surface-soft px-4 py-3 sm:px-5">
+                    <p className="text-sm leading-relaxed text-ink-soft">
+                      {module.description}
+                    </p>
+                  </div>
+
+                  <ul className="divide-y divide-line">
+                    {weekDays.map(item => {
+                      const isCompleted = completedDays.includes(item.day);
+                      const isCurrent = item.day === currentDay && !isCompleted;
+                      const isAccessible = isDayAccessible(
+                        item.day,
+                        currentDay
+                      );
+                      const isLocked = !isAccessible;
+                      const iconTone = isCompleted
+                        ? cn("border-transparent text-ink", module.palette.dot)
+                        : isCurrent
+                          ? "border-brand bg-white text-brand-ink"
+                          : isLocked
+                            ? "border-line bg-white/70 text-ink-faint"
+                            : "border-line-strong bg-white text-ink-subtle";
+
+                      return (
+                        <li key={item.day}>
+                          <button
+                            type="button"
+                            onClick={() => openDay(item.day)}
+                            disabled={isLocked}
+                            aria-current={isCurrent ? "step" : undefined}
+                            className={cn(
+                              "relative flex w-full items-center gap-3 px-4 py-3 text-left transition-colors sm:px-5",
+                              focusRing,
+                              "focus-visible:ring-inset",
+                              isCurrent && "bg-brand-wash",
+                              isAccessible &&
+                                !isCurrent &&
+                                "hover:bg-surface-soft",
+                              isLocked && "cursor-not-allowed bg-surface/60"
+                            )}
+                          >
+                            {isCurrent && (
+                              <span
+                                className="absolute inset-y-0 left-0 w-[3px] bg-brand"
+                                aria-hidden
+                              />
+                            )}
+                            <span
+                              className={cn(
+                                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border",
+                                iconTone
+                              )}
+                              aria-hidden
+                            >
+                              {isCompleted ? (
+                                <Check className="h-4 w-4" />
+                              ) : isCurrent ? (
+                                <span className="h-2 w-2 rounded-full bg-brand" />
+                              ) : isLocked ? (
+                                <Lock className="h-3.5 w-3.5" />
+                              ) : (
+                                <Circle className="h-3.5 w-3.5" />
+                              )}
+                            </span>
+
+                            <span className="min-w-0 flex-1">
+                              <span className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-ink-muted">
+                                <span className="font-semibold">
+                                  Dia {item.day}
+                                </span>
+                                <span className="text-ink-faint" aria-hidden>
+                                  ·
+                                </span>
+                                <span className="truncate">{item.theme}</span>
+                                {isCurrent && <Pill tone="brand">Hoje</Pill>}
+                              </span>
+                              <span
+                                className={cn(
+                                  "mt-0.5 block text-sm leading-snug",
+                                  isLocked ? "text-ink-muted" : "text-ink"
+                                )}
+                              >
+                                {item.title}
+                              </span>
+                              {isLocked && (
+                                <span className="mt-1 block text-[11px] leading-snug text-ink-muted">
+                                  Abre após o dia {item.day - 1}.
+                                </span>
+                              )}
+                            </span>
+
+                            {isCurrent && (
+                              <ArrowRight
+                                className="h-4 w-4 shrink-0 text-brand-ink"
+                                aria-hidden
+                              />
+                            )}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </Card>
+            </motion.div>
+          );
+        })}
+      </div>
+    </Screen>
   );
 }

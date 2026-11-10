@@ -1,10 +1,11 @@
 import { useState, type ReactNode } from "react";
-import { motion } from "framer-motion";
-import { Heart, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { APP_PAGES, useNavigation, type AppPage } from "@/app/navigation";
 import { useApp } from "@/app/store";
 import { IMAGES } from "@/app/assets";
 import { DAY_COUNT } from "@/journey";
+import { Action, ProgressRail } from "@/components/ds";
+import { cn } from "@/lib/utils";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { state, currentDay, progressPercent, currentStreak } = useApp();
@@ -20,215 +21,229 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     setMobileMenuOpen(false);
   };
 
+  const nextDayLabel =
+    currentDay >= DAY_COUNT
+      ? "Revisar o último dia"
+      : `Continuar o dia ${currentDay}`;
+
   return (
-    <div className="min-h-screen bg-[#FAF6F1] flex">
-      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-[#F0E4DC] fixed h-full z-20 shadow-sm">
-        <div className="p-6 border-b border-[#F0E4DC]">
-          <div className="flex items-center gap-3">
-            <img
-              src={IMAGES.logo}
-              alt="Ouse Ser Você"
-              className="w-10 h-10 object-contain"
-            />
-            <div>
-              <p className="font-serif text-sm font-bold text-[#2C1810] leading-tight">
-                Ouse Ser Você
-              </p>
-              <p className="text-[10px] text-[#B08070] tracking-wide uppercase">
-                30 Dias Para Mudar
-              </p>
-            </div>
+    <div className="flex min-h-screen bg-surface">
+      <aside className="fixed z-20 hidden h-full w-64 flex-col border-r border-line bg-white lg:flex">
+        <div className="flex items-center gap-3 border-b border-line px-5 py-5">
+          <img
+            src={IMAGES.logo}
+            alt=""
+            className="h-9 w-9 object-contain"
+            aria-hidden
+          />
+          <div>
+            <p className="font-serif text-sm font-semibold leading-tight text-ink">
+              Ouse Ser Você
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.16em] text-ink-subtle">
+              30 dias para mudar
+            </p>
           </div>
         </div>
 
-        <div className="px-6 py-4 border-b border-[#F0E4DC]">
-          <p className="text-xs text-[#B08070] mb-1">Olá,</p>
-          <p className="font-semibold text-[#2C1810] text-sm">{userName}</p>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="flex-1">
-              <div className="flex justify-between text-xs text-[#8B6E5A] mb-1">
-                <span>Progresso</span>
-                <span>{progressPercent}%</span>
-              </div>
-              <div className="h-1.5 bg-[#F0E4DC] rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-[#C4856A] rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-1 text-xs text-[#C4856A] font-medium">
-              <Heart className="w-3 h-3 fill-current" />
-              <span>{currentStreak}</span>
-            </div>
-          </div>
+        <div className="border-b border-line px-5 py-4">
+          <p className="text-xs text-ink-subtle">Olá,</p>
+          <p className="mb-3 truncate text-sm font-semibold text-ink">
+            {userName}
+          </p>
+          <ProgressRail
+            value={progressPercent}
+            label="Progresso"
+            valueLabel={`${progressPercent}%`}
+            size="sm"
+          />
+          <p className="mt-2 text-xs text-ink-muted">
+            <span className="font-semibold tabular-nums text-brand-ink">
+              {currentStreak}
+            </span>{" "}
+            {currentStreak === 1 ? "dia seguido" : "dias seguidos"}
+          </p>
         </div>
 
-        <nav className="flex-1 py-4 overflow-y-auto">
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => go(item.id)}
-              className={`w-full flex items-center gap-3 px-6 py-3 text-sm transition-all duration-150 ${
-                currentPage === item.id
-                  ? "bg-[#F5EDE8] text-[#C4856A] font-semibold border-r-2 border-[#C4856A]"
-                  : "text-[#6B4C3B] hover:bg-[#FAF6F1] hover:text-[#C4856A]"
-              }`}
-            >
-              <span
-                className={
-                  currentPage === item.id ? "text-[#C4856A]" : "text-[#B08070]"
-                }
+        <nav
+          className="flex-1 overflow-y-auto py-3"
+          aria-label="Navegação principal"
+        >
+          {navItems.map(item => {
+            const active = currentPage === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => go(item.id)}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex w-full items-center gap-3 px-5 py-2.5 text-sm transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand/40",
+                  active
+                    ? "border-r-2 border-brand bg-brand-soft font-semibold text-brand-ink"
+                    : "text-ink-soft hover:bg-surface hover:text-ink"
+                )}
               >
-                <item.icon className="w-5 h-5" />
-              </span>
-              {item.label}
-            </button>
-          ))}
+                <item.icon
+                  className={cn(
+                    "h-4 w-4",
+                    active ? "text-brand-ink" : "text-ink-subtle"
+                  )}
+                  aria-hidden
+                />
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
 
-        <div className="p-4 border-t border-[#F0E4DC]">
-          <div className="bg-[#F5EDE8] rounded-xl p-3 text-center">
-            <p className="text-xs text-[#8B6E5A]">Dia atual</p>
-            <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {currentDay}
-            </p>
-            <p className="text-xs text-[#8B6E5A]">de {DAY_COUNT}</p>
-          </div>
+        <div className="border-t border-line p-4">
+          <Action
+            block
+            size="md"
+            onClick={() => navigate("day")}
+            className="text-xs"
+          >
+            {nextDayLabel}
+          </Action>
+          <p className="mt-2 text-center text-[11px] text-ink-subtle">
+            Dia {currentDay} de {DAY_COUNT}
+          </p>
         </div>
       </aside>
 
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#F0E4DC] shadow-sm">
-        <div className="flex items-center justify-between px-4 h-14">
+      <header className="fixed inset-x-0 top-0 z-30 border-b border-line bg-white/95 backdrop-blur-md lg:hidden">
+        <div className="flex h-14 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <img
               src={IMAGES.logo}
-              alt="Ouse Ser Você"
-              className="w-9 h-9 object-contain"
+              alt=""
+              className="h-8 w-8 object-contain"
+              aria-hidden
             />
-            <p className="font-serif text-sm font-bold text-[#2C1810]">
+            <p className="font-serif text-sm font-semibold text-ink">
               Ouse Ser Você
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-xs text-[#C4856A] font-medium">
-              <Heart className="w-3 h-3 fill-current" />
-              <span>{currentStreak} dias</span>
-            </div>
+            <span className="text-xs font-medium tabular-nums text-brand-ink">
+              {currentStreak} {currentStreak === 1 ? "dia" : "dias"}
+            </span>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#6B4C3B]"
+              className="p-2 text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+              aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu className="h-5 w-5" />
               )}
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {mobileMenuOpen && (
         <>
           <div
-            className="lg:hidden fixed inset-0 bg-black/30 z-40 transition-opacity"
+            className="fixed inset-0 z-40 bg-ink/30 lg:hidden"
             onClick={() => setMobileMenuOpen(false)}
+            aria-hidden
           />
           <div
-            className="lg:hidden fixed right-0 top-0 bottom-0 w-72 max-w-[85vw] bg-white z-50 shadow-2xl overflow-y-auto"
-            style={{ animation: "slideInRight 0.25s ease-out" }}
+            className="fixed inset-y-0 right-0 z-50 w-72 max-w-[85vw] overflow-y-auto bg-white shadow-2xl lg:hidden"
+            style={{ animation: "slideInRight 0.2s ease-out" }}
+            role="dialog"
+            aria-label="Menu"
           >
-            <div className="p-4 border-b border-[#F0E4DC] flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-line p-4">
               <div>
-                <p className="font-semibold text-[#2C1810]">{userName}</p>
-                <p className="text-xs text-[#8B6E5A]">
+                <p className="text-sm font-semibold text-ink">{userName}</p>
+                <p className="text-xs text-ink-muted">
                   Dia {currentDay} de {DAY_COUNT}
                 </p>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-[#6B4C3B]"
+                className="p-2 text-ink-soft"
+                aria-label="Fechar menu"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="px-4 py-3 border-b border-[#F0E4DC] bg-[#FAF6F1]">
-              <div className="flex justify-between text-xs text-[#8B6E5A] mb-1">
-                <span>Progresso</span>
-                <span className="font-medium text-[#C4856A]">
-                  {progressPercent}%
-                </span>
-              </div>
-              <div className="h-1.5 bg-[#F0E4DC] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#C4856A] rounded-full transition-all"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
+            <div className="border-b border-line bg-surface px-4 py-3">
+              <ProgressRail
+                value={progressPercent}
+                label="Progresso"
+                valueLabel={`${progressPercent}%`}
+                size="sm"
+              />
             </div>
-            <nav className="py-2">
-              {navItems.map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => go(item.id)}
-                  className={`w-full flex items-center gap-3 px-6 py-3.5 text-sm transition-colors ${
-                    currentPage === item.id
-                      ? "bg-[#F5EDE8] text-[#C4856A] font-semibold"
-                      : "text-[#6B4C3B] hover:bg-[#FAF6F1]"
-                  }`}
-                >
-                  <span
-                    className={
-                      currentPage === item.id
-                        ? "text-[#C4856A]"
-                        : "text-[#B08070]"
-                    }
+            <nav className="py-1" aria-label="Navegação principal">
+              {navItems.map(item => {
+                const active = currentPage === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => go(item.id)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex w-full items-center gap-3 px-5 py-3 text-sm transition-colors",
+                      active
+                        ? "bg-brand-soft font-semibold text-brand-ink"
+                        : "text-ink-soft hover:bg-surface"
+                    )}
                   >
-                    <item.icon className="w-5 h-5" />
-                  </span>
-                  {item.label}
-                </button>
-              ))}
+                    <item.icon
+                      className={cn(
+                        "h-4 w-4",
+                        active ? "text-brand-ink" : "text-ink-subtle"
+                      )}
+                      aria-hidden
+                    />
+                    {item.label}
+                  </button>
+                );
+              })}
             </nav>
           </div>
         </>
       )}
 
-      <main className="flex-1 lg:ml-64 pt-14 lg:pt-0 min-h-screen pb-20 lg:pb-0">
-        <div className="max-w-svw mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-10">
+      <main className="min-h-screen flex-1 pt-14 pb-20 lg:ml-64 lg:pt-0 lg:pb-0">
+        <div className="mx-auto w-full max-w-3xl px-4 py-5 sm:px-6 sm:py-8 lg:py-10">
           {children}
         </div>
       </main>
 
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#F0E4DC] z-20 shadow-lg safe-area-bottom">
-        <div className="flex items-center justify-around h-16 px-1">
-          {bottomNavItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => go(item.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 w-14 h-14 rounded-xl transition-all ${
-                currentPage === item.id
-                  ? "text-[#C4856A] bg-[#F5EDE8]"
-                  : "text-[#B08070] active:bg-[#FAF6F1]"
-              }`}
-            >
-              <span
-                className={
-                  currentPage === item.id
-                    ? "scale-110 transition-transform"
-                    : ""
-                }
+      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white/95 backdrop-blur-md shadow-[0_-1px_2px_rgba(44,24,16,0.04)] lg:hidden safe-area-bottom">
+        <div className="flex h-16 items-center justify-around px-1">
+          {bottomNavItems.map(item => {
+            const active = currentPage === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => go(item.id)}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex h-14 w-14 flex-col items-center justify-center gap-0.5 rounded-xl transition-colors",
+                  active
+                    ? "bg-brand-soft text-brand-ink"
+                    : "text-ink-subtle active:bg-surface"
+                )}
               >
-                <item.icon className="w-5 h-5" />
-              </span>
-              <span className="text-[9px] font-medium leading-tight">
-                {item.shortLabel}
-              </span>
-            </button>
-          ))}
+                <item.icon
+                  className={cn("h-5 w-5", active && "scale-105")}
+                  aria-hidden
+                />
+                <span className="text-[9px] font-medium leading-tight">
+                  {item.shortLabel}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </nav>
     </div>

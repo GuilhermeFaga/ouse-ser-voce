@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import {
   buildShareMessage,
   copyToClipboard,
@@ -12,21 +12,23 @@ interface ShareInstagramButtonProps {
   subject: ShareSubject;
   size?: "sm" | "md" | "lg";
   variant?: "primary" | "secondary" | "ghost";
+  className?: string;
+  /** Accessible name when the visible label is generic (e.g. a row of "Compartilhar"). */
+  label?: string;
 }
 
 const sizeClasses = {
-  sm: "h-8 px-2 sm:px-3 text-xs",
-  md: "h-10 px-3 sm:px-4 text-sm",
-  lg: "h-12 px-4 sm:px-5 text-base",
+  sm: "h-11 px-3 text-xs gap-1.5",
+  md: "h-11 px-4 text-sm gap-2",
+  lg: "h-12 px-5 text-base gap-2",
 };
 
 const variantClasses = {
   primary:
-    "bg-gradient-to-r from-[#F77737] to-[#FD1D1D] hover:from-[#E66626] hover:to-[#EC1C1C] text-white shadow-md",
+    "bg-brand text-ink hover:bg-brand-hover shadow-[0_1px_2px_rgba(44,24,16,0.12)]",
   secondary:
-    "bg-[#F0F0F0] hover:bg-[#E0E0E0] text-[#F77737] border border-[#E8D5CC]",
-  ghost:
-    "bg-transparent hover:bg-[#F5EDE8] text-[#F77737] border border-[#F77737]",
+    "bg-white text-ink border border-line-strong hover:bg-surface-soft",
+  ghost: "bg-transparent text-brand-ink hover:bg-brand-soft",
 };
 
 const labels: Record<ShareSubject["kind"], string> = {
@@ -41,6 +43,8 @@ export default function ShareInstagramButton({
   subject,
   size = "md",
   variant = "primary",
+  className,
+  label,
 }: ShareInstagramButtonProps) {
   const handleShare = async () => {
     const message = buildShareMessage(subject);
@@ -50,18 +54,23 @@ export default function ShareInstagramButton({
       return;
     }
     openInstagram();
-    toast.success("Mensagem copiada! Cole no Instagram 📸");
+    toast.success("Mensagem copiada. Cole no Instagram.");
   };
 
   return (
-    <motion.button
+    <button
       onClick={handleShare}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className={`rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${sizeClasses[size]} ${variantClasses[variant]}`}
+      aria-label={label}
+      className={cn(
+        "inline-flex items-center justify-center rounded-xl font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
+        sizeClasses[size],
+        variantClasses[variant],
+        className
+      )}
     >
-      <Heart className="w-4 h-4" />
+      <Share2 className="h-4 w-4" aria-hidden />
       <span>{labels[subject.kind]}</span>
-    </motion.button>
+    </button>
   );
 }

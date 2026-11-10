@@ -6,6 +6,8 @@ export interface Comment {
   text: string;
   createdAt: string;
   likedBy: string[];
+  /** Whose device wrote it; older comments have none and are not deletable here. */
+  authorId: string | null;
   parentId: string | null;
 }
 

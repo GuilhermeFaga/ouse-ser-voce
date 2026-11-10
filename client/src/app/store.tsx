@@ -292,6 +292,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           text: draft.text.trim(),
           createdAt: new Date().toISOString(),
           likedBy: [],
+          authorId: previous.userId,
           parentId: draft.parentId ?? null,
         };
         return { ...previous, comments: [...previous.comments, comment] };

@@ -1,14 +1,95 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Heart, MessageCircle } from "lucide-react";
+import { useRef, useState, type KeyboardEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Calendar, TrendingUp, Trophy, type LucideIcon } from "lucide-react";
 import { useApp } from "@/app/store";
+import { useNavigation } from "@/app/navigation";
 import { achievements, DAY_COUNT, getDay } from "@/journey";
+import { buildShareMessage, type ShareSubject } from "@/share/messages";
 import ShareInstagramButton from "@/share/ShareInstagramButton";
+import {
+  Action,
+  Card,
+  CardTitle,
+  EmptyState,
+  Pill,
+  ProgressRail,
+  Screen,
+  ScreenHeader,
+  Stat,
+  focusRing,
+} from "@/components/ds";
+import { cn } from "@/lib/utils";
 
 type Tab = "dias" | "conquistas" | "progresso";
 
+const TABS: { id: Tab; label: string; short: string; icon: LucideIcon }[] = [
+  { id: "dias", label: "Dias completados", short: "Dias", icon: Calendar },
+  { id: "conquistas", label: "Conquistas", short: "Conquistas", icon: Trophy },
+  { id: "progresso", label: "Progresso", short: "Progresso", icon: TrendingUp },
+];
+
+const tabId = (tab: Tab) => `share-tab-${tab}`;
+const PANEL_ID = "share-panel";
+
+/**
+ * The literal opening of the text she will copy. The product banner that every
+ * message starts with is skipped so the preview reads as the message body.
+ */
+function messagePreview(subject: ShareSubject, maxLines: number): string {
+  const lines = buildShareMessage(subject)
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean);
+  const body = lines[0]?.includes("OUSE SER VOCÊ") ? lines.slice(1) : lines;
+  return body.slice(0, maxLines).join("\n");
+}
+
+const clampClass = { 2: "line-clamp-2", 3: "line-clamp-3", 4: "line-clamp-4" };
+
+/** What leaves the app, in the app's own words — shown before the tap. */
+function SharePreview({
+  subject,
+  lines,
+  surface = "soft",
+}: {
+  subject: ShareSubject;
+  lines: 2 | 3 | 4;
+  /** "white" when the preview sits on a warm card. */
+  surface?: "soft" | "white";
+}) {
+  return (
+    <p
+      className={cn(
+        "mt-2.5 whitespace-pre-line rounded-xl border border-line px-3 py-2.5",
+        "text-xs leading-relaxed text-ink-soft",
+        surface === "white" ? "bg-white" : "bg-surface-soft",
+        clampClass[lines]
+      )}
+    >
+      <span className="sr-only">Vai copiar: </span>
+      {messagePreview(subject, lines)}
+    </p>
+  );
+}
+
+function fadeUp(index: number, reduceMotion: boolean) {
+  return {
+    initial: reduceMotion ? false : { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    transition: reduceMotion
+      ? { duration: 0 }
+      : {
+          duration: 0.22,
+          ease: "easeOut" as const,
+          delay: Math.min(index, 5) * 0.03,
+        },
+  };
+}
+
 export default function Share() {
   const { state, completedDays, currentDay, progressPercent } = useApp();
+  const { navigate } = useNavigation();
+  const reduceMotion = useReducedMotion() ?? false;
   const mood = state.days[currentDay]?.mood ?? 3;
   const [tab, setTab] = useState<Tab>("dias");
 
@@ -17,226 +98,312 @@ export default function Share() {
   );
   const newestFirst = [...completedDays].sort((a, b) => b - a);
 
-  const tabs: {
-    id: Tab;
-    label: string;
-    short: string;
-    icon: string;
-    count: number;
-  }[] = [
-    {
-      id: "dias",
-      label: "Dias Completados",
-      short: "Dias",
-      icon: "📅",
-      count: completedDays.length,
-    },
-    {
-      id: "conquistas",
-      label: "Conquistas",
-      short: "Conquistas",
-      icon: "🏆",
-      count: unlocked.length,
-    },
-    {
-      id: "progresso",
-      label: "Progresso Geral",
-      short: "Progresso",
-      icon: "📊",
-      count: 1,
-    },
-  ];
+  const sharedDays = completedDays.length;
+  const allDone = sharedDays >= DAY_COUNT;
+  const remaining = DAY_COUNT - sharedDays;
+  const openCurrentDay = () => navigate("day");
+
+  const tabRefs = useRef<Record<Tab, HTMLButtonElement | null>>({
+    dias: null,
+    conquistas: null,
+    progresso: null,
+  });
+
+  const moveTab = (event: KeyboardEvent<HTMLDivElement>) => {
+    const index = TABS.findIndex(item => item.id === tab);
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % TABS.length;
+    else if (event.key === "ArrowLeft")
+      nextIndex = (index - 1 + TABS.length) % TABS.length;
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = TABS.length - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    const next = TABS[nextIndex];
+    setTab(next.id);
+    tabRefs.current[next.id]?.focus();
+  };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div>
-        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#2C1810] mb-1">
-          Compartilhe sua jornada
-        </h1>
-        <p className="text-[#8B6E5A] text-sm">
-          Inspire outras mulheres com sua transformação
-        </p>
+    <Screen>
+      <ScreenHeader
+        kicker="Compartilhar"
+        title="Mostre sua jornada"
+        description="Cada botão copia um texto pronto e abre o Instagram para você colar. Nada além do texto sai do app: seu nome, seu diário e suas avaliações ficam aqui."
+      />
+
+      <div
+        role="tablist"
+        aria-label="O que compartilhar"
+        onKeyDown={moveTab}
+        className="flex gap-1 rounded-xl border border-line bg-surface-soft p-1"
+      >
+        {TABS.map(item => {
+          const selected = tab === item.id;
+          const Icon = item.icon;
+          const count =
+            item.id === "dias"
+              ? sharedDays
+              : item.id === "conquistas"
+                ? unlocked.length
+                : null;
+          return (
+            <button
+              key={item.id}
+              ref={node => {
+                tabRefs.current[item.id] = node;
+              }}
+              type="button"
+              role="tab"
+              id={tabId(item.id)}
+              aria-selected={selected}
+              aria-controls={PANEL_ID}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setTab(item.id)}
+              className={cn(
+                "flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium transition-colors sm:text-sm",
+                focusRing,
+                selected
+                  ? "bg-white text-ink shadow-[0_1px_2px_rgba(44,24,16,0.04)]"
+                  : "text-ink-muted hover:text-ink"
+              )}
+            >
+              <Icon className="hidden h-4 w-4 sm:block" aria-hidden />
+              <span className="hidden sm:inline">{item.label}</span>
+              <span className="sm:hidden">{item.short}</span>
+              {count !== null && count > 0 && (
+                <span className="hidden text-[11px] tabular-nums text-ink-subtle sm:inline">
+                  ({count})
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="flex gap-1 sm:gap-2 border-b border-[#E8D5CC] overflow-x-auto scrollbar-hide">
-        {tabs.map(item => (
-          <button
-            key={item.id}
-            onClick={() => setTab(item.id)}
-            className={`px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-all ${
-              tab === item.id
-                ? "border-[#C4856A] text-[#C4856A]"
-                : "border-transparent text-[#B08070] hover:text-[#8B6E5A]"
-            }`}
-          >
-            <span>{item.icon}</span>{" "}
-            <span className="hidden sm:inline">{item.label}</span>
-            <span className="sm:hidden">{item.short}</span>{" "}
-            <span className="text-xs ml-1">({item.count})</span>
-          </button>
-        ))}
-      </div>
+      <motion.div
+        key={tab}
+        id={PANEL_ID}
+        role="tabpanel"
+        aria-labelledby={tabId(tab)}
+        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={
+          reduceMotion ? { duration: 0 } : { duration: 0.24, ease: "easeOut" }
+        }
+        className="space-y-5 sm:space-y-6"
+      >
+        {tab === "dias" &&
+          (newestFirst.length === 0 ? (
+            <EmptyState
+              icon={Calendar}
+              title="Nenhum dia concluído ainda"
+              body="O dia concluído vira um texto pronto para o Instagram. Ele aparece aqui, inteiro, antes de sair do app."
+              action={
+                <Action onClick={openCurrentDay}>
+                  Abrir o dia {currentDay}
+                </Action>
+              }
+            />
+          ) : (
+            <>
+              <p className="text-sm leading-relaxed text-ink-muted">
+                Cada texto leva o tema do dia e o humor que você registrou.
+              </p>
+              <Card as="div" padding="none" clip>
+                <ul className="divide-y divide-line">
+                  {newestFirst.map((dayNumber, index) => {
+                    const day = getDay(dayNumber);
+                    const subject: ShareSubject = {
+                      kind: "day",
+                      day: dayNumber,
+                      mood: state.days[dayNumber]?.mood ?? 3,
+                    };
+                    return (
+                      <motion.li
+                        key={dayNumber}
+                        {...fadeUp(index, reduceMotion)}
+                        className="px-4 py-4 sm:px-5"
+                      >
+                        <div className="flex flex-wrap items-baseline gap-x-2">
+                          <p className="font-serif text-base tabular-nums text-ink">
+                            Dia {dayNumber}
+                          </p>
+                          <p className="min-w-0 truncate text-sm text-ink-soft">
+                            {day.theme}
+                          </p>
+                        </div>
+                        <SharePreview subject={subject} lines={2} />
+                        <ShareInstagramButton
+                          subject={subject}
+                          size="md"
+                          variant={index === 0 ? "primary" : "secondary"}
+                          label={`Compartilhar o dia ${dayNumber}: ${day.theme}`}
+                          className="mt-3 w-full sm:w-auto"
+                        />
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+              </Card>
+            </>
+          ))}
 
-      {tab === "dias" &&
-        (newestFirst.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
-              <MessageCircle className="w-7 h-7 text-[#C4856A]" />
-            </div>
-            <p className="font-serif text-lg text-[#2C1810] mb-2">
-              Nenhum dia completado ainda
-            </p>
-            <p className="text-[#8B6E5A] text-sm">
-              Complete um dia para começar a compartilhar
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {newestFirst.map((dayNumber, index) => {
-              const day = getDay(dayNumber);
-              return (
-                <motion.div
-                  key={dayNumber}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between gap-3"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[#2C1810] text-sm truncate">
-                      Dia {dayNumber}
-                    </p>
-                    <p className="text-xs text-[#8B6E5A] truncate">
-                      {day.theme}
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <ShareInstagramButton
-                      subject={{
-                        kind: "day",
-                        day: dayNumber,
-                        mood: state.days[dayNumber]?.mood ?? 3,
-                      }}
-                      size="sm"
-                      variant="primary"
-                    />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        ))}
-
-      {tab === "conquistas" &&
-        (unlocked.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
-              <Heart className="w-7 h-7 text-[#C4856A]" />
-            </div>
-            <p className="font-serif text-lg text-[#2C1810] mb-2">
-              Nenhuma conquista desbloqueada
-            </p>
-            <p className="text-[#8B6E5A] text-sm">
-              Continue a jornada para desbloquear conquistas
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {unlocked.map((achievement, index) => (
-              <motion.div
-                key={achievement.id}
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-white rounded-2xl border border-[#F0E4DC] p-4 shadow-sm flex items-center justify-between gap-3"
-              >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-[#F5EDE8] flex items-center justify-center text-xl flex-shrink-0">
-                    {achievement.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-[#2C1810] text-sm truncate">
-                      {achievement.title}
-                    </p>
-                    <p className="text-xs text-[#8B6E5A] truncate">
-                      {achievement.description}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex-shrink-0">
-                  <ShareInstagramButton
-                    subject={{
+        {tab === "conquistas" &&
+          (unlocked.length === 0 ? (
+            <EmptyState
+              icon={Trophy}
+              title="Nenhuma conquista desbloqueada ainda"
+              body="As conquistas aparecem quando você fecha um marco da jornada. Elas ficam salvas neste dispositivo, mesmo que você pause."
+              action={
+                <Action onClick={openCurrentDay}>
+                  Abrir o dia {currentDay}
+                </Action>
+              }
+            />
+          ) : (
+            <>
+              <p className="text-sm leading-relaxed text-ink-muted">
+                Cada texto leva o título e a descrição da conquista.
+              </p>
+              <Card as="div" padding="none" clip>
+                <ul className="divide-y divide-line">
+                  {unlocked.map((achievement, index) => {
+                    const subject: ShareSubject = {
                       kind: "achievement",
                       achievement: {
                         title: achievement.title,
                         description: achievement.description,
                       },
-                    }}
-                    size="sm"
-                    variant="primary"
+                    };
+                    return (
+                      <motion.li
+                        key={achievement.id}
+                        {...fadeUp(index, reduceMotion)}
+                        className="px-4 py-4 sm:px-5"
+                      >
+                        <div className="flex items-start gap-3">
+                          <span
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-lg"
+                            aria-hidden
+                          >
+                            {achievement.icon}
+                          </span>
+                          <p className="min-w-0 pt-1.5 text-sm font-medium text-ink">
+                            {achievement.title}
+                          </p>
+                        </div>
+                        <SharePreview subject={subject} lines={3} />
+                        <ShareInstagramButton
+                          subject={subject}
+                          size="md"
+                          variant={index === 0 ? "primary" : "secondary"}
+                          label={`Compartilhar a conquista ${achievement.title}`}
+                          className="mt-3 w-full sm:w-auto"
+                        />
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+              </Card>
+            </>
+          ))}
+
+        {tab === "progresso" && (
+          <>
+            <Card>
+              <Stat
+                label="Dias concluídos"
+                value={sharedDays}
+                unit={`de ${DAY_COUNT}`}
+                emphasis
+                hint={
+                  allDone
+                    ? "Os 30 dias concluídos continuam guardados."
+                    : `Faltam ${remaining} ${
+                        remaining === 1 ? "dia" : "dias"
+                      } para a jornada completa.`
+                }
+              />
+              <ProgressRail
+                className="mt-4"
+                value={progressPercent}
+                label="Jornada"
+                valueLabel={`${progressPercent}%`}
+              />
+              <p className="mt-3 text-xs text-ink-muted">
+                {unlocked.length}{" "}
+                {unlocked.length === 1
+                  ? "conquista desbloqueada"
+                  : "conquistas desbloqueadas"}
+              </p>
+            </Card>
+
+            {sharedDays === 0 ? (
+              <EmptyState
+                icon={TrendingUp}
+                title="Ainda não há progresso para compartilhar"
+                body="A contagem começa no primeiro dia concluído. O texto que sai do app aparece aqui antes de você copiar."
+                action={
+                  <Action onClick={openCurrentDay}>
+                    Abrir o dia {currentDay}
+                  </Action>
+                }
+              />
+            ) : (
+              <Card tone="warm">
+                <CardTitle
+                  hint={
+                    allDone ? (
+                      <Pill tone="success">jornada completa</Pill>
+                    ) : (
+                      <Pill tone="brand">
+                        {sharedDays} de {DAY_COUNT}
+                      </Pill>
+                    )
+                  }
+                >
+                  {allDone ? "Jornada completa" : "Seu progresso em texto"}
+                </CardTitle>
+
+                <SharePreview
+                  subject={
+                    allDone
+                      ? { kind: "journey", mood }
+                      : { kind: "progress", completedDays }
+                  }
+                  lines={3}
+                  surface="white"
+                />
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {allDone && (
+                    <ShareInstagramButton
+                      subject={{ kind: "journey", mood }}
+                      size="lg"
+                      variant="primary"
+                      label="Compartilhar a jornada completa"
+                      className="w-full sm:w-auto"
+                    />
+                  )}
+                  <ShareInstagramButton
+                    subject={{ kind: "progress", completedDays }}
+                    size={allDone ? "md" : "lg"}
+                    variant={allDone ? "secondary" : "primary"}
+                    label={`Compartilhar meus ${sharedDays} dias`}
+                    className="w-full sm:w-auto"
                   />
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        ))}
 
-      {tab === "progresso" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
-              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
-                {completedDays.length}
-              </p>
-              <p className="text-xs text-[#8B6E5A]">Dias</p>
-            </div>
-            <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
-              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
-                {progressPercent}%
-              </p>
-              <p className="text-xs text-[#8B6E5A]">Progresso</p>
-            </div>
-            <div className="bg-white rounded-2xl border border-[#F0E4DC] p-4 text-center shadow-sm">
-              <p className="text-2xl font-serif font-bold text-[#C4856A] mb-1">
-                {unlocked.length}
-              </p>
-              <p className="text-xs text-[#8B6E5A]">Conquistas</p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-6 space-y-4">
-            <div>
-              <h3 className="font-semibold text-[#2C1810] mb-2">
-                Compartilhe seu progresso
-              </h3>
-              <p className="text-sm text-[#8B6E5A] mb-4">
-                Inspire outras mulheres com sua transformação
-              </p>
-            </div>
-
-            <ShareInstagramButton
-              subject={{ kind: "progress", completedDays }}
-              variant="primary"
-            />
-
-            {completedDays.length >= DAY_COUNT && (
-              <ShareInstagramButton
-                subject={{ kind: "journey", mood }}
-                variant="primary"
-              />
+                <p className="mt-3 text-xs leading-relaxed text-ink-muted">
+                  Copia o texto e abre o Instagram. Cole no story ou na legenda
+                  do post.
+                </p>
+              </Card>
             )}
-          </div>
-
-          <div className="bg-[#F5EDE8] rounded-xl p-4 border border-[#E8D5CC]">
-            <p className="text-sm text-[#6B4C3B] leading-relaxed">
-              💫 <strong>Cada compartilhamento é um ato de coragem.</strong>{" "}
-              Quando você compartilha sua jornada, você não apenas celebra sua
-              transformação — você também abre caminho para que outras mulheres
-              encontrem sua própria força.
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
+          </>
+        )}
+      </motion.div>
+    </Screen>
   );
 }

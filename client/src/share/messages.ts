@@ -17,7 +17,7 @@ export type ShareSubject =
     }
   | { kind: "progress"; completedDays: number[] }
   | { kind: "journey"; mood: number }
-  | { kind: "story"; name: string };
+  | { kind: "story"; name: string; daysCompleted: number };
 
 export function buildShareMessage(subject: ShareSubject): string {
   switch (subject.kind) {
@@ -62,8 +62,13 @@ Quer conhecer essa jornada?
 
 #OuseSerVocê #30DiasParaMudar #TransformacaoEmocional #Jornada #AutoconhecimentoEmocional`;
     }
-    case "story":
-      return `✨ Inspirada pela história de ${subject.name}! Ela completou a jornada OUSE SER VOCÊ e se transformou. Vem conhecer essa comunidade incrível! 🌸`;
+    case "story": {
+      const journey =
+        subject.daysCompleted >= DAY_COUNT
+          ? `Ela completou a jornada de ${DAY_COUNT} dias`
+          : `Ela chegou ao dia ${subject.daysCompleted} da jornada`;
+      return `✨ Inspirada pela história de ${subject.name}. ${journey} do OUSE SER VOCÊ e se transformou. Vem conhecer essa comunidade. 🌸`;
+    }
     case "journey":
       return `🎊 OUSE SER VOCÊ – 30 DIAS COMPLETOS! 🎊
 

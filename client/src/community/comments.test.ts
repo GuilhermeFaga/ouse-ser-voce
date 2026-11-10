@@ -11,6 +11,7 @@ const comment = (overrides: Partial<Comment>): Comment => ({
   text: "texto",
   createdAt: new Date(2024, 0, sequence).toISOString(),
   likedBy: [],
+  authorId: null,
   parentId: null,
   ...overrides,
 });

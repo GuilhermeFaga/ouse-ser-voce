@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useId, useState } from "react";
+import { Action, Field, fieldInputClass, focusRing } from "@/components/ds";
+import { cn } from "@/lib/utils";
 
 export const AVATAR_OPTIONS = ["👩", "👩‍🦱", "👩‍🦳", "👩‍🦰", "👩‍🦲"];
 
@@ -22,7 +22,11 @@ export default function CommentForm({
   const [authorName, setAuthorName] = useState("");
   const [authorAvatar, setAuthorAvatar] = useState(AVATAR_OPTIONS[0]);
   const [text, setText] = useState("");
+  const fieldId = useId();
 
+  const nameId = `${fieldId}-name`;
+  const textId = `${fieldId}-text`;
+  const avatarLabelId = `${fieldId}-avatar`;
   const canSubmit = authorName.trim() !== "" && text.trim() !== "";
 
   const handleSubmit = () => {
@@ -35,68 +39,93 @@ export default function CommentForm({
 
   return (
     <div className="space-y-3">
-      <div>
-        <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">
-          Seu nome
-        </label>
+      <Field
+        label="Seu nome"
+        htmlFor={nameId}
+        required
+        hint="Aparece junto da sua mensagem."
+      >
         <input
+          id={nameId}
           type="text"
+          autoFocus
           value={authorName}
           onChange={event => setAuthorName(event.target.value)}
           placeholder="Como você gostaria de ser chamada?"
-          className="w-full px-3 py-2 rounded-lg border border-[#E8D5CC] bg-white text-sm text-[#2C1810] placeholder:text-[#B08070] focus:outline-none focus:border-[#C4856A]"
+          className={cn("h-11", fieldInputClass())}
         />
-      </div>
+      </Field>
 
-      <div>
-        <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">
+      <div className="space-y-2">
+        <p id={avatarLabelId} className="text-sm font-medium text-ink">
           Avatar
-        </label>
-        <div className="flex gap-2">
-          {AVATAR_OPTIONS.map(avatar => (
-            <button
-              key={avatar}
-              onClick={() => setAuthorAvatar(avatar)}
-              className={`w-9 h-9 rounded-lg text-base flex items-center justify-center transition-all ${
-                authorAvatar === avatar
-                  ? "bg-[#C4856A] ring-2 ring-[#C4856A] ring-offset-2"
-                  : "bg-white border border-[#E8D5CC] hover:bg-[#FAF6F1]"
-              }`}
-            >
-              {avatar}
-            </button>
-          ))}
+        </p>
+        <div
+          role="group"
+          aria-labelledby={avatarLabelId}
+          className="flex flex-wrap gap-1.5"
+        >
+          {AVATAR_OPTIONS.map((avatar, index) => {
+            const selected = authorAvatar === avatar;
+            return (
+              <button
+                key={avatar}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setAuthorAvatar(avatar)}
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-xl text-lg transition-colors",
+                  focusRing,
+                  selected
+                    ? "bg-brand-soft ring-2 ring-brand"
+                    : "border border-line-strong bg-white hover:bg-surface-soft"
+                )}
+              >
+                <span aria-hidden>{avatar}</span>
+                <span className="sr-only">Opção {index + 1}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div>
-        <label className="text-xs font-semibold text-[#8B6E5A] block mb-2">
-          Sua mensagem
-        </label>
-        <Textarea
+      <Field
+        label="Sua mensagem"
+        htmlFor={textId}
+        required
+        hint="Fica visível para quem abrir esta história."
+      >
+        <textarea
+          id={textId}
           value={text}
           onChange={event => setText(event.target.value)}
-          placeholder="Compartilhe uma palavra de apoio, celebração ou inspiração..."
-          className="min-h-[90px] border-[#E8D5CC] focus:border-[#C4856A] bg-white rounded-lg resize-none text-sm text-[#2C1810] placeholder:text-[#B08070]"
+          rows={3}
+          placeholder="Escreva uma palavra de apoio."
+          className={cn(
+            fieldInputClass(),
+            "min-h-[96px] resize-y py-3 leading-relaxed text-ink-soft"
+          )}
         />
-      </div>
+      </Field>
 
-      <div className="flex gap-2">
-        <Button
+      <div className="flex flex-col gap-2 sm:flex-row-reverse">
+        <Action
+          block
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className="flex-1 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="sm:flex-1"
         >
           {submitLabel}
-        </Button>
+        </Action>
         {onCancel && (
-          <Button
+          <Action
+            variant="secondary"
+            block
             onClick={onCancel}
-            variant="outline"
-            className="border-[#E8D5CC] text-[#6B4C3B] rounded-lg hover:bg-[#FAF6F1] text-sm"
+            className="sm:w-auto"
           >
             Cancelar
-          </Button>
+          </Action>
         )}
       </div>
     </div>

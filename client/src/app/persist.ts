@@ -227,6 +227,7 @@ function fromStored(stored: StoredState | null): AppState {
         text: comment.text,
         createdAt: comment.createdAt,
         likedBy: comment.likedBy ?? [],
+        authorId: null,
         parentId: comment.parentCommentId ?? null,
       })),
   };

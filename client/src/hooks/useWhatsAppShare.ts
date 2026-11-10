@@ -31,7 +31,7 @@ export function useWhatsAppShare() {
       "Muito leve",
     ];
 
-    const message = `🌸 *OUSE SER VOCÊ – 30 Dias Para Mudar*
+    const message = `🌸 *OUSE SER VOCÊ – 30 Dias para Mudar*
 
 Completei o Dia ${dayNumber} da minha jornada! 🎉
 
@@ -152,7 +152,7 @@ Completei a jornada de 30 dias de transformação emocional!
 
 Essa jornada me transformou. Sou mais eu do que nunca! 💫
 
-Obrigada, Soraya Farias, por cada dia, cada exercício, cada meditação.
+Obrigada, Soraya Farias, por cada dia, cada exercício, cada áudio.
 
 Quer começar sua transformação? 🤍
 

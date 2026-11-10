@@ -168,7 +168,7 @@ export default function Onboarding() {
                 OUSE SER VOCÊ
               </p>
               <p className="text-[9px] tracking-[0.3em] uppercase text-[#C4856A] font-medium mt-0.5">
-                30 Dias Para Mudar
+                30 Dias para Mudar
               </p>
             </div>
           </div>

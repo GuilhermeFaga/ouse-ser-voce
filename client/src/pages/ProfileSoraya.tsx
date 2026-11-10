@@ -257,7 +257,7 @@ export default function ProfileSoraya() {
         </div>
         <div className="bg-gradient-to-br from-[#F5EDE8] to-white rounded-xl p-5 border border-[#E8D5CC]">
           <p className="text-[#4A3728] text-sm leading-relaxed mb-4">
-            O programa <strong>OUSE SER VOCÊ – 30 Dias Para Mudar</strong>{" "}
+            O programa <strong>OUSE SER VOCÊ – 30 Dias para Mudar</strong>{" "}
             nasceu da minha experiência clínica com milhares de mulheres. É uma
             jornada estruturada que condensa os pilares mais transformadores do
             meu trabalho em um formato acessível e prático.

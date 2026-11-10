@@ -45,7 +45,7 @@ export function useInstagramShare() {
       "Muito leve",
     ];
 
-    const message = `🌸 OUSE SER VOCÊ – 30 Dias Para Mudar
+    const message = `🌸 OUSE SER VOCÊ – 30 Dias para Mudar
 
 Completei o Dia ${dayNumber} da minha jornada! 🎉
 
@@ -78,7 +78,7 @@ ${description}
 
 Estou transformando minha vida, uma prática por vez. Você também pode! 🌟
 
-#OuseSerVocê #30DiasParaMudar #TransformacaoEmocional #Conquista #AutoestimA`;
+#OuseSerVocê #30DiasParaMudar #TransformacaoEmocional #Conquista #Autoestima`;
 
     return {
       text: message,
@@ -131,7 +131,7 @@ Completei a Semana ${weekNumber}: ${weekTheme} 🎉
 
 Obrigada, Soraya Farias, por essa jornada incrível! 🙏
 
-#OuseSerVocê #Transformacao #AutoconhecimentoEmocional #SemaCompleta #Jornada`;
+#OuseSerVocê #Transformacao #AutoconhecimentoEmocional #SemanaCompleta #Jornada`;
 
     return {
       text: message,

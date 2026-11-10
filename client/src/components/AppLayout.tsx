@@ -171,7 +171,7 @@ export default function AppLayout({
                 Ouse Ser Você
               </p>
               <p className="text-[10px] text-[#B08070] tracking-wide uppercase">
-                30 Dias Para Mudar
+                30 Dias para Mudar
               </p>
             </div>
           </div>

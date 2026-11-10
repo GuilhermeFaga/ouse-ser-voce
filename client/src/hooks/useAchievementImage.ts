@@ -176,7 +176,7 @@ export function useAchievementImage() {
 
       ctx.fillStyle = "#B08070";
       ctx.font = "18px 'DM Sans', sans-serif";
-      ctx.fillText("30 Dias Para Mudar", width / 2, height - 10);
+      ctx.fillText("30 Dias para Mudar", width / 2, height - 10);
 
       // Convert to image
       const imageUrl = canvas.toDataURL("image/png", 0.95);

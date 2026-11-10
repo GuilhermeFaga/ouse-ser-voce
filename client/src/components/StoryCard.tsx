@@ -81,7 +81,7 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
       {/* Main Transformation */}
       <div className="px-5 py-4 bg-gradient-to-r from-[#F5EDE8] to-[#FAF6F1] border-b border-[#E8D5CC]">
         <p className="text-sm font-semibold text-[#C4856A] mb-1">
-          Sua transformação
+          A transformação dela
         </p>
         <p className="text-sm text-[#2C1810] leading-relaxed">
           {story.mainTransformation}
@@ -100,7 +100,7 @@ export default function StoryCard({ story, onShare, onLike }: StoryCardProps) {
             {/* Full Story */}
             <div>
               <p className="text-xs font-semibold text-[#8B6E5A] uppercase tracking-wide mb-2">
-                Sua história
+                A história dela
               </p>
               <p className="text-sm text-[#4A3728] leading-relaxed">
                 {story.fullStory}

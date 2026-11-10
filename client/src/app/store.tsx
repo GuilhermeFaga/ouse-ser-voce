@@ -21,6 +21,7 @@ import { commentSubtreeIds } from "@/community/comments";
 import {
   completedDaysOf,
   createDayRecord,
+  withoutUnreachableCompletions,
   writtenDaysOf,
   type AppState,
   type Comment,
@@ -103,6 +104,15 @@ function withAchievements(state: AppState): AppState {
   };
 }
 
+/**
+ * Every copy that reaches the app goes through here — the local storage read,
+ * each local change and the cloud snapshot — so a completion the journey could
+ * never have produced is dropped before it can move the current day.
+ */
+function prepare(state: AppState): AppState {
+  return withAchievements(withoutUnreachableCompletions(state));
+}
+
 function withDay(
   state: AppState,
   day: number,
@@ -121,9 +131,7 @@ function withDay(
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AppState>(() =>
-    withAchievements(loadState())
-  );
+  const [state, setState] = useState<AppState>(() => prepare(loadState()));
   const [localRevision, setLocalRevision] = useState(0);
   const saveFailed = useRef(false);
 
@@ -139,7 +147,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const commit = useCallback((update: (state: AppState) => AppState) => {
     setState(previous => ({
-      ...withAchievements(update(previous)),
+      ...prepare(update(previous)),
       updatedAt: new Date().toISOString(),
     }));
     setLocalRevision(previous => previous + 1);
@@ -147,7 +155,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const replaceState = useCallback((next: AppState) => {
     // Not a local change: cloud sync must not echo this back to Firestore.
-    setState(withAchievements(next));
+    setState(prepare(next));
   }, []);
 
   const completeOnboarding = useCallback(

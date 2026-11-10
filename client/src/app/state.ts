@@ -1,4 +1,5 @@
 import type { Comment } from "@/community/types";
+import { currentDayOf } from "@/journey";
 
 export type { Comment };
 
@@ -89,6 +90,25 @@ export function completedDaysOf(state: AppState): number[] {
     .filter(record => record.completedAt !== null)
     .map(record => record.day)
     .sort((a, b) => a - b);
+}
+
+/**
+ * The journey advances one day at a time, so a day marked complete beyond the
+ * first unfinished one was never hers to complete: builds before the rewrite
+ * let the current day follow a link or the "next day" button, and one account
+ * ended up with days 1 and 2 done plus a day 29 that held nothing but a
+ * timestamp. The stray completion is dropped — whatever she wrote on that day
+ * stays — so the position, the counters and the streak stop lying.
+ */
+export function withoutUnreachableCompletions(state: AppState): AppState {
+  const completed = completedDaysOf(state);
+  const frontier = currentDayOf(completed);
+  const stray = completed.filter(day => day > frontier);
+  if (stray.length === 0) return state;
+
+  const days = { ...state.days };
+  for (const day of stray) days[day] = { ...days[day], completedAt: null };
+  return { ...state, days };
 }
 
 export function hasWriting(record: DayRecord): boolean {

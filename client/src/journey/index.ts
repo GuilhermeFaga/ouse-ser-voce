@@ -66,9 +66,17 @@ export function isDayAccessible(day: number, currentDay: number): boolean {
   return day >= 1 && day <= currentDay;
 }
 
+/**
+ * The journey walks forward one day at a time, so the day she is on is the
+ * first one she has not finished yet. Taking the last completed day instead
+ * let a single stray record — an old build let the current day follow a link or
+ * the "next day" button — jump a woman from day 2 straight to day 30.
+ */
 export function currentDayOf(completedDays: number[]): number {
-  if (completedDays.length === 0) return 1;
-  return Math.min(Math.max(...completedDays) + 1, DAY_COUNT);
+  const done = new Set(completedDays);
+  let day = 1;
+  while (day < DAY_COUNT && done.has(day)) day += 1;
+  return day;
 }
 
 export function progressPercent(completedDays: number[]): number {

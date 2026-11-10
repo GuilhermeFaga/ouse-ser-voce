@@ -47,13 +47,18 @@ describe("jornada", () => {
     expect(getWeek(9).week).toBe(1);
   });
 
-  it("avança o dia atual até o último dia concluído", () => {
+  it("fica no primeiro dia ainda não concluído", () => {
     expect(currentDayOf([])).toBe(1);
     expect(currentDayOf([1])).toBe(2);
     expect(currentDayOf([1, 2, 3])).toBe(4);
-    expect(currentDayOf([1, 2, 3, 10])).toBe(11);
-    expect(currentDayOf([30])).toBe(30);
     expect(currentDayOf(Array.from({ length: 30 }, (_, i) => i + 1))).toBe(30);
+  });
+
+  it("não avança por causa de um dia solto muito à frente", () => {
+    // Uma conta real: dias 1 e 2 feitos, e um dia 29 gravado por engano.
+    expect(currentDayOf([1, 2, 29])).toBe(3);
+    expect(currentDayOf([30])).toBe(1);
+    expect(currentDayOf([1, 2, 3, 10])).toBe(4);
   });
 
   it("calcula sequência apenas de dias consecutivos no fim", () => {

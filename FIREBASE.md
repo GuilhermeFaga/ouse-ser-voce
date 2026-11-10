@@ -37,9 +37,11 @@ Sem as variáveis do Firebase, o app não abre (mostra uma tela de configuraçã
 4. **Authentication → Sign-in method → Google**: ative e escolha um e-mail de
    suporte.
 5. **Authentication → Settings → Authorized domains**: adicione o domínio de
-   produção. Para GitHub Pages deste repositório, é
-   **`guilhermefaga.github.io`** (só o host, sem o caminho `/ouse-ser-voce/`).
-   `localhost` já vem incluso.
+   produção. O site deste repositório roda em
+   **`ouseservoce.sorayafarias.com.br`** (CNAME do GitHub Pages), então ele
+   precisa estar na lista. `localhost` já vem incluso; o host
+   `guilhermefaga.github.io` também pode ficar autorizado para o endereço
+   padrão do Pages.
 6. **Google Auth Platform → OAuth consent screen**: preencha nome do app, e-mail
    de suporte e os escopos `email` e `profile`. Em desenvolvimento, adicione as
    contas de teste; para o público geral, publique o app. Sem isso o Google
@@ -64,6 +66,9 @@ Não há endpoint de backend: o cliente fala direto com o Firebase, e as regras
 são a fronteira de segurança.
 
 ### GitHub Pages (o deploy deste repositório)
+
+O site é publicado em **`https://ouseservoce.sorayafarias.com.br`**, com o
+CNAME configurado no GitHub Pages.
 
 O workflow `.github/workflows/deploy.yml` já lê as variáveis de repositório.
 Em **Settings → Secrets and variables → Actions → Variables**, crie as seis

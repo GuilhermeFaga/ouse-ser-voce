@@ -1,4 +1,3 @@
-// OUSE SER VOCÊ – Motivational Quotes
 // Frases inspiradoras organizadas por categoria para as imagens de conquistas
 
 export interface QuoteCategory {

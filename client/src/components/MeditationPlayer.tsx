@@ -1,27 +1,31 @@
-// OUSE SER VOCÊ – Meditation Player Avançado
-// Design: Controles de velocidade, progresso, conclusão, favoritos e visual sofisticado
-// Com salvamento automático do progresso no localStorage
-
-import { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import {
-  Play,
-  Pause,
-  Volume2,
-  Zap,
-  CheckCircle2,
-  Bookmark,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useCallback, useRef, useState } from "react";
+import { Bookmark, Check, Pause, Play, Volume2, Zap } from "lucide-react";
+import { toast } from "sonner";
+import { Action } from "@/components/ds";
 import { useAudioProgress } from "@/hooks/useAudioProgress";
-import { useFavoriteAudios } from "@/hooks/useFavoriteAudios";
+import { useApp } from "@/app/store";
+import { cn } from "@/lib/utils";
+
+const PLAYBACK_RATES = [0.75, 1, 1.25, 1.5];
 
 interface MeditationPlayerProps {
   title: string;
   duration: string;
   audioUrl: string;
   dayNumber: number;
+  completed: boolean;
   onComplete?: () => void;
+}
+
+function formatTime(seconds: number) {
+  if (!seconds || Number.isNaN(seconds)) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
+function formatRate(rate: number) {
+  return `${rate.toString().replace(".", ",")}x`;
 }
 
 export default function MeditationPlayer({
@@ -29,6 +33,7 @@ export default function MeditationPlayer({
   duration,
   audioUrl,
   dayNumber,
+  completed,
   onComplete,
 }: MeditationPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -36,79 +41,26 @@ export default function MeditationPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [showFavToast, setShowFavToast] = useState(false);
-
-  // Usar hook para salvar progresso automaticamente
   useAudioProgress(dayNumber, audioRef);
+  const { state, toggleFavoriteDay } = useApp();
+  const favorited = state.favoriteAudioDays.includes(dayNumber);
 
-  // Hook de favoritos
-  const { isFavorite, toggleFavorite } = useFavoriteAudios();
-  const favorited = isFavorite(dayNumber);
+  const handleToggleFavorite = useCallback(() => {
+    if (!favorited) toast.success("Áudio salvo nos favoritos.");
+    toggleFavoriteDay(dayNumber);
+  }, [favorited, toggleFavoriteDay, dayNumber]);
 
-  const handleToggleFavorite = () => {
-    toggleFavorite(dayNumber, title);
-    if (!favorited) {
-      setShowFavToast(true);
-      setTimeout(() => setShowFavToast(false), 2000);
-    }
-  };
-
-  const handlePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
+  const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = Number(event.target.value);
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
   };
 
   const handlePlaybackRateChange = (rate: number) => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = rate;
-      setPlaybackRate(rate);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setTotalDuration(audioRef.current.duration);
-    }
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = parseFloat(e.target.value);
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }
-  };
-
-  const handleComplete = () => {
-    setIsCompleted(true);
-    setIsPlaying(false);
-    if (onComplete) {
-      onComplete();
-    }
-  };
-
-  const handleEnded = () => {
-    handleComplete();
-  };
-
-  const formatTime = (seconds: number) => {
-    if (!seconds || isNaN(seconds)) return "0:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    if (!audioRef.current) return;
+    audioRef.current.playbackRate = rate;
+    setPlaybackRate(rate);
   };
 
   const progressPercent = totalDuration
@@ -116,158 +68,178 @@ export default function MeditationPlayer({
     : 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <audio
         ref={audioRef}
         src={audioUrl}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleEnded}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
+        onLoadedMetadata={() =>
+          setTotalDuration(audioRef.current?.duration ?? 0)
+        }
+        onEnded={() => onComplete?.()}
       />
 
-      {/* Player Card */}
-      <div className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-5 sm:p-6 shadow-sm relative">
-        {/* Favorite Toast */}
-        {showFavToast && (
-          <div className="absolute top-3 right-3 bg-[#C4856A] text-white text-xs px-3 py-1.5 rounded-lg shadow-md animate-in fade-in slide-in-from-top-2 duration-200">
-            Salvo nos favoritos!
-          </div>
-        )}
-
-        {/* Title + Favorite */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-[#2C1810] mb-1 truncate">
+      <div className="rounded-2xl border border-line-strong bg-gradient-to-br from-surface-soft to-brand-wash p-5 shadow-[0_1px_2px_rgba(44,24,16,0.04)] sm:p-6">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="truncate font-serif text-lg leading-tight text-ink">
               {title}
             </h3>
-            <p className="text-xs text-[#B08070]">
+            <p className="mt-1 text-xs text-ink-subtle">
               Dia {dayNumber} · {duration}
             </p>
           </div>
-          <motion.button
+          <button
+            type="button"
             onClick={handleToggleFavorite}
-            whileTap={{ scale: 0.85 }}
-            className={`ml-3 p-2 rounded-full transition-all duration-200 ${
+            aria-pressed={favorited}
+            aria-label={
               favorited
-                ? "bg-[#C4856A]/15 text-[#C4856A]"
-                : "bg-white text-[#D4C4BC] hover:text-[#C4856A] hover:bg-[#F5EDE8]"
-            } border ${favorited ? "border-[#C4856A]/30" : "border-[#E8D5CC]"}`}
-            title={favorited ? "Remover dos favoritos" : "Salvar nos favoritos"}
+                ? `Remover o áudio do dia ${dayNumber} dos favoritos`
+                : `Salvar o áudio do dia ${dayNumber} nos favoritos`
+            }
+            title={
+              favorited
+                ? "Remover dos favoritos"
+                : "Salvar o áudio nos favoritos"
+            }
+            className={cn(
+              "ml-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
+              favorited
+                ? "border-brand/30 bg-brand-soft text-brand-ink"
+                : "border-line-strong bg-white text-ink-faint hover:bg-brand-soft hover:text-brand-ink"
+            )}
           >
             <Bookmark
-              className={`w-4 h-4 transition-all duration-200 ${favorited ? "fill-[#C4856A]" : ""}`}
+              className={cn("h-4 w-4", favorited && "fill-current")}
+              aria-hidden
             />
-          </motion.button>
+          </button>
         </div>
 
-        {/* Play Button */}
-        <div className="flex items-center justify-center mb-5">
-          <motion.button
-            onClick={handlePlayPause}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-14 h-14 rounded-full bg-[#C4856A] hover:bg-[#B07055] text-white flex items-center justify-center shadow-lg transition-all duration-200"
+        <div className="mb-5 flex items-center justify-center">
+          <button
+            type="button"
+            onClick={() => {
+              const audio = audioRef.current;
+              if (!audio) return;
+              if (audio.paused) void audio.play();
+              else audio.pause();
+            }}
+            aria-label={isPlaying ? "Pausar o áudio" : "Ouvir o áudio"}
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-[0_1px_2px_rgba(44,24,16,0.12)] transition-colors hover:bg-brand-strong active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
           >
             {isPlaying ? (
-              <Pause className="w-6 h-6" />
+              <Pause className="h-6 w-6" aria-hidden />
             ) : (
-              <Play className="w-6 h-6 ml-0.5" />
+              <Play className="ml-0.5 h-6 w-6" aria-hidden />
             )}
-          </motion.button>
+          </button>
         </div>
 
-        {/* Progress Bar */}
-        <div className="space-y-2 mb-4">
-          <input
-            type="range"
-            min="0"
-            max={totalDuration || 0}
-            value={currentTime}
-            onChange={handleSeek}
-            className="w-full h-1.5 bg-[#E8D5CC] rounded-full appearance-none cursor-pointer accent-[#C4856A]"
-            style={{
-              background: `linear-gradient(to right, #C4856A 0%, #C4856A ${progressPercent}%, #E8D5CC ${progressPercent}%, #E8D5CC 100%)`,
-            }}
-          />
-          <div className="flex items-center justify-between text-xs text-[#B08070] font-medium">
+        <div className="space-y-1">
+          <div className="relative flex h-11 items-center rounded-full has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand/40 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-line-strong"
+            >
+              <div
+                className="h-full rounded-full bg-brand"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-brand bg-white"
+              style={{ left: `${progressPercent}%` }}
+            />
+            <input
+              type="range"
+              min="0"
+              max={totalDuration || 0}
+              step="0.1"
+              value={currentTime}
+              onChange={handleSeek}
+              aria-label="Posição do áudio"
+              aria-valuetext={`${formatTime(currentTime)} de ${formatTime(totalDuration)}`}
+              className="relative h-11 w-full cursor-pointer appearance-none bg-transparent opacity-0"
+            />
+          </div>
+          <div className="flex items-center justify-between text-xs font-medium tabular-nums text-ink-muted">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(totalDuration)}</span>
           </div>
         </div>
 
-        {/* Controls Row */}
-        <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 flex-wrap">
-          {/* Playback Speed */}
+        <div className="mb-4 mt-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-1.5">
-            <Zap className="w-4 h-4 text-[#C4856A] hidden sm:block" />
-            <div className="flex gap-1">
-              {[0.75, 1, 1.25, 1.5].map(rate => (
+            <Zap
+              className="hidden h-4 w-4 text-brand-ink sm:block"
+              aria-hidden
+            />
+            <div
+              role="group"
+              aria-label="Velocidade do áudio"
+              className="flex gap-1"
+            >
+              {PLAYBACK_RATES.map(rate => (
                 <button
                   key={rate}
+                  type="button"
                   onClick={() => handlePlaybackRateChange(rate)}
-                  className={`px-2 py-1 text-xs font-medium rounded transition-all ${
+                  aria-pressed={playbackRate === rate}
+                  className={cn(
+                    "min-h-11 min-w-11 rounded-lg border px-2 text-xs font-medium tabular-nums transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
                     playbackRate === rate
-                      ? "bg-[#C4856A] text-white"
-                      : "bg-white text-[#B08070] border border-[#E8D5CC] hover:border-[#C4856A]"
-                  }`}
+                      ? "border-brand bg-brand text-ink"
+                      : "border-line-strong bg-white text-ink-muted hover:border-brand hover:text-ink"
+                  )}
                 >
-                  {rate}x
+                  {formatRate(rate)}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Volume */}
           <div className="flex items-center gap-2">
-            <Volume2 className="w-4 h-4 text-[#C4856A]" />
+            <Volume2 className="h-4 w-4 text-brand-ink" aria-hidden />
             <input
               type="range"
               min="0"
               max="1"
               step="0.1"
               defaultValue="1"
-              onChange={e => {
+              onChange={event => {
                 if (audioRef.current) {
-                  audioRef.current.volume = parseFloat(e.target.value);
+                  audioRef.current.volume = Number(event.target.value);
                 }
               }}
-              className="w-16 h-1 bg-[#E8D5CC] rounded-full appearance-none cursor-pointer accent-[#C4856A]"
+              aria-label="Volume do áudio"
+              className="h-11 w-20 cursor-pointer accent-brand"
             />
           </div>
         </div>
 
-        {/* Complete Button */}
-        <Button
-          onClick={handleComplete}
-          disabled={isCompleted}
-          className={`w-full h-11 rounded-xl font-medium text-sm transition-all ${
-            isCompleted
-              ? "bg-green-100 text-green-700 cursor-default"
-              : "bg-[#C4856A] hover:bg-[#B07055] text-white active:scale-[0.97]"
-          }`}
+        <Action
+          variant="secondary"
+          block
+          aria-pressed={completed}
+          disabled={completed}
+          onClick={() => onComplete?.()}
+          icon={<Check className="h-4 w-4" aria-hidden />}
+          className={cn(completed && "border-brand/40 bg-brand-soft text-ink")}
         >
-          {isCompleted ? (
-            <>
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Prática concluída
-            </>
-          ) : (
-            <>
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Marcar como concluída
-            </>
-          )}
-        </Button>
+          {completed ? "Áudio do dia concluído" : "Marcar áudio como ouvido"}
+        </Action>
       </div>
 
-      {/* Info */}
-      <p className="text-xs text-[#B08070] text-center">
-        Dica: Use a velocidade 1.25x para uma experiência mais dinâmica, ou
-        0.75x para aprofundar.
-        <br />
-        <span className="text-[#A0705F]">
-          Seu progresso é salvo automaticamente.
-        </span>
+      <p className="px-1 text-center text-xs leading-relaxed text-ink-muted">
+        Você pode ouvir em 1,25x para acompanhar melhor, ou em 0,75x para
+        aprofundar. Seu progresso é salvo automaticamente.
       </p>
     </div>
   );

@@ -1,194 +1,417 @@
-// OUSE SER VOCÊ – Anotações
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { useNotes } from "@/hooks/useNotes";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Edit3, Check, X, FileText } from "lucide-react";
-import type { Note } from "@/contexts/AppContext";
+import { useState, type KeyboardEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  Edit3,
+  NotebookPen,
+  Plus,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react";
+import { useApp } from "@/app/store";
+import type { Note } from "@/app/state";
+import { formatShortDate } from "@/lib/dates";
+import { cn } from "@/lib/utils";
+import {
+  Action,
+  Card,
+  CardTitle,
+  EmptyState,
+  Field,
+  fieldInputClass,
+  focusRing,
+  Pill,
+  Screen,
+  ScreenHeader,
+} from "@/components/ds";
+
+/** Title the store receives when she leaves the optional field empty. */
+const UNTITLED = "Sem título";
+
+/** Above this length the card offers "Ler a nota inteira" instead of a long block. */
+const CLAMP_THRESHOLD = 220;
 
 export default function Notes() {
-  const { notes, addNote, updateNote, deleteNote } = useNotes();
-  const [showNew, setShowNew] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const { state, addNote } = useApp();
+  const [composerOpen, setComposerOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
-  const [editContent, setEditContent] = useState("");
-  const [editTitle, setEditTitle] = useState("");
+  const reduceMotion = useReducedMotion();
 
-  const handleSave = () => {
-    if (!newContent.trim()) return;
-    addNote({ title: newTitle || "Sem título", content: newContent });
-    setNewTitle("");
-    setNewContent("");
-    setShowNew(false);
-  };
-
-  const handleEdit = (note: Note) => {
-    setEditingId(note.id);
-    setEditTitle(note.title);
-    setEditContent(note.content);
-  };
-
-  const handleSaveEdit = (id: string) => {
-    updateNote(id, { title: editTitle, content: editContent });
-    setEditingId(null);
-  };
-
-  const sorted = [...notes].sort(
+  const sorted = [...state.notes].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
 
-  return (
-    <div className="space-y-6 pb-20 lg:pb-0">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
-            Anotações
-          </h1>
-          <p className="text-[#8B6E5A] text-sm">{notes.length} notas</p>
-        </div>
-        <Button
-          onClick={() => setShowNew(!showNew)}
-          className="bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl h-10 px-4 text-sm"
-        >
-          {showNew ? (
-            <X className="w-4 h-4" />
-          ) : (
-            <>
-              <Plus className="w-4 h-4 mr-1" /> Nova nota
-            </>
-          )}
-        </Button>
-      </div>
+  const canSave = newContent.trim().length > 0;
 
-      <div>
-        {showNew && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-3">
-              <Input
-                value={newTitle}
-                onChange={e => setNewTitle(e.target.value)}
-                placeholder="Título (opcional)"
-                className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm"
-              />
-              <Textarea
-                value={newContent}
-                onChange={e => setNewContent(e.target.value)}
-                placeholder="Escreva sua anotação..."
-                className="min-h-[120px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm text-[#4A3728] placeholder:text-[#C4B0A4]"
+  const openComposer = () => setComposerOpen(true);
+
+  // Closing keeps the draft in memory: reopening the composer restores it.
+  const closeComposer = () => setComposerOpen(false);
+
+  const handleSave = () => {
+    if (!canSave) return;
+    addNote({ title: newTitle || UNTITLED, content: newContent });
+    setNewTitle("");
+    setNewContent("");
+    setComposerOpen(false);
+  };
+
+  const saveOnEnter = (event: KeyboardEvent) => {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      handleSave();
+    }
+  };
+
+  const countLabel =
+    sorted.length === 1
+      ? "1 anotação salva"
+      : `${sorted.length} anotações salvas`;
+
+  return (
+    <Screen>
+      <ScreenHeader
+        kicker="Anotações livres"
+        title="O que você quer anotar?"
+        description={
+          sorted.length === 0
+            ? "Um lugar para o que você não quer esquecer."
+            : `${countLabel} neste dispositivo.`
+        }
+        actions={
+          composerOpen || sorted.length === 0 ? undefined : (
+            <Action
+              onClick={openComposer}
+              icon={<Plus className="h-4 w-4" aria-hidden />}
+            >
+              Nova anotação
+            </Action>
+          )
+        }
+      />
+
+      {composerOpen && (
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+        >
+          <Card>
+            <CardTitle>Nova anotação</CardTitle>
+
+            <Field
+              label="Anotação"
+              htmlFor="note-new-content"
+              required
+              hint="Uma frase basta. Você pode editar ou apagar depois."
+            >
+              <textarea
+                id="note-new-content"
                 autoFocus
+                rows={5}
+                value={newContent}
+                onChange={event => setNewContent(event.target.value)}
+                onKeyDown={saveOnEnter}
+                placeholder="O que passou pela sua cabeça?"
+                className={cn(
+                  fieldInputClass(),
+                  "min-h-[132px] resize-y py-3 leading-relaxed text-ink-soft"
+                )}
               />
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSave}
-                  disabled={!newContent.trim()}
-                  className="flex-1 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl text-sm"
-                >
-                  Salvar
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowNew(false)}
-                  className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl text-sm hover:bg-[#F5EDE8]"
-                >
-                  Cancelar
-                </Button>
-              </div>
+            </Field>
+
+            <Field
+              label="Título"
+              htmlFor="note-new-title"
+              optional
+              hint="Serve só para reconhecer a nota na lista."
+              className="mt-4"
+            >
+              <input
+                id="note-new-title"
+                type="text"
+                value={newTitle}
+                onChange={event => setNewTitle(event.target.value)}
+                onKeyDown={saveOnEnter}
+                placeholder="ex.: o que percebi no caminho"
+                className={cn(fieldInputClass(), "h-12")}
+              />
+            </Field>
+
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row-reverse">
+              <Action
+                size="lg"
+                block
+                onClick={handleSave}
+                disabled={!canSave}
+                className="sm:flex-1"
+              >
+                Salvar anotação
+              </Action>
+              <Action
+                size="lg"
+                variant="secondary"
+                block
+                onClick={closeComposer}
+                className="sm:w-auto"
+              >
+                Cancelar
+              </Action>
             </div>
-          </motion.div>
-        )}
-      </div>
+
+            <p className="mt-3 text-xs leading-relaxed text-ink-muted">
+              Fica salvo neste dispositivo. Só você lê.
+            </p>
+          </Card>
+        </motion.div>
+      )}
 
       {sorted.length === 0 ? (
-        <div className="text-center py-16">
-          <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-7 h-7 text-[#C4856A]" />
+        !composerOpen && (
+          <EmptyState
+            icon={NotebookPen}
+            title="Nenhuma anotação ainda"
+            body="Um pensamento por nota, sem título obrigatório. O que você escrever fica salvo neste dispositivo e pode ser editado depois."
+            action={
+              <Action
+                size="lg"
+                onClick={openComposer}
+                icon={<Plus className="h-4 w-4" aria-hidden />}
+              >
+                Nova anotação
+              </Action>
+            }
+          />
+        )
+      ) : (
+        <section className="space-y-3" aria-labelledby="notes-list-title">
+          <CardTitle
+            id="notes-list-title"
+            hint={
+              <span className="text-ink-subtle">mais recente primeiro</span>
+            }
+          >
+            Suas anotações
+          </CardTitle>
+          {sorted.map(note => (
+            <NoteCard key={note.id} note={note} />
+          ))}
+        </section>
+      )}
+    </Screen>
+  );
+}
+
+function NoteCard({ note }: { note: Note }) {
+  const { updateNote, deleteNote } = useApp();
+  const [mode, setMode] = useState<"read" | "edit" | "confirmDelete">("read");
+  const [expanded, setExpanded] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(note.title);
+  const [draftContent, setDraftContent] = useState(note.content);
+
+  const dateLabel = formatShortDate(note.updatedAt);
+  const hasTitle = note.title.trim() !== "" && note.title !== UNTITLED;
+  const wasEdited = note.updatedAt !== note.createdAt;
+  const isLong = note.content.length > CLAMP_THRESHOLD;
+  const noteLabel = hasTitle
+    ? `${dateLabel}, ${note.title}`
+    : `${dateLabel}, sem título`;
+
+  const startEditing = () => {
+    setDraftTitle(note.title);
+    setDraftContent(note.content);
+    setMode("edit");
+  };
+
+  const cancelEditing = () => {
+    setDraftTitle(note.title);
+    setDraftContent(note.content);
+    setMode("read");
+  };
+
+  const canSaveEdit = draftContent.trim().length > 0;
+
+  const saveEdit = () => {
+    if (!canSaveEdit) return;
+    updateNote(note.id, { title: draftTitle, content: draftContent });
+    setMode("read");
+  };
+
+  const saveEditOnEnter = (event: KeyboardEvent) => {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      saveEdit();
+    }
+  };
+
+  return (
+    <Card as="article" padding="sm">
+      {mode === "edit" ? (
+        <div className="space-y-3">
+          <Field label="Anotação" htmlFor={`${note.id}-content`} required>
+            <textarea
+              id={`${note.id}-content`}
+              autoFocus
+              rows={5}
+              value={draftContent}
+              onChange={event => setDraftContent(event.target.value)}
+              onKeyDown={saveEditOnEnter}
+              className={cn(
+                fieldInputClass(),
+                "min-h-[120px] resize-y py-3 leading-relaxed text-ink-soft"
+              )}
+            />
+          </Field>
+
+          <Field
+            label="Título"
+            htmlFor={`${note.id}-title`}
+            optional
+            hint="Serve só para reconhecer a nota na lista."
+          >
+            <input
+              id={`${note.id}-title`}
+              type="text"
+              value={draftTitle}
+              onChange={event => setDraftTitle(event.target.value)}
+              onKeyDown={saveEditOnEnter}
+              className={cn(fieldInputClass(), "h-12")}
+            />
+          </Field>
+
+          <div className="flex flex-col gap-2 sm:flex-row-reverse">
+            <Action
+              size="md"
+              block
+              onClick={saveEdit}
+              disabled={!canSaveEdit}
+              className="sm:flex-1"
+            >
+              Salvar alterações
+            </Action>
+            <Action
+              size="md"
+              variant="secondary"
+              block
+              onClick={cancelEditing}
+              className="sm:w-auto"
+            >
+              Cancelar
+            </Action>
           </div>
-          <p className="font-serif text-lg text-[#2C1810] mb-2">
-            Nenhuma anotação ainda
-          </p>
-          <p className="text-[#8B6E5A] text-sm">
-            Registre pensamentos, insights e descobertas da sua jornada.
-          </p>
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {sorted.map(note => (
-            <motion.div
-              key={note.id}
-              layout
-              className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm"
+        <>
+          <h2
+            className={cn(
+              "text-sm font-medium leading-snug text-ink",
+              !hasTitle && "sr-only"
+            )}
+          >
+            {hasTitle ? note.title : `Anotação de ${dateLabel}`}
+          </h2>
+
+          <p
+            className={cn(
+              "whitespace-pre-wrap text-sm leading-relaxed text-ink-soft",
+              hasTitle && "mt-1",
+              isLong && !expanded && "line-clamp-4"
+            )}
+          >
+            {note.content}
+          </p>
+
+          {isLong && (
+            <Action
+              variant="quiet"
+              size="sm"
+              className="mt-1 h-11 px-0 text-xs"
+              aria-expanded={expanded}
+              onClick={() => setExpanded(!expanded)}
             >
-              {editingId === note.id ? (
-                <div className="space-y-2">
-                  <Input
-                    value={editTitle}
-                    onChange={e => setEditTitle(e.target.value)}
-                    className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm"
-                  />
-                  <Textarea
-                    value={editContent}
-                    onChange={e => setEditContent(e.target.value)}
-                    className="min-h-[100px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleSaveEdit(note.id)}
-                      className="flex items-center gap-1 text-xs text-[#C4856A] font-medium"
-                    >
-                      <Check className="w-3.5 h-3.5" /> Salvar
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="flex items-center gap-1 text-xs text-[#B08070]"
-                    >
-                      <X className="w-3.5 h-3.5" /> Cancelar
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="font-semibold text-sm text-[#2C1810] leading-tight">
-                      {note.title}
-                    </p>
-                    <div className="flex gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => handleEdit(note)}
-                        className="text-[#B08070] hover:text-[#C4856A] transition-colors"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => deleteNote(note.id)}
-                        className="text-[#B08070] hover:text-red-400 transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#6B4C3B] leading-relaxed line-clamp-4 whitespace-pre-wrap">
-                    {note.content}
-                  </p>
-                  <p className="text-xs text-[#B08070] mt-3">
-                    {new Date(note.updatedAt).toLocaleDateString("pt-BR", {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </p>
-                </>
-              )}
-            </motion.div>
-          ))}
-        </div>
+              {expanded ? "Mostrar menos" : "Ler a nota inteira"}
+            </Action>
+          )}
+
+          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-1.5">
+            <div className="flex items-center gap-2">
+              <time
+                dateTime={note.updatedAt}
+                className="text-xs text-ink-subtle"
+              >
+                {dateLabel}
+              </time>
+              {wasEdited && <Pill tone="neutral">editada</Pill>}
+            </div>
+
+            {mode === "confirmDelete" ? (
+              <div className="flex flex-wrap items-center gap-1.5">
+                <p className="text-xs text-ink-muted">Apagar esta anotação?</p>
+                <Action
+                  size="sm"
+                  variant="danger"
+                  className="h-11 border border-destructive/30 px-3"
+                  onClick={() => deleteNote(note.id)}
+                >
+                  Apagar anotação
+                </Action>
+                <Action
+                  size="sm"
+                  variant="quiet"
+                  className="h-11 px-3"
+                  onClick={() => setMode("read")}
+                >
+                  Manter
+                </Action>
+              </div>
+            ) : (
+              <div className="flex items-center gap-0.5">
+                <NoteIconButton
+                  label={`Editar a anotação de ${noteLabel}`}
+                  onClick={startEditing}
+                  icon={Edit3}
+                />
+                <NoteIconButton
+                  label={`Apagar a anotação de ${noteLabel}`}
+                  onClick={() => setMode("confirmDelete")}
+                  icon={Trash2}
+                  danger
+                />
+              </div>
+            )}
+          </div>
+        </>
       )}
-    </div>
+    </Card>
+  );
+}
+
+function NoteIconButton({
+  label,
+  onClick,
+  icon: Icon,
+  danger = false,
+}: {
+  label: string;
+  onClick: () => void;
+  icon: LucideIcon;
+  danger?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      className={cn(
+        "inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-muted transition-colors",
+        focusRing,
+        danger
+          ? "hover:bg-destructive/5 hover:text-destructive"
+          : "hover:bg-surface-soft hover:text-ink"
+      )}
+    >
+      <Icon className="h-4 w-4" aria-hidden />
+    </button>
   );
 }

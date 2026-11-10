@@ -1,364 +1,346 @@
-// OUSE SER VOCÊ – Scanner de Essência
-// Design: Diagnóstico emocional personalizado
-
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { useAssessments } from "@/hooks/useAssessments";
-import { scannerQuestions, calculateScannerResults } from "@/lib/journeyData";
-import type { ScannerResult } from "@/hooks/useAppState";
-import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight, RotateCcw, AlertTriangle } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, ChevronLeft, RotateCcw, Sparkles } from "lucide-react";
+import { useApp } from "@/app/store";
+import { useNavigation } from "@/app/navigation";
+import { getDay } from "@/journey";
+import { formatLongDate } from "@/lib/dates";
+import {
+  SCANNER_AREAS,
+  SCANNER_QUESTION_COUNT,
+  scannerQuestions,
+  scoreScanner,
+  type ScannerArea,
+  type ScannerSeverity,
+} from "@/assessments/scanner";
+import {
+  Action,
+  Card,
+  Pill,
+  ProgressRail,
+  Screen,
+  ScreenHeader,
+  Stat,
+  focusRing,
+} from "@/components/ds";
 
-const areaLabels: Record<string, string> = {
-  identidade: "Identidade",
-  emocional: "Equilíbrio Emocional",
-  autocuidado: "Autocuidado",
-  relacionamentos: "Relacionamentos",
-  proposito: "Propósito",
+/**
+ * One severity signal per diagnosis: a tone and a plain-language reading.
+ * The percentage stays in the page's single hero number, not five times over.
+ */
+const SEVERITY_SIGNAL: Record<
+  ScannerSeverity,
+  { tone: "danger" | "warning" | "success"; reading: string }
+> = {
+  high: {
+    tone: "danger",
+    reading:
+      "Suas respostas mostram você em último lugar na maior parte das áreas.",
+  },
+  moderate: {
+    tone: "warning",
+    reading: "Você aparece em algumas áreas e recua em outras.",
+  },
+  low: {
+    tone: "success",
+    reading: "Você já se coloca em primeiro lugar em parte da sua vida.",
+  },
 };
 
-const areaColors: Record<string, string> = {
-  identidade: "bg-rose-400",
-  emocional: "bg-amber-400",
-  autocuidado: "bg-teal-400",
-  relacionamentos: "bg-blue-400",
-  proposito: "bg-purple-400",
-};
-
-const areaTextColors: Record<string, string> = {
-  identidade: "text-rose-700",
-  emocional: "text-amber-700",
-  autocuidado: "text-teal-700",
-  relacionamentos: "text-blue-700",
-  proposito: "text-purple-700",
-};
-
-const areaBgColors: Record<string, string> = {
-  identidade: "bg-rose-50",
-  emocional: "bg-amber-50",
-  autocuidado: "bg-teal-50",
-  relacionamentos: "bg-blue-50",
-  proposito: "bg-purple-50",
-};
+type Mode = "intro" | "quiz" | "results";
 
 export default function Scanner() {
-  const { scannerResult, saveScannerResult } = useAssessments();
-  const [started, setStarted] = useState(false);
-  const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [showResults, setShowResults] = useState(!!scannerResult);
+  const { state, saveScanner } = useApp();
+  const [mode, setMode] = useState<Mode>(state.scanner ? "results" : "intro");
+  const [answers, setAnswers] = useState<Record<string, number>>(
+    state.scanner?.answers ?? {}
+  );
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const reduceMotion = useReducedMotion();
 
-  const handleAnswer = (questionId: string, value: number) => {
-    const newAnswers = { ...answers, [questionId]: value };
-    setAnswers(newAnswers);
-
-    if (currentQ < scannerQuestions.length - 1) {
-      setTimeout(() => setCurrentQ(q => q + 1), 300);
-    } else {
-      // All answered
-      const results = calculateScannerResults(newAnswers);
-      saveScannerResult({ ...results, answers: newAnswers });
-      setShowResults(true);
-    }
-  };
-
-  const handleRestart = () => {
-    setStarted(false);
-    setCurrentQ(0);
+  const startQuiz = () => {
     setAnswers({});
-    setShowResults(false);
+    setCurrentQuestion(0);
+    setMode("quiz");
   };
 
-  const results = scannerResult;
-
-  if (showResults && results) {
-    return <ScannerResults results={results} onRestart={handleRestart} />;
-  }
-
-  if (!started) {
+  if (mode === "results" && state.scanner) {
     return (
-      <div className="space-y-6 pb-20 lg:pb-0">
-        <div>
-          <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
-            Scanner de Essência
-          </h1>
-          <p className="text-[#8B6E5A] text-sm">
-            Diagnóstico emocional personalizado
-          </p>
-        </div>
-
-        <div className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-6">
-          <div className="w-12 h-12 rounded-xl bg-[#C4856A]/10 flex items-center justify-center mb-4">
-            <Sparkles className="w-6 h-6 text-[#C4856A]" />
-          </div>
-          <h2 className="font-serif text-xl text-[#2C1810] mb-3">
-            O que é o Scanner de Essência?
-          </h2>
-          <p className="text-[#6B4C3B] text-sm leading-relaxed mb-4">
-            Um diagnóstico de 10 perguntas que avalia 5 áreas fundamentais da
-            sua vida: identidade, equilíbrio emocional, autocuidado,
-            relacionamentos e propósito.
-          </p>
-          <p className="text-[#6B4C3B] text-sm leading-relaxed mb-6">
-            Ao final, você recebe um diagnóstico personalizado com seu nível de
-            autoabandono, a área mais crítica e uma recomendação prática
-            imediata.
-          </p>
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            {Object.entries(areaLabels).map(([key, label]) => (
-              <div
-                key={key}
-                className={`flex items-center gap-2 px-3 py-2 rounded-xl ${areaBgColors[key]}`}
-              >
-                <div className={`w-2 h-2 rounded-full ${areaColors[key]}`} />
-                <span className={`text-xs font-medium ${areaTextColors[key]}`}>
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-          <Button
-            onClick={() => setStarted(true)}
-            className="w-full h-12 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl font-medium"
-          >
-            Iniciar diagnóstico
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
-        </div>
-
-        {scannerResult && (
-          <div className="text-center">
-            <button
-              onClick={() => setShowResults(true)}
-              className="text-sm text-[#C4856A] font-medium hover:underline"
-            >
-              Ver meu diagnóstico anterior
-            </button>
-          </div>
-        )}
-      </div>
+      <ScannerResults
+        answers={state.scanner.answers}
+        completedAt={state.scanner.completedAt}
+        onRestart={() => {
+          setAnswers({});
+          setCurrentQuestion(0);
+          setMode("intro");
+        }}
+      />
     );
   }
 
-  const question = scannerQuestions[currentQ];
-  const progress = (currentQ / scannerQuestions.length) * 100;
+  if (mode === "quiz") {
+    const question = scannerQuestions[currentQuestion];
+    const area =
+      SCANNER_AREAS.find(item => item.id === question.area) ?? SCANNER_AREAS[0];
+    const isLastQuestion = currentQuestion === SCANNER_QUESTION_COUNT - 1;
 
-  return (
-    <div className="space-y-6 pb-20 lg:pb-0">
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-[#B08070] font-medium">
-            {currentQ + 1} de {scannerQuestions.length}
-          </span>
-          <span className="text-xs text-[#B08070]">
-            {areaLabels[question.area]}
-          </span>
-        </div>
-        <div className="h-1.5 bg-[#F0E4DC] rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-[#C4856A] rounded-full"
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4 }}
+    const handleAnswer = (questionId: string, value: number) => {
+      const nextAnswers = { ...answers, [questionId]: value };
+      setAnswers(nextAnswers);
+      if (!isLastQuestion) {
+        setCurrentQuestion(currentQuestion + 1);
+      } else {
+        saveScanner(nextAnswers);
+        setMode("results");
+      }
+    };
+
+    return (
+      <Screen>
+        <p aria-live="polite" className="sr-only">
+          {`Pergunta ${currentQuestion + 1} de ${SCANNER_QUESTION_COUNT}: ${area.label}`}
+        </p>
+
+        <div>
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <p className="text-xs font-medium tabular-nums text-ink-muted">
+              Pergunta {currentQuestion + 1} de {SCANNER_QUESTION_COUNT}
+            </p>
+            <AreaBadge area={area} />
+          </div>
+          <ProgressRail
+            value={currentQuestion + 1}
+            max={SCANNER_QUESTION_COUNT}
+            size="sm"
+            ariaLabel={`Pergunta ${currentQuestion + 1} de ${SCANNER_QUESTION_COUNT}`}
           />
         </div>
-      </div>
 
-      <div>
         <motion.div
-          key={currentQ}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-          className="space-y-5"
+          key={question.id}
+          initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
         >
-          <div
-            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${areaBgColors[question.area]}`}
-          >
-            <div
-              className={`w-2 h-2 rounded-full ${areaColors[question.area]}`}
-            />
-            <span
-              className={`text-xs font-medium ${areaTextColors[question.area]}`}
+          <Card>
+            <h2
+              id={`scanner-question-${question.id}`}
+              className="font-serif text-xl leading-snug text-ink sm:text-[24px]"
             >
-              {areaLabels[question.area]}
-            </span>
-          </div>
+              {question.question}
+            </h2>
+            {isLastQuestion && (
+              <p className="mt-1.5 text-xs text-ink-muted">
+                Última pergunta · o seu diagnóstico vem em seguida
+              </p>
+            )}
 
-          <h2 className="font-serif text-xl lg:text-2xl text-[#2C1810] leading-snug">
-            {question.question}
-          </h2>
-
-          <div className="space-y-2">
-            {question.options.map(option => (
-              <button
-                key={option.value}
-                onClick={() => handleAnswer(question.id, option.value)}
-                className={`w-full text-left p-4 rounded-xl border transition-all duration-200 active:scale-[0.98] ${
-                  answers[question.id] === option.value
-                    ? "border-[#C4856A] bg-[#F5EDE8] text-[#4A3728]"
-                    : "border-[#F0E4DC] bg-white hover:border-[#E8D5CC] hover:bg-[#FAF6F1] text-[#4A3728]"
-                }`}
-              >
-                <p className="text-sm leading-relaxed">{option.label}</p>
-              </button>
-            ))}
-          </div>
+            <div
+              role="group"
+              aria-labelledby={`scanner-question-${question.id}`}
+              className="mt-4 space-y-2"
+            >
+              {question.options.map(option => {
+                const selected = answers[question.id] === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => handleAnswer(question.id, option.value)}
+                    className={`flex min-h-[56px] w-full items-center rounded-xl border px-4 py-3.5 text-left text-sm leading-relaxed transition-colors ${focusRing} ${
+                      selected
+                        ? "border-brand bg-brand-soft text-ink"
+                        : "border-line bg-white text-ink-soft hover:border-line-strong hover:bg-surface-soft"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
         </motion.div>
-      </div>
-    </div>
+
+        {currentQuestion > 0 && (
+          <div className="flex justify-center">
+            <Action
+              variant="quiet"
+              size="md"
+              onClick={() => setCurrentQuestion(currentQuestion - 1)}
+              icon={
+                <ChevronLeft className="h-4 w-4" aria-hidden strokeWidth={2} />
+              }
+            >
+              Pergunta anterior
+            </Action>
+          </div>
+        )}
+      </Screen>
+    );
+  }
+
+  return (
+    <Screen>
+      <ScreenHeader
+        kicker="Diagnóstico de essência"
+        title="Scanner de Essência"
+      />
+
+      <Card tone="warm">
+        <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
+          <Sparkles className="h-4 w-4 shrink-0 text-brand-ink" aria-hidden />
+          {SCANNER_QUESTION_COUNT} perguntas · {SCANNER_AREAS.length} áreas
+        </p>
+
+        <p className="mt-4 text-sm leading-relaxed text-ink-soft">
+          Um diagnóstico de {SCANNER_QUESTION_COUNT} perguntas que avalia{" "}
+          {SCANNER_AREAS.length} áreas fundamentais da sua vida:{" "}
+          {SCANNER_AREAS.map(area => area.label.toLowerCase()).join(", ")}.
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+          Ao final, você recebe um diagnóstico personalizado com seu nível de
+          autoabandono, a área mais crítica e uma recomendação prática imediata.
+        </p>
+
+        <Action
+          block
+          size="lg"
+          className="mt-5"
+          onClick={startQuiz}
+          icon={<ArrowRight className="h-4 w-4" aria-hidden strokeWidth={2} />}
+        >
+          Iniciar diagnóstico
+        </Action>
+        <p className="mt-2 text-center text-xs text-ink-muted">
+          Uma pergunta por tela · sem tempo limite · resultado no fim
+        </p>
+      </Card>
+
+      {state.scanner && (
+        <div className="flex justify-center">
+          <Action variant="quiet" size="md" onClick={() => setMode("results")}>
+            Ver meu diagnóstico anterior
+          </Action>
+        </div>
+      )}
+    </Screen>
+  );
+}
+
+function AreaBadge({ area }: { area: ScannerArea }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${area.palette.bg} ${area.palette.text}`}
+    >
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${area.palette.dot}`}
+        aria-hidden
+      />
+      {area.label}
+    </span>
   );
 }
 
 function ScannerResults({
-  results,
+  answers,
+  completedAt,
   onRestart,
 }: {
-  results: ScannerResult;
+  answers: Record<string, number>;
+  completedAt: string;
   onRestart: () => void;
 }) {
-  const abandonmentColor =
-    results.abandonmentLevel > 60
-      ? "text-red-600"
-      : results.abandonmentLevel > 30
-        ? "text-amber-600"
-        : "text-green-600";
+  const { completedDays, currentDay } = useApp();
+  const { openDay } = useNavigation();
+  const reduceMotion = useReducedMotion();
+  const diagnosis = scoreScanner(answers);
+  const { criticalArea } = diagnosis;
+  const signal = SEVERITY_SIGNAL[diagnosis.severity];
+  const day = getDay(currentDay);
+  const hasStarted = completedDays.length > 0;
 
-  const abandonmentBg =
-    results.abandonmentLevel > 60
-      ? "bg-red-50 border-red-200"
-      : results.abandonmentLevel > 30
-        ? "bg-amber-50 border-amber-200"
-        : "bg-green-50 border-green-200";
+  const fadeUp = (delay = 0) => ({
+    initial: reduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    transition: {
+      duration: 0.24,
+      ease: "easeOut" as const,
+      delay: reduceMotion ? 0 : delay,
+    },
+  });
 
   return (
-    <div className="space-y-6 pb-20 lg:pb-0">
-      <div>
-        <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
-          Seu Diagnóstico
-        </h1>
-        <p className="text-[#8B6E5A] text-sm">
-          {new Date(results.completedAt).toLocaleDateString("pt-BR", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </p>
-      </div>
+    <Screen>
+      <ScreenHeader
+        kicker="Diagnóstico de essência"
+        title={`Sua prioridade agora é ${criticalArea.label}.`}
+        description={signal.reading}
+      />
 
-      {/* Abandonment Level */}
-      <div className={`rounded-2xl border p-6 ${abandonmentBg}`}>
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0">
-            <AlertTriangle className={`w-6 h-6 ${abandonmentColor}`} />
+      <motion.div {...fadeUp()}>
+        <Card>
+          <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
+            <Stat
+              label="Nível de autoabandono"
+              value={diagnosis.abandonmentLevel}
+              unit="%"
+              hint={`calculado com as suas ${SCANNER_QUESTION_COUNT} respostas`}
+              emphasis
+            />
+            <Pill tone={signal.tone}>{diagnosis.abandonmentLabel}</Pill>
           </div>
-          <div>
-            <p className="text-xs font-medium text-[#8B6E5A] uppercase tracking-wide mb-1">
-              Nível de Autoabandono
+        </Card>
+      </motion.div>
+
+      <motion.div {...fadeUp(0.06)}>
+        <Card>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+            Recomendação prática imediata
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-ink">
+            {diagnosis.recommendation}
+          </p>
+
+          <div className="mt-4 rounded-xl border border-line bg-surface-soft p-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
+              Por que esta área
             </p>
-            <div className="flex items-baseline gap-2 mb-2">
-              <span
-                className={`font-serif text-4xl font-bold ${abandonmentColor}`}
-              >
-                {results.abandonmentLevel}%
-              </span>
-              <span className={`font-semibold ${abandonmentColor}`}>
-                {results.abandonmentLabel}
-              </span>
-            </div>
-            <div className="h-2 bg-white/60 rounded-full overflow-hidden">
-              <motion.div
-                className={`h-full rounded-full ${
-                  results.abandonmentLevel > 60
-                    ? "bg-red-400"
-                    : results.abandonmentLevel > 30
-                      ? "bg-amber-400"
-                      : "bg-green-400"
-                }`}
-                initial={{ width: 0 }}
-                animate={{ width: `${results.abandonmentLevel}%` }}
-                transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-              />
-            </div>
+            <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+              {diagnosis.explanation}
+            </p>
           </div>
-        </div>
-      </div>
 
-      {/* Area Scores */}
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
-        <h3 className="font-semibold text-[#2C1810] mb-4">
-          Pontuação por área
-        </h3>
-        <div className="space-y-4">
-          {Object.entries(results.percentages).map(([area, pct]) => (
-            <div key={area}>
-              <div className="flex justify-between items-center mb-1.5">
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${areaColors[area]}`} />
-                  <span className="text-sm text-[#4A3728] font-medium">
-                    {areaLabels[area]}
-                  </span>
-                  {area === results.criticalArea && (
-                    <span className="text-[10px] bg-[#C4856A] text-white px-2 py-0.5 rounded-full">
-                      Crítica
-                    </span>
-                  )}
-                </div>
-                <span className="text-sm font-bold text-[#2C1810]">{pct}%</span>
-              </div>
-              <div className="h-2 bg-[#F0E4DC] rounded-full overflow-hidden">
-                <motion.div
-                  className={`h-full rounded-full ${areaColors[area]}`}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${pct}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Critical Area */}
-      <div
-        className={`rounded-2xl border p-6 ${areaBgColors[results.criticalArea]}`}
-      >
-        <p className="text-xs font-medium text-[#8B6E5A] uppercase tracking-wide mb-2">
-          Área mais crítica
-        </p>
-        <div className="flex items-center gap-2 mb-3">
-          <div
-            className={`w-3 h-3 rounded-full ${areaColors[results.criticalArea]}`}
-          />
-          <h3
-            className={`font-serif text-xl font-bold ${areaTextColors[results.criticalArea]}`}
+          <Action
+            block
+            size="lg"
+            className="mt-5"
+            onClick={() => openDay(currentDay)}
+            icon={
+              <ArrowRight className="h-4 w-4" aria-hidden strokeWidth={2} />
+            }
           >
-            {results.criticalAreaName}
-          </h3>
-        </div>
-        <p className="text-sm text-[#4A3728] leading-relaxed">
-          {results.explanation}
+            {hasStarted ? `Voltar ao dia ${currentDay}` : "Fazer o dia 1"}
+          </Action>
+          <p className="mt-2 text-center text-xs text-ink-muted">
+            {`Dia ${currentDay} · ${day.theme} · salvo neste dispositivo`}
+          </p>
+        </Card>
+      </motion.div>
+
+      <div className="flex flex-col items-center gap-1.5">
+        <Action
+          variant="quiet"
+          size="md"
+          onClick={onRestart}
+          icon={<RotateCcw className="h-4 w-4" aria-hidden strokeWidth={2} />}
+        >
+          Refazer o diagnóstico
+        </Action>
+        <p className="text-xs text-ink-muted">
+          {`Concluído em ${formatLongDate(completedAt)}`}
         </p>
       </div>
-
-      {/* Recommendation */}
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
-        <p className="text-xs font-medium text-[#B08070] uppercase tracking-wide mb-2">
-          Recomendação prática imediata
-        </p>
-        <p className="text-[#4A3728] leading-relaxed text-sm">
-          {results.recommendation}
-        </p>
-      </div>
-
-      {/* Restart */}
-      <button
-        onClick={onRestart}
-        className="flex items-center gap-2 text-sm text-[#B08070] hover:text-[#C4856A] transition-colors mx-auto"
-      >
-        <RotateCcw className="w-4 h-4" />
-        Refazer o diagnóstico
-      </button>
-    </div>
+    </Screen>
   );
 }

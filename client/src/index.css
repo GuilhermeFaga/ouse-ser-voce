@@ -44,6 +44,24 @@
   /* Typography */
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "DM Sans", system-ui, sans-serif;
+
+  /* Brand tokens – use these instead of arbitrary hex values */
+  --color-ink: #2c1810;
+  --color-ink-soft: #4a3728;
+  --color-ink-muted: #6e5443;
+  --color-ink-subtle: #87695a;
+  --color-ink-faint: #d4c4bc;
+  --color-line: #f0e4dc;
+  --color-line-strong: #e8d5cc;
+  --color-surface: #faf6f1;
+  --color-surface-soft: #f5ede8;
+  --color-brand: #c4856a;
+  --color-brand-strong: #b07055;
+  --color-brand-hover: #ba7b61;
+  /* terracotta that is legible as text (5.37:1 on white) */
+  --color-brand-ink: #9a5a3f;
+  --color-brand-soft: #f5ede8;
+  --color-brand-wash: #fdf9f6;
 }
 
 :root {

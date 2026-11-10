@@ -1,149 +1,197 @@
-// OUSE SER VOCÊ – Página de Áudios Favoritos
-// Design: Lista de áudios salvos com acesso rápido para reprodução
+import { motion, useReducedMotion } from "framer-motion";
+import { Headphones, Lock, Play, Trash2 } from "lucide-react";
+import { useApp } from "@/app/store";
+import { useNavigation } from "@/app/navigation";
+import { getDay, isDayAccessible, weekOfDay } from "@/journey";
+import {
+  Action,
+  Card,
+  EmptyState,
+  focusRing,
+  Screen,
+  ScreenHeader,
+} from "@/components/ds";
+import { cn } from "@/lib/utils";
 
-import { Bookmark, Play, Trash2, Headphones } from "lucide-react";
-import { useFavoriteAudios } from "@/hooks/useFavoriteAudios";
-import { useApp } from "@/contexts/AppContext";
-import { meditationAudios } from "@/lib/meditationAudios";
-import { dailyContent } from "@/lib/journeyData";
+const rise = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.22, ease: "easeOut" as const },
+};
 
-interface FavoritesProps {
-  onNavigate?: (
-    page:
-      | "day"
-      | "home"
-      | "journey"
-      | "journal"
-      | "notes"
-      | "calendar"
-      | "achievements"
-      | "scanner"
-      | "assessment"
-      | "settings"
-      | "share"
-      | "community"
-      | "favorites",
-    extra?: unknown
-  ) => void;
-}
+export default function Favorites() {
+  const { state, currentDay, toggleFavoriteDay } = useApp();
+  const { openDay } = useNavigation();
+  const reduceMotion = useReducedMotion();
 
-export default function Favorites({ onNavigate }: FavoritesProps) {
-  const { favorites, removeFavorite } = useFavoriteAudios();
-  const { updateState } = useApp();
-
-  const handlePlayAudio = (day: number) => {
-    updateState({ currentDay: day });
-    if (onNavigate) onNavigate("day", day);
-  };
-
-  const sortedFavorites = [...favorites].sort((a, b) => a.day - b.day);
+  const favorites = [...state.favoriteAudioDays].sort((a, b) => a - b);
+  const total = favorites.length;
+  const savedLabel = total === 1 ? "1 áudio salvo" : `${total} áudios salvos`;
+  // The first saved audio she can actually open is this screen's one primary action.
+  const resumeDay =
+    favorites.find(day => isDayAccessible(day, currentDay)) ?? null;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <Bookmark className="w-5 h-5 text-[#C4856A] fill-[#C4856A]" />
-          <h1 className="font-serif text-2xl text-[#2C1810]">Meus Favoritos</h1>
-        </div>
-        <p className="text-sm text-[#8B6E5A]">
-          Seus áudios salvos para ouvir quando quiser
-        </p>
-      </div>
+    <Screen>
+      <ScreenHeader
+        kicker="Ouvir de novo"
+        title="Favoritos"
+        description={
+          total === 0
+            ? "Um atalho para os áudios que você salvou."
+            : `${savedLabel}. Um toque retoma o áudio do dia.`
+        }
+      />
 
-      {/* Favorites List */}
-      {sortedFavorites.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
-            <Headphones className="w-7 h-7 text-[#D4C4BC]" />
-          </div>
-          <p className="text-[#8B6E5A] font-medium mb-1">
-            Nenhum favorito ainda
-          </p>
-          <p className="text-xs text-[#B08070] max-w-xs mx-auto">
-            Ao ouvir os áudios diários, toque no ícone de marcador para salvar
-            seus favoritos aqui.
-          </p>
-        </div>
+      {total === 0 ? (
+        <EmptyState
+          icon={Headphones}
+          title="Nenhum áudio salvo"
+          body="Toque no marcador na tela de um dia e o áudio fica aqui, para ouvir de novo quando quiser."
+          action={
+            <Action
+              onClick={() => openDay(currentDay)}
+              icon={<Play className="h-4 w-4" aria-hidden />}
+            >
+              Ouvir o áudio do dia {currentDay}
+            </Action>
+          }
+        />
       ) : (
         <div className="space-y-3">
-          {/* Counter */}
-          <p className="text-xs text-[#B08070] font-medium">
-            {sortedFavorites.length}{" "}
-            {sortedFavorites.length === 1 ? "áudio salvo" : "áudios salvos"}
-          </p>
+          <Card as="div" padding="none">
+            <ul className="divide-y divide-line">
+              {favorites.map((dayNumber, index) => {
+                const day = getDay(dayNumber);
+                const week = weekOfDay(dayNumber);
+                const accessible = isDayAccessible(dayNumber, currentDay);
+                const isPrimary = dayNumber === resumeDay;
 
-          {sortedFavorites.map(fav => {
-            const dayData = dailyContent[fav.day - 1];
-            const audioUrl = meditationAudios[fav.day];
-            const weekNumber = Math.ceil(fav.day / 7);
-            const weekColors: Record<number, string> = {
-              1: "#E8A090",
-              2: "#D4956A",
-              3: "#C4856A",
-              4: "#A06040",
-            };
-            const weekColor = weekColors[weekNumber] || "#C4856A";
-
-            return (
-              <div
-                key={fav.day}
-                className="flex items-center gap-3 p-4 bg-white rounded-xl border border-[#F0E4DC] shadow-sm hover:shadow-md transition-all duration-200 group"
-              >
-                {/* Day indicator */}
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
-                  style={{ backgroundColor: weekColor }}
-                >
-                  {fav.day}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#2C1810] text-sm truncate">
-                    {dayData?.title || fav.title}
-                  </p>
-                  <p className="text-xs text-[#B08070] mt-0.5">
-                    Semana {weekNumber} ·{" "}
-                    {dayData?.meditationDuration || "5-10 min"}
-                  </p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  {audioUrl && (
-                    <button
-                      onClick={() => handlePlayAudio(fav.day)}
-                      className="w-9 h-9 rounded-full bg-[#C4856A] hover:bg-[#B07055] text-white flex items-center justify-center transition-all duration-200 active:scale-95 shadow-sm"
-                      title="Ouvir áudio"
-                    >
-                      <Play className="w-4 h-4 ml-0.5" />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => removeFavorite(fav.day)}
-                    className="w-8 h-8 rounded-full bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-500 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100"
-                    title="Remover dos favoritos"
+                return (
+                  <motion.li
+                    key={dayNumber}
+                    initial={reduceMotion ? false : rise.initial}
+                    animate={rise.animate}
+                    transition={{
+                      duration: 0.22,
+                      ease: "easeOut",
+                      delay: index * 0.03,
+                    }}
+                    className="flex items-stretch"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+                    {/* The row is the button: one tap resumes the audio. */}
+                    <button
+                      type="button"
+                      onClick={() => openDay(dayNumber)}
+                      disabled={!accessible}
+                      aria-label={
+                        accessible
+                          ? `Ouvir o áudio do dia ${dayNumber}: ${day.title}`
+                          : `Dia ${dayNumber} bloqueado, abre quando você chegar no dia ${dayNumber}`
+                      }
+                      title={
+                        accessible
+                          ? `Ouvir o áudio do dia ${dayNumber}`
+                          : `Abre no dia ${dayNumber}`
+                      }
+                      className={cn(
+                        "flex min-h-16 flex-1 items-center gap-3 px-4 py-3 text-left transition-colors sm:px-5",
+                        focusRing,
+                        "focus-visible:ring-inset",
+                        isPrimary && "bg-brand-wash",
+                        accessible && !isPrimary && "hover:bg-surface-soft",
+                        !accessible && "cursor-not-allowed bg-surface/60"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums",
+                          accessible
+                            ? cn("text-ink", week.palette.dot)
+                            : "border border-line bg-white/70 text-ink-muted"
+                        )}
+                        aria-hidden
+                      >
+                        {dayNumber}
+                      </span>
 
-      {/* Tip */}
-      {sortedFavorites.length > 0 && (
-        <div className="p-4 bg-[#F5EDE8] rounded-xl border border-[#E8D5CC]">
-          <p className="text-xs text-[#6B4C3B] leading-relaxed">
-            <strong>Dica:</strong> Ouça seus áudios favoritos em momentos de
-            pausa durante o dia — no café da manhã, antes de dormir ou durante
-            uma caminhada. A repetição aprofunda a transformação.
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-baseline gap-x-1.5 text-[11px]">
+                          <span
+                            className={cn(
+                              "font-semibold uppercase tracking-[0.12em]",
+                              accessible ? week.palette.text : "text-ink-subtle"
+                            )}
+                          >
+                            Dia {dayNumber}
+                          </span>
+                          <span className="text-ink-faint" aria-hidden>
+                            ·
+                          </span>
+                          <span className="tabular-nums text-ink-muted">
+                            {week.subtitle} · {day.meditationDuration}
+                          </span>
+                        </span>
+
+                        <span
+                          className={cn(
+                            "mt-0.5 block truncate font-serif text-base leading-snug",
+                            accessible ? "text-ink" : "text-ink-muted"
+                          )}
+                        >
+                          {day.title}
+                        </span>
+
+                        {!accessible && (
+                          <span className="mt-1 flex items-center gap-1 text-[11px] leading-snug text-ink-muted">
+                            <Lock className="h-3 w-3 shrink-0" aria-hidden />
+                            Abre quando você chegar no dia {dayNumber}.
+                          </span>
+                        )}
+                      </span>
+
+                      <span
+                        className={cn(
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                          isPrimary
+                            ? "bg-brand text-white"
+                            : accessible
+                              ? "border border-line-strong bg-white text-brand-ink"
+                              : "border border-line bg-white/70 text-ink-faint"
+                        )}
+                        aria-hidden
+                      >
+                        <Play className="h-3.5 w-3.5 translate-x-[1px]" />
+                      </span>
+                    </button>
+
+                    {/* Removal stays a separate, always-visible 44px target. */}
+                    <div className="flex shrink-0 items-center pr-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleFavoriteDay(dayNumber)}
+                        aria-label={`Remover o áudio do dia ${dayNumber} dos favoritos`}
+                        title="Remover dos favoritos"
+                        className={cn(
+                          "flex h-11 w-11 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-destructive/5 hover:text-destructive",
+                          focusRing
+                        )}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden />
+                      </button>
+                    </div>
+                  </motion.li>
+                );
+              })}
+            </ul>
+          </Card>
+
+          <p className="px-1 text-xs leading-relaxed text-ink-muted">
+            Novos áudios entram aqui pelo marcador, na tela do dia. Para
+            remover, toque na lixeira.
           </p>
         </div>
       )}
-    </div>
+    </Screen>
   );
 }

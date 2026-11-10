@@ -1,21 +1,21 @@
-// OUSE SER VOCÊ – Anotações
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useNotes } from "@/hooks/useNotes";
+import { Check, Edit3, FileText, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Edit3, Check, X, FileText } from "lucide-react";
-import type { Note } from "@/contexts/AppContext";
+import { Textarea } from "@/components/ui/textarea";
+import { useApp } from "@/app/store";
+import type { Note } from "@/app/state";
+import { formatShortDate } from "@/lib/dates";
 
 export default function Notes() {
-  const { notes, addNote, updateNote, deleteNote } = useNotes();
+  const { state, addNote, updateNote, deleteNote } = useApp();
   const [showNew, setShowNew] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
-  const [editContent, setEditContent] = useState("");
   const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
 
   const handleSave = () => {
     if (!newContent.trim()) return;
@@ -25,18 +25,13 @@ export default function Notes() {
     setShowNew(false);
   };
 
-  const handleEdit = (note: Note) => {
+  const startEditing = (note: Note) => {
     setEditingId(note.id);
     setEditTitle(note.title);
     setEditContent(note.content);
   };
 
-  const handleSaveEdit = (id: string) => {
-    updateNote(id, { title: editTitle, content: editContent });
-    setEditingId(null);
-  };
-
-  const sorted = [...notes].sort(
+  const sorted = [...state.notes].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
 
@@ -47,7 +42,7 @@ export default function Notes() {
           <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
             Anotações
           </h1>
-          <p className="text-[#8B6E5A] text-sm">{notes.length} notas</p>
+          <p className="text-[#8B6E5A] text-sm">{state.notes.length} notas</p>
         </div>
         <Button
           onClick={() => setShowNew(!showNew)}
@@ -63,48 +58,39 @@ export default function Notes() {
         </Button>
       </div>
 
-      <div>
-        {showNew && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-3">
-              <Input
-                value={newTitle}
-                onChange={e => setNewTitle(e.target.value)}
-                placeholder="Título (opcional)"
-                className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm"
-              />
-              <Textarea
-                value={newContent}
-                onChange={e => setNewContent(e.target.value)}
-                placeholder="Escreva sua anotação..."
-                className="min-h-[120px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm text-[#4A3728] placeholder:text-[#C4B0A4]"
-                autoFocus
-              />
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSave}
-                  disabled={!newContent.trim()}
-                  className="flex-1 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl text-sm"
-                >
-                  Salvar
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowNew(false)}
-                  className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl text-sm hover:bg-[#F5EDE8]"
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </div>
+      {showNew && (
+        <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-3">
+          <Input
+            value={newTitle}
+            onChange={event => setNewTitle(event.target.value)}
+            placeholder="Título (opcional)"
+            className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm"
+          />
+          <Textarea
+            value={newContent}
+            onChange={event => setNewContent(event.target.value)}
+            placeholder="Escreva sua anotação..."
+            className="min-h-[120px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm text-[#4A3728] placeholder:text-[#C4B0A4]"
+            autoFocus
+          />
+          <div className="flex gap-2">
+            <Button
+              onClick={handleSave}
+              disabled={!newContent.trim()}
+              className="flex-1 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl text-sm"
+            >
+              Salvar
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowNew(false)}
+              className="border-[#E8D5CC] text-[#6B4C3B] rounded-xl text-sm hover:bg-[#F5EDE8]"
+            >
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      )}
 
       {sorted.length === 0 ? (
         <div className="text-center py-16">
@@ -130,17 +116,23 @@ export default function Notes() {
                 <div className="space-y-2">
                   <Input
                     value={editTitle}
-                    onChange={e => setEditTitle(e.target.value)}
+                    onChange={event => setEditTitle(event.target.value)}
                     className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm"
                   />
                   <Textarea
                     value={editContent}
-                    onChange={e => setEditContent(e.target.value)}
+                    onChange={event => setEditContent(event.target.value)}
                     className="min-h-[100px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
                   />
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleSaveEdit(note.id)}
+                      onClick={() => {
+                        updateNote(note.id, {
+                          title: editTitle,
+                          content: editContent,
+                        });
+                        setEditingId(null);
+                      }}
                       className="flex items-center gap-1 text-xs text-[#C4856A] font-medium"
                     >
                       <Check className="w-3.5 h-3.5" /> Salvar
@@ -161,7 +153,7 @@ export default function Notes() {
                     </p>
                     <div className="flex gap-2 flex-shrink-0">
                       <button
-                        onClick={() => handleEdit(note)}
+                        onClick={() => startEditing(note)}
                         className="text-[#B08070] hover:text-[#C4856A] transition-colors"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -178,10 +170,7 @@ export default function Notes() {
                     {note.content}
                   </p>
                   <p className="text-xs text-[#B08070] mt-3">
-                    {new Date(note.updatedAt).toLocaleDateString("pt-BR", {
-                      day: "numeric",
-                      month: "short",
-                    })}
+                    {formatShortDate(note.updatedAt)}
                   </p>
                 </>
               )}

@@ -1,168 +1,32 @@
-// OUSE SER VOCÊ – Layout Principal
-// Design: Clínica Emocional Sofisticada | Sidebar fixa + conteúdo central
-
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
-import { useProfile } from "@/hooks/useProfile";
-import { useJourney } from "@/hooks/useJourney";
-import {
-  Home,
-  BookOpen,
-  PenLine,
-  Calendar,
-  Trophy,
-  Settings,
-  Sparkles,
-  ClipboardList,
-  Menu,
-  X,
-  Heart,
-  FileText,
-  MessageCircle,
-  Users,
-  Share2,
-  Bookmark,
-} from "lucide-react";
+import { Heart, Menu, X } from "lucide-react";
+import { APP_PAGES, useNavigation, type AppPage } from "@/app/navigation";
+import { useApp } from "@/app/store";
+import { IMAGES } from "@/app/assets";
+import { DAY_COUNT } from "@/journey";
 
-const LOGO_IMG = "/images/logo-ouse-ser-voce.jpeg";
-
-export type AppPage =
-  | "home"
-  | "journey"
-  | "day"
-  | "journal"
-  | "notes"
-  | "calendar"
-  | "achievements"
-  | "scanner"
-  | "assessment"
-  | "settings"
-  | "share"
-  | "community"
-  | "favorites"
-  | "profile";
-
-interface NavItem {
-  id: AppPage;
-  label: string;
-  shortLabel: string;
-  icon: React.ReactNode;
-}
-
-const navItems: NavItem[] = [
-  {
-    id: "home",
-    label: "Início",
-    shortLabel: "Início",
-    icon: <Home className="w-5 h-5" />,
-  },
-  {
-    id: "journey",
-    label: "Jornada",
-    shortLabel: "Jornada",
-    icon: <BookOpen className="w-5 h-5" />,
-  },
-  {
-    id: "journal",
-    label: "Diário",
-    shortLabel: "Diário",
-    icon: <PenLine className="w-5 h-5" />,
-  },
-  {
-    id: "notes",
-    label: "Anotações",
-    shortLabel: "Notas",
-    icon: <FileText className="w-5 h-5" />,
-  },
-  {
-    id: "calendar",
-    label: "Calendário",
-    shortLabel: "Calendário",
-    icon: <Calendar className="w-5 h-5" />,
-  },
-  {
-    id: "achievements",
-    label: "Conquistas",
-    shortLabel: "Conquistas",
-    icon: <Trophy className="w-5 h-5" />,
-  },
-  {
-    id: "community",
-    label: "Comunidade",
-    shortLabel: "Comunidade",
-    icon: <Users className="w-5 h-5" />,
-  },
-  {
-    id: "scanner",
-    label: "Scanner",
-    shortLabel: "Scanner",
-    icon: <Sparkles className="w-5 h-5" />,
-  },
-  {
-    id: "assessment",
-    label: "Avaliação",
-    shortLabel: "Avaliação",
-    icon: <ClipboardList className="w-5 h-5" />,
-  },
-  {
-    id: "favorites",
-    label: "Favoritos",
-    shortLabel: "Favoritos",
-    icon: <Bookmark className="w-5 h-5" />,
-  },
-  {
-    id: "profile",
-    label: "Soraya Farias",
-    shortLabel: "Soraya",
-    icon: <Heart className="w-5 h-5" />,
-  },
-  {
-    id: "share",
-    label: "Compartilhar",
-    shortLabel: "Compartilhar",
-    icon: <Share2 className="w-5 h-5" />,
-  },
-  {
-    id: "settings",
-    label: "Config.",
-    shortLabel: "Config.",
-    icon: <Settings className="w-5 h-5" />,
-  },
-];
-
-// Bottom nav shows these 5 items on mobile
-const bottomNavItems: AppPage[] = [
-  "home",
-  "journey",
-  "achievements",
-  "community",
-  "share",
-];
-
-interface AppLayoutProps {
-  currentPage: AppPage;
-  onNavigate: (page: AppPage) => void;
-  children: React.ReactNode;
-}
-
-export default function AppLayout({
-  currentPage,
-  onNavigate,
-  children,
-}: AppLayoutProps) {
-  const { userName } = useProfile();
-  const { currentDay, progressPercent, currentStreak } = useJourney();
+export default function AppLayout({ children }: { children: ReactNode }) {
+  const { state, currentDay, progressPercent, currentStreak } = useApp();
+  const { userName } = state;
+  const { currentPage, navigate } = useNavigation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = APP_PAGES.filter(page => page.nav);
+  const bottomNavItems = APP_PAGES.filter(page => page.bottomBar);
+
+  const go = (page: AppPage) => {
+    navigate(page);
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#FAF6F1] flex">
-      {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-[#F0E4DC] fixed h-full z-20 shadow-sm">
-        {/* Logo */}
         <div className="p-6 border-b border-[#F0E4DC]">
           <div className="flex items-center gap-3">
             <img
-              src={LOGO_IMG}
+              src={IMAGES.logo}
               alt="Ouse Ser Você"
               className="w-10 h-10 object-contain"
             />
@@ -177,7 +41,6 @@ export default function AppLayout({
           </div>
         </div>
 
-        {/* User greeting */}
         <div className="px-6 py-4 border-b border-[#F0E4DC]">
           <p className="text-xs text-[#B08070] mb-1">Olá,</p>
           <p className="font-semibold text-[#2C1810] text-sm">{userName}</p>
@@ -203,12 +66,11 @@ export default function AppLayout({
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 py-4 overflow-y-auto">
           {navItems.map(item => (
             <button
               key={item.id}
-              onClick={() => onNavigate(item.id)}
+              onClick={() => go(item.id)}
               className={`w-full flex items-center gap-3 px-6 py-3 text-sm transition-all duration-150 ${
                 currentPage === item.id
                   ? "bg-[#F5EDE8] text-[#C4856A] font-semibold border-r-2 border-[#C4856A]"
@@ -220,31 +82,29 @@ export default function AppLayout({
                   currentPage === item.id ? "text-[#C4856A]" : "text-[#B08070]"
                 }
               >
-                {item.icon}
+                <item.icon className="w-5 h-5" />
               </span>
               {item.label}
             </button>
           ))}
         </nav>
 
-        {/* Day indicator */}
         <div className="p-4 border-t border-[#F0E4DC]">
           <div className="bg-[#F5EDE8] rounded-xl p-3 text-center">
             <p className="text-xs text-[#8B6E5A]">Dia atual</p>
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
               {currentDay}
             </p>
-            <p className="text-xs text-[#8B6E5A]">de 30</p>
+            <p className="text-xs text-[#8B6E5A]">de {DAY_COUNT}</p>
           </div>
         </div>
       </aside>
 
-      {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#F0E4DC] shadow-sm">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-2">
             <img
-              src={LOGO_IMG}
+              src={IMAGES.logo}
               alt="Ouse Ser Você"
               className="w-9 h-9 object-contain"
             />
@@ -271,7 +131,6 @@ export default function AppLayout({
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <>
           <div
@@ -285,7 +144,9 @@ export default function AppLayout({
             <div className="p-4 border-b border-[#F0E4DC] flex items-center justify-between">
               <div>
                 <p className="font-semibold text-[#2C1810]">{userName}</p>
-                <p className="text-xs text-[#8B6E5A]">Dia {currentDay} de 30</p>
+                <p className="text-xs text-[#8B6E5A]">
+                  Dia {currentDay} de {DAY_COUNT}
+                </p>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
@@ -294,7 +155,6 @@ export default function AppLayout({
                 <X className="w-5 h-5" />
               </button>
             </div>
-            {/* Progress in mobile menu */}
             <div className="px-4 py-3 border-b border-[#F0E4DC] bg-[#FAF6F1]">
               <div className="flex justify-between text-xs text-[#8B6E5A] mb-1">
                 <span>Progresso</span>
@@ -313,10 +173,7 @@ export default function AppLayout({
               {navItems.map(item => (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    onNavigate(item.id);
-                    setMobileMenuOpen(false);
-                  }}
+                  onClick={() => go(item.id)}
                   className={`w-full flex items-center gap-3 px-6 py-3.5 text-sm transition-colors ${
                     currentPage === item.id
                       ? "bg-[#F5EDE8] text-[#C4856A] font-semibold"
@@ -330,7 +187,7 @@ export default function AppLayout({
                         : "text-[#B08070]"
                     }
                   >
-                    {item.icon}
+                    <item.icon className="w-5 h-5" />
                   </span>
                   {item.label}
                 </button>
@@ -340,42 +197,38 @@ export default function AppLayout({
         </>
       )}
 
-      {/* Main Content */}
       <main className="flex-1 lg:ml-64 pt-14 lg:pt-0 min-h-screen pb-20 lg:pb-0">
         <div className="max-w-svw mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-10">
           {children}
         </div>
       </main>
 
-      {/* Mobile Bottom Nav - 5 key items */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#F0E4DC] z-20 shadow-lg safe-area-bottom">
         <div className="flex items-center justify-around h-16 px-1">
-          {navItems
-            .filter(item => bottomNavItems.includes(item.id))
-            .map(item => (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`flex flex-col items-center justify-center gap-0.5 w-14 h-14 rounded-xl transition-all ${
+          {bottomNavItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => go(item.id)}
+              className={`flex flex-col items-center justify-center gap-0.5 w-14 h-14 rounded-xl transition-all ${
+                currentPage === item.id
+                  ? "text-[#C4856A] bg-[#F5EDE8]"
+                  : "text-[#B08070] active:bg-[#FAF6F1]"
+              }`}
+            >
+              <span
+                className={
                   currentPage === item.id
-                    ? "text-[#C4856A] bg-[#F5EDE8]"
-                    : "text-[#B08070] active:bg-[#FAF6F1]"
-                }`}
+                    ? "scale-110 transition-transform"
+                    : ""
+                }
               >
-                <span
-                  className={
-                    currentPage === item.id
-                      ? "scale-110 transition-transform"
-                      : ""
-                  }
-                >
-                  {item.icon}
-                </span>
-                <span className="text-[9px] font-medium leading-tight">
-                  {item.shortLabel}
-                </span>
-              </button>
-            ))}
+                <item.icon className="w-5 h-5" />
+              </span>
+              <span className="text-[9px] font-medium leading-tight">
+                {item.shortLabel}
+              </span>
+            </button>
+          ))}
         </div>
       </nav>
     </div>

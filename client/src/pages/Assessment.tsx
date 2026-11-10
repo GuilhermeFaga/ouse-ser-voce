@@ -1,23 +1,116 @@
-// OUSE SER VOCÊ – Avaliação Inicial e Final
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useAssessments } from "@/hooks/useAssessments";
-import { useJourney } from "@/hooks/useJourney";
-import type { InitialAssessment, FinalAssessment } from "@/hooks/useAppState";
+import { CheckCircle2, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Slider } from "@/components/ui/slider";
-import { ClipboardList, CheckCircle2 } from "lucide-react";
+import { useApp } from "@/app/store";
+import { moodEmoji } from "@/journey";
+import {
+  FEELING_SCALE,
+  FINAL_ASSESSMENT_MIN_DAYS,
+  feelingLabel,
+  finalAssessmentUnlocked,
+} from "@/assessments/assessment";
+import { formatLongDate } from "@/lib/dates";
+
+interface FieldSpec {
+  key: string;
+  label: string;
+  placeholder: string;
+  optional?: boolean;
+}
+
+const INITIAL_FIELDS: FieldSpec[] = [
+  {
+    key: "mainChallenge",
+    label: "Qual é o seu maior desafio agora?",
+    placeholder: "O que mais pesa na sua vida hoje?",
+  },
+  {
+    key: "mainGoal",
+    label: "O que você quer alcançar com esta jornada?",
+    placeholder: "O que você quer sentir, descobrir ou mudar?",
+  },
+  {
+    key: "biggestFear",
+    label: "Qual é o seu maior medo nesta jornada? (opcional)",
+    placeholder: "O que você teme descobrir ou enfrentar?",
+    optional: true,
+  },
+  {
+    key: "selfDescription",
+    label: "Como você se descreveria em 3 palavras? (opcional)",
+    placeholder: "Três palavras honestas sobre quem você é hoje",
+    optional: true,
+  },
+];
+
+const FINAL_FIELDS: FieldSpec[] = [
+  {
+    key: "mainTransformation",
+    label: "Qual foi sua maior transformação nesses 30 dias?",
+    placeholder: "O que mudou em você?",
+  },
+  {
+    key: "biggestLesson",
+    label: "Qual foi o maior aprendizado?",
+    placeholder: "O que você descobriu que não sabia antes?",
+  },
+  {
+    key: "nextCommitment",
+    label: "Qual compromisso você faz a partir de hoje?",
+    placeholder: "Uma promessa honesta para você mesma",
+  },
+  {
+    key: "messageToSelf",
+    label: "Escreva uma mensagem para você mesma (opcional)",
+    placeholder: "O que você quer que a mulher que você é hoje saiba?",
+    optional: true,
+  },
+];
+
+type Values = Record<string, string>;
+
+function initialValues(
+  existing: {
+    mainChallenge: string;
+    mainGoal: string;
+    biggestFear: string;
+    selfDescription: string;
+  } | null
+): Values {
+  return {
+    mainChallenge: existing?.mainChallenge ?? "",
+    mainGoal: existing?.mainGoal ?? "",
+    biggestFear: existing?.biggestFear ?? "",
+    selfDescription: existing?.selfDescription ?? "",
+  };
+}
+
+function finalValues(
+  existing: {
+    mainTransformation: string;
+    biggestLesson: string;
+    nextCommitment: string;
+    messageToSelf: string;
+  } | null
+): Values {
+  return {
+    mainTransformation: existing?.mainTransformation ?? "",
+    biggestLesson: existing?.biggestLesson ?? "",
+    nextCommitment: existing?.nextCommitment ?? "",
+    messageToSelf: existing?.messageToSelf ?? "",
+  };
+}
 
 export default function Assessment() {
-  const {
-    initialAssessment,
-    finalAssessment,
-    saveInitialAssessment,
-    saveFinalAssessment,
-  } = useAssessments();
-  const { completedDays } = useJourney();
-  const [activeTab, setActiveTab] = useState<"initial" | "final">("initial");
+  const { state, completedDays, saveInitialAssessment, saveFinalAssessment } =
+    useApp();
+  const [tab, setTab] = useState<"initial" | "final">("initial");
+  const { initialAssessment, finalAssessment } = state;
+
+  const canCompleteFinal =
+    finalAssessmentUnlocked(completedDays) || finalAssessment !== null;
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
@@ -31,149 +124,159 @@ export default function Assessment() {
       </div>
 
       <div className="flex gap-1 bg-[#F0E4DC] rounded-xl p-1">
-        <button
-          onClick={() => setActiveTab("initial")}
-          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-            activeTab === "initial"
-              ? "bg-white text-[#C4856A] shadow-sm"
-              : "text-[#8B6E5A]"
-          }`}
-        >
-          Avaliação Inicial
-        </button>
-        <button
-          onClick={() => setActiveTab("final")}
-          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-            activeTab === "final"
-              ? "bg-white text-[#C4856A] shadow-sm"
-              : "text-[#8B6E5A]"
-          }`}
-        >
-          Avaliação Final
-        </button>
+        {(
+          [
+            ["initial", "Avaliação Inicial"],
+            ["final", "Avaliação Final"],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setTab(id)}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+              tab === id
+                ? "bg-white text-[#C4856A] shadow-sm"
+                : "text-[#8B6E5A]"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      <div>
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.25 }}
-        >
-          {activeTab === "initial" ? (
-            <InitialAssessmentForm
-              existing={initialAssessment}
-              onSave={saveInitialAssessment}
-            />
-          ) : (
-            <FinalAssessmentForm
-              existing={finalAssessment}
-              onSave={saveFinalAssessment}
-              canComplete={completedDays.length >= 28}
-            />
-          )}
-        </motion.div>
-      </div>
+      <motion.div
+        key={tab}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+      >
+        {tab === "initial" ? (
+          <AssessmentForm
+            intro="Esta avaliação registra onde você está agora — antes de começar a jornada. Seja honesta. Não existe resposta certa ou errada."
+            feelingQuestion="Como você está se sentindo hoje, de forma geral?"
+            fields={INITIAL_FIELDS}
+            saveLabel="Salvar avaliação inicial"
+            completedTitle="Avaliação inicial registrada"
+            existing={initialAssessment}
+            initialValues={initialValues(initialAssessment)}
+            onSave={values =>
+              saveInitialAssessment({
+                currentFeeling: Number(values.currentFeeling),
+                mainChallenge: values.mainChallenge,
+                mainGoal: values.mainGoal,
+                biggestFear: values.biggestFear,
+                selfDescription: values.selfDescription,
+              })
+            }
+          />
+        ) : (
+          <AssessmentForm
+            intro="Você chegou até aqui. Esta avaliação final é o espelho da sua transformação — compare com onde você estava no começo."
+            feelingQuestion="Como você está se sentindo agora?"
+            fields={FINAL_FIELDS}
+            saveLabel="Salvar avaliação final"
+            completedTitle="Avaliação final registrada"
+            existing={finalAssessment}
+            initialValues={finalValues(finalAssessment)}
+            lockedMessage={
+              canCompleteFinal
+                ? undefined
+                : `A avaliação final fica disponível a partir do Dia ${FINAL_ASSESSMENT_MIN_DAYS}. Continue a jornada!`
+            }
+            onSave={values =>
+              saveFinalAssessment({
+                currentFeeling: Number(values.currentFeeling),
+                mainTransformation: values.mainTransformation,
+                biggestLesson: values.biggestLesson,
+                nextCommitment: values.nextCommitment,
+                messageToSelf: values.messageToSelf,
+              })
+            }
+          />
+        )}
+      </motion.div>
     </div>
   );
 }
 
-function InitialAssessmentForm({
+function AssessmentForm({
+  intro,
+  feelingQuestion,
+  fields,
+  saveLabel,
+  completedTitle,
   existing,
+  initialValues,
   onSave,
+  lockedMessage,
 }: {
-  existing: InitialAssessment | null;
-  onSave: (data: any) => void;
+  intro: string;
+  feelingQuestion: string;
+  fields: FieldSpec[];
+  saveLabel: string;
+  completedTitle: string;
+  existing: { currentFeeling: number; completedAt: string } | null;
+  initialValues: Values;
+  onSave: (values: Values) => void;
+  lockedMessage?: string;
 }) {
-  const [feeling, setFeeling] = useState(existing?.currentFeeling || 3);
-  const [challenge, setChallenge] = useState(existing?.mainChallenge || "");
-  const [goal, setGoal] = useState(existing?.mainGoal || "");
-  const [fear, setFear] = useState(existing?.biggestFear || "");
-  const [description, setDescription] = useState(
-    existing?.selfDescription || ""
-  );
-  const [saved, setSaved] = useState(!!existing);
+  const [feeling, setFeeling] = useState(existing?.currentFeeling ?? 3);
+  const [values, setValues] = useState<Values>(initialValues);
+  const [editing, setEditing] = useState(existing === null);
 
-  const feelingLabels = ["", "Muito mal", "Mal", "Regular", "Bem", "Muito bem"];
+  if (lockedMessage && !existing) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
+          <ClipboardList className="w-7 h-7 text-[#C4856A]" />
+        </div>
+        <p className="font-serif text-lg text-[#2C1810] mb-2">Quase lá</p>
+        <p className="text-[#8B6E5A] text-sm max-w-xs mx-auto">
+          {lockedMessage}
+        </p>
+      </div>
+    );
+  }
 
-  const handleSave = () => {
-    onSave({
-      mainChallenge: challenge,
-      currentFeeling: feeling,
-      mainGoal: goal,
-      biggestFear: fear,
-      selfDescription: description,
-    });
-    setSaved(true);
-  };
-
-  if (saved && existing) {
+  if (!editing && existing) {
+    const rows = fields
+      .filter(field => values[field.key]?.trim())
+      .map(field => ({ label: field.label, value: values[field.key] }));
     return (
       <div className="space-y-4">
         <div className="bg-[#F5EDE8] rounded-2xl p-5 border-l-4 border-[#C4856A] flex items-start gap-3">
           <CheckCircle2 className="w-5 h-5 text-[#C4856A] flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-[#2C1810] text-sm">
-              Avaliação inicial registrada
+              {completedTitle}
             </p>
             <p className="text-xs text-[#8B6E5A] mt-0.5">
-              {new Date(existing.completedAt).toLocaleDateString("pt-BR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+              {formatLongDate(existing.completedAt)}
             </p>
           </div>
         </div>
         <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm space-y-4">
           <div>
             <p className="text-xs text-[#B08070] font-medium mb-1">
-              Como eu me sentia
+              {feelingQuestion}
             </p>
             <p className="text-sm text-[#4A3728]">
-              {feelingLabels[existing.currentFeeling]}
+              {moodEmoji(feeling)} {feelingLabel(feeling)}
             </p>
           </div>
-          <div>
-            <p className="text-xs text-[#B08070] font-medium mb-1">
-              Meu maior desafio
-            </p>
-            <p className="text-sm text-[#4A3728] leading-relaxed">
-              {existing.mainChallenge}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-[#B08070] font-medium mb-1">
-              O que eu queria alcançar
-            </p>
-            <p className="text-sm text-[#4A3728] leading-relaxed">
-              {existing.mainGoal}
-            </p>
-          </div>
-          {existing.biggestFear && (
-            <div>
+          {rows.map(row => (
+            <div key={row.label}>
               <p className="text-xs text-[#B08070] font-medium mb-1">
-                Meu maior medo
+                {row.label.replace(" (opcional)", "")}
               </p>
               <p className="text-sm text-[#4A3728] leading-relaxed">
-                {existing.biggestFear}
+                {row.value}
               </p>
             </div>
-          )}
-          {existing.selfDescription && (
-            <div>
-              <p className="text-xs text-[#B08070] font-medium mb-1">
-                Como eu me descrevia
-              </p>
-              <p className="text-sm text-[#4A3728] leading-relaxed">
-                {existing.selfDescription}
-              </p>
-            </div>
-          )}
+          ))}
         </div>
         <button
-          onClick={() => setSaved(false)}
+          onClick={() => setEditing(true)}
           className="text-xs text-[#B08070] hover:text-[#C4856A] transition-colors"
         >
           Editar avaliação
@@ -182,286 +285,71 @@ function InitialAssessmentForm({
     );
   }
 
+  const canSave = fields
+    .filter(field => !field.optional)
+    .every(field => values[field.key]?.trim());
+
   return (
     <div className="space-y-4">
       <div className="bg-[#FAF6F1] rounded-2xl border border-[#F0E4DC] p-5">
-        <p className="text-sm text-[#6B4C3B] leading-relaxed">
-          Esta avaliação registra onde você está agora — antes de começar a
-          jornada. Seja honesta. Não existe resposta certa ou errada.
-        </p>
+        <p className="text-sm text-[#6B4C3B] leading-relaxed">{intro}</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm space-y-5">
         <div>
           <p className="font-medium text-[#2C1810] text-sm mb-3">
-            Como você está se sentindo hoje, de forma geral?
+            {feelingQuestion}
           </p>
           <div className="flex justify-between text-lg mb-2">
-            {["😔", "😕", "😐", "🙂", "😊"].map((e, i) => (
+            {FEELING_SCALE.map(step => (
               <button
-                key={i}
-                onClick={() => setFeeling(i + 1)}
-                className={`text-2xl transition-transform ${feeling === i + 1 ? "scale-125" : "opacity-50 hover:opacity-75"}`}
+                key={step.value}
+                onClick={() => setFeeling(step.value)}
+                className={`text-2xl transition-transform ${
+                  feeling === step.value
+                    ? "scale-125"
+                    : "opacity-50 hover:opacity-75"
+                }`}
               >
-                {e}
+                {step.emoji}
               </button>
             ))}
           </div>
           <p className="text-xs text-center text-[#8B6E5A]">
-            {feelingLabels[feeling]}
+            {feelingLabel(feeling)}
           </p>
         </div>
 
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Qual é o seu maior desafio agora?
-          </p>
-          <Textarea
-            value={challenge}
-            onChange={e => setChallenge(e.target.value)}
-            placeholder="O que mais pesa na sua vida hoje?"
-            className="min-h-[80px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            O que você quer alcançar com esta jornada?
-          </p>
-          <Textarea
-            value={goal}
-            onChange={e => setGoal(e.target.value)}
-            placeholder="O que você quer sentir, descobrir ou mudar?"
-            className="min-h-[80px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Qual é o seu maior medo nesta jornada? (opcional)
-          </p>
-          <Textarea
-            value={fear}
-            onChange={e => setFear(e.target.value)}
-            placeholder="O que você teme descobrir ou enfrentar?"
-            className="min-h-[70px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Como você se descreveria em 3 palavras? (opcional)
-          </p>
-          <Textarea
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            placeholder="Três palavras honestas sobre quem você é hoje"
-            className="min-h-[60px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
+        {fields.map(field => (
+          <div key={field.key}>
+            <p className="font-medium text-[#2C1810] text-sm mb-2">
+              {field.label}
+            </p>
+            <Textarea
+              value={values[field.key] ?? ""}
+              onChange={event =>
+                setValues(previous => ({
+                  ...previous,
+                  [field.key]: event.target.value,
+                }))
+              }
+              placeholder={field.placeholder}
+              className={`border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm ${
+                field.optional ? "min-h-[70px]" : "min-h-[80px]"
+              }`}
+            />
+          </div>
+        ))}
 
         <Button
-          onClick={handleSave}
-          disabled={!challenge.trim() || !goal.trim()}
+          onClick={() => {
+            onSave({ ...values, currentFeeling: String(feeling) });
+            setEditing(false);
+          }}
+          disabled={!canSave}
           className="w-full h-11 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl font-medium"
         >
-          Salvar avaliação inicial
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function FinalAssessmentForm({
-  existing,
-  onSave,
-  canComplete,
-}: {
-  existing: FinalAssessment | null;
-  onSave: (data: any) => void;
-  canComplete: boolean;
-}) {
-  const [feeling, setFeeling] = useState(existing?.currentFeeling || 4);
-  const [transformation, setTransformation] = useState(
-    existing?.mainTransformation || ""
-  );
-  const [lesson, setLesson] = useState(existing?.biggestLesson || "");
-  const [commitment, setCommitment] = useState(existing?.nextCommitment || "");
-  const [message, setMessage] = useState(existing?.messageToSelf || "");
-  const [saved, setSaved] = useState(!!existing);
-
-  const feelingLabels = ["", "Muito mal", "Mal", "Regular", "Bem", "Muito bem"];
-
-  const handleSave = () => {
-    onSave({
-      currentFeeling: feeling,
-      mainTransformation: transformation,
-      biggestLesson: lesson,
-      nextCommitment: commitment,
-      messageToSelf: message,
-    });
-    setSaved(true);
-  };
-
-  if (!canComplete && !existing) {
-    return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
-          <ClipboardList className="w-7 h-7 text-[#C4856A]" />
-        </div>
-        <p className="font-serif text-lg text-[#2C1810] mb-2">Quase lá</p>
-        <p className="text-[#8B6E5A] text-sm max-w-xs mx-auto">
-          A avaliação final fica disponível a partir do Dia 28. Continue a
-          jornada!
-        </p>
-      </div>
-    );
-  }
-
-  if (saved && existing) {
-    return (
-      <div className="space-y-4">
-        <div className="bg-[#F5EDE8] rounded-2xl p-5 border-l-4 border-[#C4856A] flex items-start gap-3">
-          <CheckCircle2 className="w-5 h-5 text-[#C4856A] flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-[#2C1810] text-sm">
-              Avaliação final registrada
-            </p>
-            <p className="text-xs text-[#8B6E5A] mt-0.5">
-              {new Date(existing.completedAt).toLocaleDateString("pt-BR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </p>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm space-y-4">
-          <div>
-            <p className="text-xs text-[#B08070] font-medium mb-1">
-              Como me sinto agora
-            </p>
-            <p className="text-sm text-[#4A3728]">
-              {feelingLabels[existing.currentFeeling]}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-[#B08070] font-medium mb-1">
-              Minha maior transformação
-            </p>
-            <p className="text-sm text-[#4A3728] leading-relaxed">
-              {existing.mainTransformation}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-[#B08070] font-medium mb-1">
-              Maior aprendizado
-            </p>
-            <p className="text-sm text-[#4A3728] leading-relaxed">
-              {existing.biggestLesson}
-            </p>
-          </div>
-          {existing.messageToSelf && (
-            <div className="bg-[#FAF6F1] rounded-xl p-4 border-l-4 border-[#C4856A]">
-              <p className="text-xs text-[#B08070] mb-1">
-                Mensagem para mim mesma
-              </p>
-              <p className="font-serif text-sm text-[#4A3728] italic leading-relaxed">
-                {existing.messageToSelf}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="bg-[#FAF6F1] rounded-2xl border border-[#F0E4DC] p-5">
-        <p className="text-sm text-[#6B4C3B] leading-relaxed">
-          Você chegou até aqui. Esta avaliação final é o espelho da sua
-          transformação — compare com onde você estava no começo.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-5 shadow-sm space-y-5">
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-3">
-            Como você está se sentindo agora?
-          </p>
-          <div className="flex justify-between text-lg mb-2">
-            {["😔", "😕", "😐", "🙂", "😊"].map((e, i) => (
-              <button
-                key={i}
-                onClick={() => setFeeling(i + 1)}
-                className={`text-2xl transition-transform ${feeling === i + 1 ? "scale-125" : "opacity-50 hover:opacity-75"}`}
-              >
-                {e}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-center text-[#8B6E5A]">
-            {feelingLabels[feeling]}
-          </p>
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Qual foi sua maior transformação nesses 30 dias?
-          </p>
-          <Textarea
-            value={transformation}
-            onChange={e => setTransformation(e.target.value)}
-            placeholder="O que mudou em você?"
-            className="min-h-[80px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Qual foi o maior aprendizado?
-          </p>
-          <Textarea
-            value={lesson}
-            onChange={e => setLesson(e.target.value)}
-            placeholder="O que você descobriu que não sabia antes?"
-            className="min-h-[80px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Qual compromisso você faz a partir de hoje?
-          </p>
-          <Textarea
-            value={commitment}
-            onChange={e => setCommitment(e.target.value)}
-            placeholder="Uma promessa honesta para você mesma"
-            className="min-h-[70px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <div>
-          <p className="font-medium text-[#2C1810] text-sm mb-2">
-            Escreva uma mensagem para você mesma (opcional)
-          </p>
-          <Textarea
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            placeholder="O que você quer que a mulher que você é hoje saiba?"
-            className="min-h-[80px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm"
-          />
-        </div>
-
-        <Button
-          onClick={handleSave}
-          disabled={
-            !transformation.trim() || !lesson.trim() || !commitment.trim()
-          }
-          className="w-full h-11 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl font-medium"
-        >
-          Salvar avaliação final
+          {saveLabel}
         </Button>
       </div>
     </div>

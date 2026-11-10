@@ -1,23 +1,18 @@
-// OUSE SER VOCÊ – Onboarding
-// Design: Clínica Emocional Sofisticada | Playfair Display + DM Sans | Rosa pó + Creme
-// Presença de Soraya Farias como psicóloga guia, identidade visual forte
-
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useProfile } from "@/hooks/useProfile";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   ArrowRight,
   BookOpen,
-  Heart,
-  Star,
-  Shield,
   CheckCircle2,
+  Heart,
+  Shield,
+  Star,
 } from "lucide-react";
-
-const HERO_IMG = "./hero.webp";
-const LOGO_IMG = "/images/logo-ouse-ser-voce.jpeg";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useApp } from "@/app/store";
+import { IMAGES } from "@/app/assets";
+import { DAY_COUNT, weekModules, weekOfDay } from "@/journey";
 
 const steps = [
   {
@@ -63,44 +58,32 @@ const features = [
   },
 ];
 
-const journeyWeeks = [
-  { week: 1, title: "Autoconhecimento", color: "#E8A090" },
-  { week: 2, title: "Desapego", color: "#D4956A" },
-  { week: 3, title: "Autoconfiança", color: "#C4856A" },
-  { week: 4, title: "Transformação", color: "#A06040" },
-];
-
 export default function Onboarding() {
-  const { completeOnboarding } = useProfile();
+  const { completeOnboarding } = useApp();
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
 
+  const currentStep = steps[step];
+
   const handleNext = () => {
     if (step < steps.length - 1) {
-      setStep(s => s + 1);
-    } else {
-      if (name.trim()) {
-        completeOnboarding(name.trim());
-      }
+      setStep(step + 1);
+      return;
     }
+    if (name.trim()) completeOnboarding(name.trim());
   };
-
-  const currentStep = steps[step];
 
   return (
     <div className="min-h-screen bg-[#FAF6F1] flex flex-col lg:flex-row">
-      {/* Left panel - image */}
       <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden">
         <img
-          src={HERO_IMG}
+          src={IMAGES.hero}
           alt="Mulher confiante e serena"
           className="w-full h-svh object-cover object-center"
         />
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#FAF6F1]/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1A0E08]/60 via-transparent to-transparent" />
 
-        {/* Soraya's quote at bottom */}
         <div className="absolute bottom-10 left-8 right-8">
           <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-xl border border-white/50">
             <div className="flex items-start gap-3">
@@ -125,24 +108,13 @@ export default function Onboarding() {
           </div>
         </div>
 
-        {/* 30-day journey visual */}
         <div className="absolute top-8 left-8">
           <div className="flex items-center gap-1.5">
-            {Array.from({ length: 30 }, (_, i) => (
+            {Array.from({ length: DAY_COUNT }, (_, index) => (
               <div
-                key={i}
-                className="w-1.5 h-1.5 rounded-full transition-all"
-                style={{
-                  backgroundColor:
-                    i < 7
-                      ? "#E8A090"
-                      : i < 14
-                        ? "#D4956A"
-                        : i < 21
-                          ? "#C4856A"
-                          : "#A06040",
-                  opacity: 0.6 + (i / 30) * 0.4,
-                }}
+                key={index}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${weekOfDay(index + 1).palette.dot}`}
+                style={{ opacity: 0.6 + (index / DAY_COUNT) * 0.4 }}
               />
             ))}
           </div>
@@ -152,13 +124,11 @@ export default function Onboarding() {
         </div>
       </div>
 
-      {/* Right panel - content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 lg:px-12 xl:px-16">
-        {/* Logo & Brand */}
         <div className="mb-8 flex flex-col items-center">
           <div className="flex items-center gap-3 mb-1">
             <img
-              src={LOGO_IMG}
+              src={IMAGES.logo}
               alt="Ouse Ser Você"
               className="w-12 h-12 object-contain"
             />
@@ -174,15 +144,14 @@ export default function Onboarding() {
         </div>
 
         <div className="w-full max-w-md">
-          {/* Progress line - 30-day themed */}
           <div className="mb-8">
             <div className="flex items-center gap-1 mb-2">
-              {steps.map((_, i) => (
+              {steps.map((_, index) => (
                 <div
-                  key={i}
+                  key={index}
                   className="flex-1 h-1 rounded-full transition-all duration-500"
                   style={{
-                    backgroundColor: i <= step ? "#C4856A" : "#E8D5CC",
+                    backgroundColor: index <= step ? "#C4856A" : "#E8D5CC",
                   }}
                 />
               ))}
@@ -216,28 +185,23 @@ export default function Onboarding() {
                     Não é sobre ser perfeita. É sobre ser honesta consigo mesma.
                   </p>
 
-                  {/* Journey weeks preview */}
                   <div className="mt-5 grid grid-cols-4 gap-2">
-                    {journeyWeeks.map(w => (
-                      <div key={w.week} className="text-center">
+                    {weekModules.map(module => (
+                      <div key={module.week} className="text-center">
                         <div
-                          className="w-full h-1.5 rounded-full mb-1.5"
-                          style={{ backgroundColor: w.color }}
+                          className={`w-full h-1.5 rounded-full mb-1.5 ${module.palette.dot}`}
                         />
                         <p className="text-[10px] text-[#8B6E5A] font-medium leading-tight">
-                          {w.title}
+                          {module.shortTitle}
                         </p>
                         <p className="text-[9px] text-[#B08070]">
-                          Semana {w.week}
+                          Semana {module.week}
                         </p>
                       </div>
                     ))}
                   </div>
 
-                  <div
-                    className="mt-2 p-4 bg-[#F5EDE8] rounded-xl border-l-3 border-[#C4856A]"
-                    style={{ borderLeftWidth: "3px" }}
-                  >
+                  <div className="mt-2 p-4 bg-[#F5EDE8] rounded-xl border-l-4 border-[#C4856A]">
                     <p className="text-xs text-[#6B4C3B] leading-relaxed">
                       Esta jornada foi desenvolvida pela psicóloga{" "}
                       <strong>Soraya Farias</strong> para mulheres que se sentem
@@ -249,30 +213,29 @@ export default function Onboarding() {
 
               {currentStep.id === "about" && (
                 <div className="space-y-3">
-                  {features.map((f, i) => (
+                  {features.map((feature, index) => (
                     <motion.div
-                      key={i}
+                      key={feature.title}
                       initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.07, duration: 0.3 }}
+                      transition={{ delay: index * 0.07, duration: 0.3 }}
                       className="flex items-center gap-3 p-3.5 bg-white rounded-xl shadow-sm border border-[#F0E4DC]"
                     >
                       <div className="w-8 h-8 rounded-lg bg-[#F5EDE8] flex items-center justify-center text-[#C4856A] flex-shrink-0">
-                        {f.icon}
+                        {feature.icon}
                       </div>
                       <div>
                         <p className="font-semibold text-[#2C1810] text-xs">
-                          {f.title}
+                          {feature.title}
                         </p>
                         <p className="text-[#8B6E5A] text-[11px] mt-0.5">
-                          {f.desc}
+                          {feature.desc}
                         </p>
                       </div>
                       <CheckCircle2 className="w-4 h-4 text-[#C4856A] ml-auto flex-shrink-0" />
                     </motion.div>
                   ))}
 
-                  {/* Soraya presence */}
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -304,18 +267,16 @@ export default function Onboarding() {
                     Antes de começar, me diga seu nome. Quero que cada mensagem
                     seja pessoal — como uma conversa entre nós.
                   </p>
-                  <div className="space-y-2">
-                    <Input
-                      value={name}
-                      onChange={e => setName(e.target.value)}
-                      onKeyDown={e =>
-                        e.key === "Enter" && name.trim() && handleNext()
-                      }
-                      placeholder="Seu primeiro nome"
-                      className="h-12 text-base border-[#E8D5CC] focus:border-[#C4856A] bg-white rounded-xl"
-                      autoFocus
-                    />
-                  </div>
+                  <Input
+                    value={name}
+                    onChange={event => setName(event.target.value)}
+                    onKeyDown={event => {
+                      if (event.key === "Enter" && name.trim()) handleNext();
+                    }}
+                    placeholder="Seu primeiro nome"
+                    className="h-12 text-base border-[#E8D5CC] focus:border-[#C4856A] bg-white rounded-xl"
+                    autoFocus
+                  />
                   {name.trim() && (
                     <motion.div
                       initial={{ opacity: 0, y: 6 }}

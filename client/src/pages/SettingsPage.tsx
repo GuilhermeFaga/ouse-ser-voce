@@ -1,52 +1,38 @@
-// OUSE SER VOCÊ – Configurações
 import { useState } from "react";
-import { useApp } from "@/contexts/AppContext";
-import { useProfile } from "@/hooks/useProfile";
-import { useJourney } from "@/hooks/useJourney";
-import { useJournal } from "@/hooks/useJournal";
-import { useNotes } from "@/hooks/useNotes";
-import { useAchievements } from "@/hooks/useAchievements";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Bell, User, Shield, RotateCcw, Heart } from "lucide-react";
+import { Heart, RotateCcw, Shield, User } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useApp } from "@/app/store";
+import { writtenDaysOf } from "@/app/state";
+import { formatLongDate } from "@/lib/dates";
+
+function SectionTitle({
+  icon,
+  title,
+}: {
+  icon: React.ReactNode;
+  title: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 mb-2">
+      <div className="w-8 h-8 rounded-lg bg-[#F5EDE8] flex items-center justify-center">
+        {icon}
+      </div>
+      <h3 className="font-semibold text-[#2C1810]">{title}</h3>
+    </div>
+  );
+}
 
 export default function SettingsPage() {
-  const { updateState } = useApp();
-  const {
-    userName,
-    reminderTime: savedReminderTime,
-    reminderEnabled: savedReminderEnabled,
-    startDate,
-    updateSettings,
-  } = useProfile();
-  const { completedDays } = useJourney();
-  const { journalEntries } = useJournal();
-  const { notes } = useNotes();
-  const { unlockedAchievements } = useAchievements();
-  const [name, setName] = useState(userName);
-  const [reminderTime, setReminderTime] = useState(savedReminderTime);
-  const [reminderEnabled, setReminderEnabled] = useState(savedReminderEnabled);
-
-  const handleSaveName = () => {
-    if (name.trim()) {
-      updateState({ userName: name.trim() });
-      toast.success("Nome atualizado!");
-    }
-  };
-
-  const handleSaveReminder = () => {
-    updateSettings({ reminderTime, reminderEnabled });
-    toast.success("Configurações salvas!");
-  };
+  const { state, completedDays, updateName, resetAll } = useApp();
+  const [name, setName] = useState(state.userName);
 
   const handleReset = () => {
     if (
       window.confirm("Tem certeza? Todos os dados da jornada serão apagados.")
     ) {
-      localStorage.removeItem("ouse-ser-voce-state");
-      window.location.reload();
+      resetAll();
     }
   };
 
@@ -59,25 +45,26 @@ export default function SettingsPage() {
         <p className="text-[#8B6E5A] text-sm">Personalize sua experiência</p>
       </div>
 
-      {/* Profile */}
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-4">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F5EDE8] flex items-center justify-center">
-            <User className="w-4 h-4 text-[#C4856A]" />
-          </div>
-          <h3 className="font-semibold text-[#2C1810]">Perfil</h3>
-        </div>
+        <SectionTitle
+          icon={<User className="w-4 h-4 text-[#C4856A]" />}
+          title="Perfil"
+        />
         <div className="space-y-2">
           <label className="text-xs text-[#8B6E5A] font-medium">Seu nome</label>
           <div className="flex gap-2">
             <Input
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={event => setName(event.target.value)}
               className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm"
             />
             <Button
-              onClick={handleSaveName}
-              disabled={!name.trim() || name === userName}
+              onClick={() => {
+                if (!name.trim()) return;
+                updateName(name.trim());
+                toast.success("Nome atualizado!");
+              }}
+              disabled={!name.trim() || name === state.userName}
               className="bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl px-4 text-sm"
             >
               Salvar
@@ -86,50 +73,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Reminders */}
-      <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-4">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F5EDE8] flex items-center justify-center">
-            <Bell className="w-4 h-4 text-[#C4856A]" />
-          </div>
-          <h3 className="font-semibold text-[#2C1810]">Lembretes</h3>
-        </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-[#4A3728] font-medium">
-              Ativar lembretes diários
-            </p>
-            <p className="text-xs text-[#8B6E5A]">
-              Receba uma notificação para praticar
-            </p>
-          </div>
-          <Switch
-            checked={reminderEnabled}
-            onCheckedChange={setReminderEnabled}
-          />
-        </div>
-        {reminderEnabled && (
-          <div className="space-y-2">
-            <label className="text-xs text-[#8B6E5A] font-medium">
-              Horário do lembrete
-            </label>
-            <Input
-              type="time"
-              value={reminderTime}
-              onChange={e => setReminderTime(e.target.value)}
-              className="border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl text-sm w-40"
-            />
-          </div>
-        )}
-        <Button
-          onClick={handleSaveReminder}
-          className="w-full h-10 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl text-sm"
-        >
-          Salvar configurações
-        </Button>
-      </div>
-
-      {/* Stats */}
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 rounded-lg bg-[#F5EDE8] flex items-center justify-center">
@@ -146,50 +89,41 @@ export default function SettingsPage() {
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {journalEntries.length}
+              {writtenDaysOf(state).length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Entradas no diário</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {notes.length}
+              {state.notes.length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Anotações</p>
           </div>
           <div className="bg-[#FAF6F1] rounded-xl p-3 text-center">
             <p className="font-serif text-2xl font-bold text-[#C4856A]">
-              {unlockedAchievements.length}
+              {state.unlockedAchievements.length}
             </p>
             <p className="text-xs text-[#8B6E5A]">Conquistas</p>
           </div>
         </div>
-        {startDate && (
+        {state.startDate && (
           <p className="text-xs text-[#B08070] text-center mt-3">
-            Jornada iniciada em{" "}
-            {new Date(startDate).toLocaleDateString("pt-BR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+            Jornada iniciada em {formatLongDate(state.startDate)}
           </p>
         )}
       </div>
 
-      {/* Privacy */}
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-[#F5EDE8] flex items-center justify-center">
-            <Shield className="w-4 h-4 text-[#C4856A]" />
-          </div>
-          <h3 className="font-semibold text-[#2C1810]">Privacidade</h3>
-        </div>
-        <p className="text-sm text-[#8B6E5A] leading-relaxed mb-4">
+        <SectionTitle
+          icon={<Shield className="w-4 h-4 text-[#C4856A]" />}
+          title="Privacidade"
+        />
+        <p className="text-sm text-[#8B6E5A] leading-relaxed">
           Todos os seus dados são armazenados apenas no seu dispositivo. Nenhuma
           informação é enviada para servidores externos.
         </p>
       </div>
 
-      {/* Reset */}
       <div className="bg-white rounded-2xl border border-red-100 p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">

@@ -1,8 +1,5 @@
-// OUSE SER VOCE - apresentacao e contatos de Soraya Farias
-
 import { Instagram, Mail, MapPin } from "lucide-react";
-
-const PORTRAIT_SRC = "/images/soraya-portrait.webp";
+import { IMAGES } from "@/app/assets";
 
 export default function ProfileSoraya() {
   return (
@@ -14,7 +11,7 @@ export default function ProfileSoraya() {
         <div className="grid gap-7 p-6 sm:p-8 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)] md:items-start lg:gap-10">
           <div className="mx-auto w-full max-w-[220px]">
             <img
-              src={PORTRAIT_SRC}
+              src={IMAGES.sorayaPortrait}
               alt="Soraya Farias sorrindo"
               width={280}
               height={373}

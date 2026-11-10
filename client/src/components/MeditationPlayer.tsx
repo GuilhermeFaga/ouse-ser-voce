@@ -1,27 +1,34 @@
-// OUSE SER VOCÊ – Meditation Player Avançado
-// Design: Controles de velocidade, progresso, conclusão, favoritos e visual sofisticado
-// Com salvamento automático do progresso no localStorage
-
-import { useState, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Play,
+  Bookmark,
+  CheckCircle2,
   Pause,
+  Play,
   Volume2,
   Zap,
-  CheckCircle2,
-  Bookmark,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAudioProgress } from "@/hooks/useAudioProgress";
-import { useFavoriteAudios } from "@/hooks/useFavoriteAudios";
+import { useApp } from "@/app/store";
+
+const PLAYBACK_RATES = [0.75, 1, 1.25, 1.5];
 
 interface MeditationPlayerProps {
   title: string;
   duration: string;
   audioUrl: string;
   dayNumber: number;
+  completed: boolean;
   onComplete?: () => void;
+}
+
+function formatTime(seconds: number) {
+  if (!seconds || Number.isNaN(seconds)) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
 export default function MeditationPlayer({
@@ -29,6 +36,7 @@ export default function MeditationPlayer({
   duration,
   audioUrl,
   dayNumber,
+  completed,
   onComplete,
 }: MeditationPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -36,79 +44,26 @@ export default function MeditationPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [showFavToast, setShowFavToast] = useState(false);
-
-  // Usar hook para salvar progresso automaticamente
   useAudioProgress(dayNumber, audioRef);
+  const { state, toggleFavoriteDay } = useApp();
+  const favorited = state.favoriteAudioDays.includes(dayNumber);
 
-  // Hook de favoritos
-  const { isFavorite, toggleFavorite } = useFavoriteAudios();
-  const favorited = isFavorite(dayNumber);
+  const handleToggleFavorite = useCallback(() => {
+    if (!favorited) toast.success("Salvo nos favoritos!");
+    toggleFavoriteDay(dayNumber);
+  }, [favorited, toggleFavoriteDay, dayNumber]);
 
-  const handleToggleFavorite = () => {
-    toggleFavorite(dayNumber, title);
-    if (!favorited) {
-      setShowFavToast(true);
-      setTimeout(() => setShowFavToast(false), 2000);
-    }
-  };
-
-  const handlePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
+  const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = Number(event.target.value);
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
   };
 
   const handlePlaybackRateChange = (rate: number) => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = rate;
-      setPlaybackRate(rate);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setTotalDuration(audioRef.current.duration);
-    }
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = parseFloat(e.target.value);
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }
-  };
-
-  const handleComplete = () => {
-    setIsCompleted(true);
-    setIsPlaying(false);
-    if (onComplete) {
-      onComplete();
-    }
-  };
-
-  const handleEnded = () => {
-    handleComplete();
-  };
-
-  const formatTime = (seconds: number) => {
-    if (!seconds || isNaN(seconds)) return "0:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    if (!audioRef.current) return;
+    audioRef.current.playbackRate = rate;
+    setPlaybackRate(rate);
   };
 
   const progressPercent = totalDuration
@@ -120,21 +75,16 @@ export default function MeditationPlayer({
       <audio
         ref={audioRef}
         src={audioUrl}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleEnded}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
+        onLoadedMetadata={() =>
+          setTotalDuration(audioRef.current?.duration ?? 0)
+        }
+        onEnded={() => onComplete?.()}
       />
 
-      {/* Player Card */}
       <div className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-5 sm:p-6 shadow-sm relative">
-        {/* Favorite Toast */}
-        {showFavToast && (
-          <div className="absolute top-3 right-3 bg-[#C4856A] text-white text-xs px-3 py-1.5 rounded-lg shadow-md animate-in fade-in slide-in-from-top-2 duration-200">
-            Salvo nos favoritos!
-          </div>
-        )}
-
-        {/* Title + Favorite */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-[#2C1810] mb-1 truncate">
@@ -160,10 +110,14 @@ export default function MeditationPlayer({
           </motion.button>
         </div>
 
-        {/* Play Button */}
         <div className="flex items-center justify-center mb-5">
           <motion.button
-            onClick={handlePlayPause}
+            onClick={() => {
+              const audio = audioRef.current;
+              if (!audio) return;
+              if (audio.paused) void audio.play();
+              else audio.pause();
+            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="w-14 h-14 rounded-full bg-[#C4856A] hover:bg-[#B07055] text-white flex items-center justify-center shadow-lg transition-all duration-200"
@@ -176,7 +130,6 @@ export default function MeditationPlayer({
           </motion.button>
         </div>
 
-        {/* Progress Bar */}
         <div className="space-y-2 mb-4">
           <input
             type="range"
@@ -195,13 +148,11 @@ export default function MeditationPlayer({
           </div>
         </div>
 
-        {/* Controls Row */}
         <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 flex-wrap">
-          {/* Playback Speed */}
           <div className="flex items-center gap-1.5">
             <Zap className="w-4 h-4 text-[#C4856A] hidden sm:block" />
             <div className="flex gap-1">
-              {[0.75, 1, 1.25, 1.5].map(rate => (
+              {PLAYBACK_RATES.map(rate => (
                 <button
                   key={rate}
                   onClick={() => handlePlaybackRateChange(rate)}
@@ -217,7 +168,6 @@ export default function MeditationPlayer({
             </div>
           </div>
 
-          {/* Volume */}
           <div className="flex items-center gap-2">
             <Volume2 className="w-4 h-4 text-[#C4856A]" />
             <input
@@ -226,9 +176,9 @@ export default function MeditationPlayer({
               max="1"
               step="0.1"
               defaultValue="1"
-              onChange={e => {
+              onChange={event => {
                 if (audioRef.current) {
-                  audioRef.current.volume = parseFloat(e.target.value);
+                  audioRef.current.volume = Number(event.target.value);
                 }
               }}
               className="w-16 h-1 bg-[#E8D5CC] rounded-full appearance-none cursor-pointer accent-[#C4856A]"
@@ -236,31 +186,20 @@ export default function MeditationPlayer({
           </div>
         </div>
 
-        {/* Complete Button */}
         <Button
-          onClick={handleComplete}
-          disabled={isCompleted}
+          onClick={() => onComplete?.()}
+          disabled={completed}
           className={`w-full h-11 rounded-xl font-medium text-sm transition-all ${
-            isCompleted
+            completed
               ? "bg-green-100 text-green-700 cursor-default"
               : "bg-[#C4856A] hover:bg-[#B07055] text-white active:scale-[0.97]"
           }`}
         >
-          {isCompleted ? (
-            <>
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Prática concluída
-            </>
-          ) : (
-            <>
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Marcar como concluída
-            </>
-          )}
+          <CheckCircle2 className="w-4 h-4 mr-2" />
+          {completed ? "Prática concluída" : "Marcar como concluída"}
         </Button>
       </div>
 
-      {/* Info */}
       <p className="text-xs text-[#B08070] text-center">
         Dica: Use a velocidade 1.25x para uma experiência mais dinâmica, ou
         0.75x para aprofundar.

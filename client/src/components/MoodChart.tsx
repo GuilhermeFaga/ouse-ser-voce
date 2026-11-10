@@ -1,25 +1,29 @@
-// OUSE SER VOCÊ – Mood Variation Chart
-// Visualização de tendência de humor ao longo dos dias
-
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
   Area,
   AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { JournalEntry } from "@/hooks/useAppState";
+import {
+  averageMood,
+  MOOD_SCALE,
+  moodEmoji,
+  moodLabel,
+  moodTrend,
+} from "@/journey";
+import type { DayRecord } from "@/app/state";
 
-interface MoodChartProps {
-  entries: JournalEntry[];
-}
+const TREND_LABEL = {
+  improving: { label: "Melhorando", symbol: "↑", color: "text-green-600" },
+  declining: { label: "Desafiador", symbol: "↓", color: "text-amber-600" },
+  steady: { label: "Estável", symbol: "→", color: "text-blue-600" },
+} as const;
 
-export default function MoodChart({ entries }: MoodChartProps) {
-  if (entries.length === 0) {
+export default function MoodChart({ records }: { records: DayRecord[] }) {
+  if (records.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 text-center">
         <p className="text-[#B08070] text-sm">
@@ -29,85 +33,54 @@ export default function MoodChart({ entries }: MoodChartProps) {
     );
   }
 
-  // Prepare data for chart
-  const chartData = entries
-    .sort(
-      (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    )
-    .map(entry => ({
-      date: new Date(entry.createdAt).toLocaleDateString("pt-BR", {
-        month: "short",
-        day: "numeric",
-      }),
-      mood: entry.mood,
-      fullDate: new Date(entry.createdAt),
-    }));
+  const moods = records.map(record => record.mood);
+  const chartData = records.map(record => ({
+    date: `Dia ${record.day}`,
+    mood: record.mood,
+  }));
 
-  // Calculate statistics
-  const moods = entries.map(e => e.mood);
-  const avgMood = (moods.reduce((a, b) => a + b, 0) / moods.length).toFixed(1);
-  const maxMood = Math.max(...moods);
-  const minMood = Math.min(...moods);
-  const trend =
-    moods.length >= 2 && moods[moods.length - 1] > moods[0]
-      ? "↑ Melhorando"
-      : moods[moods.length - 1] < moods[0]
-        ? "↓ Desafiador"
-        : "→ Estável";
-  const trendColor = trend.includes("Melhorando")
-    ? "text-green-600"
-    : trend.includes("Desafiador")
-      ? "text-amber-600"
-      : "text-blue-600";
-
-  const moodLabels = [
-    "",
-    "Muito pesado",
-    "Pesado",
-    "Neutro",
-    "Leve",
-    "Muito leve",
-  ];
-  const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
+  const average = averageMood(moods);
+  const trend = TREND_LABEL[moodTrend(moods)];
 
   return (
     <div className="space-y-4">
-      {/* Stats Row */}
       <div className="grid grid-cols-4 gap-2">
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-3 text-center shadow-sm">
           <p className="text-xs text-[#B08070] font-medium mb-1">Média</p>
           <p className="font-serif text-lg font-bold text-[#C4856A]">
-            {avgMood}
+            {average.toFixed(1)}
           </p>
           <p className="text-[10px] text-[#8B6E5A]">
-            {moodEmojis[Math.round(parseFloat(avgMood))]}
+            {moodEmoji(Math.round(average))}
           </p>
         </div>
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-3 text-center shadow-sm">
           <p className="text-xs text-[#B08070] font-medium mb-1">Melhor</p>
           <p className="font-serif text-lg font-bold text-green-600">
-            {maxMood}
+            {Math.max(...moods)}
           </p>
-          <p className="text-[10px] text-[#8B6E5A]">{moodEmojis[maxMood]}</p>
+          <p className="text-[10px] text-[#8B6E5A]">
+            {moodEmoji(Math.max(...moods))}
+          </p>
         </div>
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-3 text-center shadow-sm">
           <p className="text-xs text-[#B08070] font-medium mb-1">Desafio</p>
           <p className="font-serif text-lg font-bold text-amber-600">
-            {minMood}
+            {Math.min(...moods)}
           </p>
-          <p className="text-[10px] text-[#8B6E5A]">{moodEmojis[minMood]}</p>
+          <p className="text-[10px] text-[#8B6E5A]">
+            {moodEmoji(Math.min(...moods))}
+          </p>
         </div>
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-3 text-center shadow-sm">
           <p className="text-xs text-[#B08070] font-medium mb-1">Tendência</p>
-          <p className={`font-serif text-lg font-bold ${trendColor}`}>
-            {trend.split(" ")[0]}
+          <p className={`font-serif text-lg font-bold ${trend.color}`}>
+            {trend.symbol}
           </p>
-          <p className="text-[10px] text-[#8B6E5A]">{entries.length} dias</p>
+          <p className="text-[10px] text-[#8B6E5A]">{records.length} dias</p>
         </div>
       </div>
 
-      {/* Chart */}
       <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
         <p className="text-sm font-semibold text-[#2C1810] mb-4">
           Evolução do seu humor
@@ -149,7 +122,7 @@ export default function MoodChart({ entries }: MoodChartProps) {
                 borderRadius: "8px",
               }}
               formatter={(value: number) => [
-                `${value} - ${moodLabels[value]}`,
+                `${value} - ${moodLabel(value)}`,
                 "Humor",
               ]}
               labelStyle={{ color: "#2C1810" }}
@@ -167,19 +140,15 @@ export default function MoodChart({ entries }: MoodChartProps) {
         </ResponsiveContainer>
       </div>
 
-      {/* Legend */}
       <div className="bg-[#F5EDE8] rounded-xl p-3 text-xs text-[#6B4C3B] leading-relaxed">
         <p className="font-semibold mb-1.5">Escala de humor:</p>
         <div className="grid grid-cols-5 gap-1">
-          {moodLabels.map(
-            (label, i) =>
-              i > 0 && (
-                <div key={i} className="text-center">
-                  <p className="text-lg mb-0.5">{moodEmojis[i]}</p>
-                  <p className="text-[10px]">{i}</p>
-                </div>
-              )
-          )}
+          {MOOD_SCALE.map(step => (
+            <div key={step.value} className="text-center">
+              <p className="text-lg mb-0.5">{step.emoji}</p>
+              <p className="text-[10px]">{step.value}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

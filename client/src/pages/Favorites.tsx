@@ -1,46 +1,17 @@
-// OUSE SER VOCÊ – Página de Áudios Favoritos
-// Design: Lista de áudios salvos com acesso rápido para reprodução
+import { Bookmark, Headphones, Play, Trash2 } from "lucide-react";
+import { useApp } from "@/app/store";
+import { useNavigation } from "@/app/navigation";
+import { getDay, isDayAccessible, weekOfDay } from "@/journey";
 
-import { Bookmark, Play, Trash2, Headphones } from "lucide-react";
-import { useFavoriteAudios } from "@/hooks/useFavoriteAudios";
-import { useApp } from "@/contexts/AppContext";
-import { meditationAudios } from "@/lib/meditationAudios";
-import { dailyContent } from "@/lib/journeyData";
+export default function Favorites() {
+  const { state, currentDay, toggleFavoriteDay } = useApp();
+  const { openDay } = useNavigation();
 
-interface FavoritesProps {
-  onNavigate?: (
-    page:
-      | "day"
-      | "home"
-      | "journey"
-      | "journal"
-      | "notes"
-      | "calendar"
-      | "achievements"
-      | "scanner"
-      | "assessment"
-      | "settings"
-      | "share"
-      | "community"
-      | "favorites",
-    extra?: unknown
-  ) => void;
-}
-
-export default function Favorites({ onNavigate }: FavoritesProps) {
-  const { favorites, removeFavorite } = useFavoriteAudios();
-  const { updateState } = useApp();
-
-  const handlePlayAudio = (day: number) => {
-    updateState({ currentDay: day });
-    if (onNavigate) onNavigate("day", day);
-  };
-
-  const sortedFavorites = [...favorites].sort((a, b) => a.day - b.day);
+  const favorites = [...state.favoriteAudioDays].sort((a, b) => a - b);
+  const playLabel = favorites.length === 1 ? "áudio salvo" : "áudios salvos";
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Bookmark className="w-5 h-5 text-[#C4856A] fill-[#C4856A]" />
@@ -51,8 +22,7 @@ export default function Favorites({ onNavigate }: FavoritesProps) {
         </p>
       </div>
 
-      {/* Favorites List */}
-      {sortedFavorites.length === 0 ? (
+      {favorites.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
             <Headphones className="w-7 h-7 text-[#D4C4BC]" />
@@ -67,61 +37,49 @@ export default function Favorites({ onNavigate }: FavoritesProps) {
         </div>
       ) : (
         <div className="space-y-3">
-          {/* Counter */}
           <p className="text-xs text-[#B08070] font-medium">
-            {sortedFavorites.length}{" "}
-            {sortedFavorites.length === 1 ? "áudio salvo" : "áudios salvos"}
+            {favorites.length} {playLabel}
           </p>
 
-          {sortedFavorites.map(fav => {
-            const dayData = dailyContent[fav.day - 1];
-            const audioUrl = meditationAudios[fav.day];
-            const weekNumber = Math.ceil(fav.day / 7);
-            const weekColors: Record<number, string> = {
-              1: "#E8A090",
-              2: "#D4956A",
-              3: "#C4856A",
-              4: "#A06040",
-            };
-            const weekColor = weekColors[weekNumber] || "#C4856A";
-
+          {favorites.map(dayNumber => {
+            const day = getDay(dayNumber);
+            const week = weekOfDay(dayNumber);
+            const accessible = isDayAccessible(dayNumber, currentDay);
             return (
               <div
-                key={fav.day}
+                key={dayNumber}
                 className="flex items-center gap-3 p-4 bg-white rounded-xl border border-[#F0E4DC] shadow-sm hover:shadow-md transition-all duration-200 group"
               >
-                {/* Day indicator */}
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
-                  style={{ backgroundColor: weekColor }}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm ${week.palette.dot}`}
                 >
-                  {fav.day}
+                  {dayNumber}
                 </div>
 
-                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-[#2C1810] text-sm truncate">
-                    {dayData?.title || fav.title}
+                    {day.title}
                   </p>
                   <p className="text-xs text-[#B08070] mt-0.5">
-                    Semana {weekNumber} ·{" "}
-                    {dayData?.meditationDuration || "5-10 min"}
+                    {week.subtitle} · {day.meditationDuration}
                   </p>
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center gap-2">
-                  {audioUrl && (
-                    <button
-                      onClick={() => handlePlayAudio(fav.day)}
-                      className="w-9 h-9 rounded-full bg-[#C4856A] hover:bg-[#B07055] text-white flex items-center justify-center transition-all duration-200 active:scale-95 shadow-sm"
-                      title="Ouvir áudio"
-                    >
-                      <Play className="w-4 h-4 ml-0.5" />
-                    </button>
-                  )}
                   <button
-                    onClick={() => removeFavorite(fav.day)}
+                    onClick={() => openDay(dayNumber)}
+                    disabled={!accessible}
+                    className="w-9 h-9 rounded-full bg-[#C4856A] hover:bg-[#B07055] text-white flex items-center justify-center transition-all duration-200 active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                    title={
+                      accessible
+                        ? "Ouvir áudio"
+                        : `Disponível ao chegar no dia ${dayNumber}`
+                    }
+                  >
+                    <Play className="w-4 h-4 ml-0.5" />
+                  </button>
+                  <button
+                    onClick={() => toggleFavoriteDay(dayNumber)}
                     className="w-8 h-8 rounded-full bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-500 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100"
                     title="Remover dos favoritos"
                   >
@@ -134,8 +92,7 @@ export default function Favorites({ onNavigate }: FavoritesProps) {
         </div>
       )}
 
-      {/* Tip */}
-      {sortedFavorites.length > 0 && (
+      {favorites.length > 0 && (
         <div className="p-4 bg-[#F5EDE8] rounded-xl border border-[#E8D5CC]">
           <p className="text-xs text-[#6B4C3B] leading-relaxed">
             <strong>Dica:</strong> Ouça seus áudios favoritos em momentos de

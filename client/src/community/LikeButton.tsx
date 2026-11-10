@@ -1,6 +1,3 @@
-// Botão de like/apoio para histórias e comentários
-// Design: Animação suave com coração que pulsa
-
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 
@@ -9,7 +6,6 @@ interface LikeButtonProps {
   isLiked: boolean;
   onToggle: () => void;
   size?: "sm" | "md" | "lg";
-  showCount?: boolean;
 }
 
 export default function LikeButton({
@@ -17,7 +13,6 @@ export default function LikeButton({
   isLiked,
   onToggle,
   size = "md",
-  showCount = true,
 }: LikeButtonProps) {
   const sizeClasses = {
     sm: "w-8 h-8",
@@ -59,18 +54,16 @@ export default function LikeButton({
         </motion.div>
       </motion.button>
 
-      {showCount && (
-        <motion.span
-          key={likes}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className={`${textSizes[size]} font-medium ${
-            isLiked ? "text-rose-500" : "text-gray-600"
-          }`}
-        >
-          {likes > 0 ? likes : ""}
-        </motion.span>
-      )}
+      <motion.span
+        key={likes}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className={`${textSizes[size]} font-medium ${
+          isLiked ? "text-rose-500" : "text-gray-600"
+        }`}
+      >
+        {likes > 0 ? likes : ""}
+      </motion.span>
     </div>
   );
 }

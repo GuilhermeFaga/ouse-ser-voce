@@ -1,25 +1,21 @@
-// OUSE SER VOCÊ – Conquistas
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useAchievements } from "@/hooks/useAchievements";
-import { achievements } from "@/lib/achievements";
-import { Trophy, Download } from "lucide-react";
-import ShareInstagramButton from "@/components/ShareInstagramButton";
+import { Download, Trophy } from "lucide-react";
+import { useApp } from "@/app/store";
+import { achievements } from "@/journey";
+import ShareInstagramButton from "@/share/ShareInstagramButton";
 import AchievementImageModal from "@/components/AchievementImageModal";
 
 export default function Achievements() {
-  const { unlockedAchievements } = useAchievements();
-  const [selectedAchievement, setSelectedAchievement] = useState<string | null>(
-    null
-  );
-  const unlocked = unlockedAchievements;
+  const { state } = useApp();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const unlocked = state.unlockedAchievements;
 
   const unlockedList = achievements.filter(a => unlocked.includes(a.id));
   const lockedList = achievements.filter(a => !unlocked.includes(a.id));
-
-  const selectedAchievementData = selectedAchievement
-    ? achievements.find(a => a.id === selectedAchievement)
-    : null;
+  const selected = selectedId
+    ? achievements.find(a => a.id === selectedId)
+    : undefined;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -32,7 +28,6 @@ export default function Achievements() {
         </p>
       </div>
 
-      {/* Progress */}
       <div className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm">
         <div className="flex justify-between text-sm text-[#8B6E5A] mb-2">
           <span>Progresso</span>
@@ -52,33 +47,32 @@ export default function Achievements() {
         </div>
       </div>
 
-      {/* Unlocked */}
       {unlockedList.length > 0 && (
         <div>
           <h2 className="font-semibold text-[#2C1810] mb-3">Desbloqueadas</h2>
           <div className="space-y-3">
-            {unlockedList.map((a, i) => (
+            {unlockedList.map((achievement, index) => (
               <motion.div
-                key={a.id}
+                key={achievement.id}
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.06 }}
+                transition={{ delay: index * 0.06 }}
                 className="bg-white rounded-xl sm:rounded-2xl border border-[#F0E4DC] p-3 sm:p-5 shadow-sm flex items-center gap-3 hover:shadow-md transition-shadow"
               >
                 <div className="w-12 h-12 rounded-xl bg-[#F5EDE8] flex items-center justify-center text-2xl flex-shrink-0">
-                  {a.icon}
+                  {achievement.icon}
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-[#2C1810] text-sm">
-                    {a.title}
+                    {achievement.title}
                   </p>
                   <p className="text-xs text-[#8B6E5A] mt-0.5 leading-relaxed">
-                    {a.description}
+                    {achievement.description}
                   </p>
                 </div>
                 <div className="flex-shrink-0 flex items-center gap-1 sm:gap-2">
                   <button
-                    onClick={() => setSelectedAchievement(a.id)}
+                    onClick={() => setSelectedId(achievement.id)}
                     className="p-2 hover:bg-[#F5EDE8] rounded-lg transition-colors text-[#C4856A]"
                     title="Gerar imagem para Stories"
                   >
@@ -86,9 +80,13 @@ export default function Achievements() {
                   </button>
                   <div className="hidden sm:block">
                     <ShareInstagramButton
-                      type="achievement"
-                      achievementName={a.title}
-                      achievementDescription={a.description}
+                      subject={{
+                        kind: "achievement",
+                        achievement: {
+                          title: achievement.title,
+                          description: achievement.description,
+                        },
+                      }}
                       size="sm"
                       variant="secondary"
                     />
@@ -103,27 +101,26 @@ export default function Achievements() {
         </div>
       )}
 
-      {/* Locked */}
       {lockedList.length > 0 && (
         <div>
           <h2 className="font-semibold text-[#2C1810] mb-3">
             Ainda por desbloquear
           </h2>
           <div className="space-y-3">
-            {lockedList.map(a => (
+            {lockedList.map(achievement => (
               <div
-                key={a.id}
+                key={achievement.id}
                 className="bg-white rounded-2xl border border-[#F0E4DC] p-5 flex items-center gap-4 opacity-50"
               >
                 <div className="w-12 h-12 rounded-xl bg-[#F0E4DC] flex items-center justify-center text-2xl flex-shrink-0 grayscale">
-                  {a.icon}
+                  {achievement.icon}
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-[#6B4C3B] text-sm">
-                    {a.title}
+                    {achievement.title}
                   </p>
                   <p className="text-xs text-[#B08070] mt-0.5 leading-relaxed">
-                    {a.description}
+                    {achievement.description}
                   </p>
                 </div>
                 <div className="ml-auto flex-shrink-0">
@@ -151,13 +148,11 @@ export default function Achievements() {
         </div>
       )}
 
-      {/* Achievement Image Modal */}
-      {selectedAchievementData && (
+      {selected && (
         <AchievementImageModal
-          isOpen={!!selectedAchievement}
-          onClose={() => setSelectedAchievement(null)}
-          achievement={selectedAchievementData}
-          accentColor="#C4856A"
+          isOpen
+          onClose={() => setSelectedId(null)}
+          achievement={selected}
         />
       )}
     </div>

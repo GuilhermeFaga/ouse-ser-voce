@@ -1,57 +1,23 @@
-// OUSE SER VOCÊ – Calendário de Evolução
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useJourney } from "@/hooks/useJourney";
-import { useProfile } from "@/hooks/useProfile";
-import { dailyContent } from "@/lib/journeyData";
-import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
-
-const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
-const moodColors = [
-  "",
-  "bg-red-100",
-  "bg-orange-100",
-  "bg-yellow-100",
-  "bg-green-100",
-  "bg-emerald-100",
-];
+import { CheckCircle2 } from "lucide-react";
+import { useApp } from "@/app/store";
+import {
+  DAY_COUNT,
+  daysOfWeek,
+  getDay,
+  moodEmoji,
+  moodLabel,
+  weekModules,
+} from "@/journey";
+import { dateOfDay } from "@/lib/dates";
 
 export default function CalendarView() {
-  const { currentDay, completedDays, checkins } = useJourney();
-  const { startDate: profileStartDate } = useProfile();
+  const { state, currentDay, completedDays } = useApp();
   const [selectedDay, setSelectedDay] = useState<number | null>(currentDay);
 
-  const selectedDayContent = selectedDay
-    ? dailyContent.find(d => d.day === selectedDay)
-    : null;
-  const selectedCheckin = selectedDay ? checkins[selectedDay] : null;
-
-  // Build 30-day grid
-  const startDate = profileStartDate ? new Date(profileStartDate) : new Date();
-  const days = Array.from({ length: 30 }, (_, i) => {
-    const date = new Date(startDate);
-    date.setDate(date.getDate() + i);
-    return {
-      day: i + 1,
-      date,
-      completed: completedDays.includes(i + 1),
-      isCurrent: i + 1 === currentDay,
-      checkin: checkins[i + 1],
-    };
-  });
-
-  // Group by weeks
-  const weeks: (typeof days)[] = [];
-  for (let i = 0; i < days.length; i += 7) {
-    weeks.push(days.slice(i, i + 7));
-  }
-
-  const weekLabels = [
-    "S1 · Autoconhecimento",
-    "S2 · Desapego",
-    "S3 · Autoconfiança",
-    "S4 · Transformação",
-  ];
+  const selected = selectedDay ? state.days[selectedDay] : undefined;
+  const selectedContent = selectedDay ? getDay(selectedDay) : null;
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
@@ -64,55 +30,62 @@ export default function CalendarView() {
         </p>
       </div>
 
-      {/* Calendar Grid */}
       <div className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden">
-        {weeks.map((week, wi) => (
-          <div key={wi}>
+        {weekModules.map(module => (
+          <div key={module.week}>
             <div className="px-4 py-2 bg-[#FAF6F1] border-b border-[#F0E4DC]">
               <p className="text-xs font-medium text-[#8B6E5A]">
-                {weekLabels[wi]}
+                S{module.week} · {module.shortTitle}
               </p>
             </div>
             <div className="grid grid-cols-7 divide-x divide-[#F0E4DC]">
-              {week.map(({ day, date, completed, isCurrent, checkin }) => (
-                <button
-                  key={day}
-                  onClick={() =>
-                    setSelectedDay(day === selectedDay ? null : day)
-                  }
-                  className={`p-2 flex flex-col items-center gap-1 transition-colors min-h-[64px] ${
-                    selectedDay === day ? "bg-[#F5EDE8]" : "hover:bg-[#FAF6F1]"
-                  } ${day > currentDay ? "opacity-40" : ""}`}
-                >
-                  <span className="text-[10px] text-[#B08070]">
-                    {date
-                      .toLocaleDateString("pt-BR", { weekday: "short" })
-                      .slice(0, 3)}
-                  </span>
-                  <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                      completed
-                        ? "bg-[#C4856A] text-white"
-                        : isCurrent
-                          ? "border-2 border-[#C4856A] text-[#C4856A]"
-                          : "text-[#6B4C3B]"
-                    }`}
+              {daysOfWeek(module.week).map(content => {
+                const date = dateOfDay(state.startDate, content.day);
+                const record = state.days[content.day];
+                const completed = record?.completedAt != null;
+                return (
+                  <button
+                    key={content.day}
+                    onClick={() =>
+                      setSelectedDay(
+                        content.day === selectedDay ? null : content.day
+                      )
+                    }
+                    className={`p-2 flex flex-col items-center gap-1 transition-colors min-h-[64px] ${
+                      selectedDay === content.day
+                        ? "bg-[#F5EDE8]"
+                        : "hover:bg-[#FAF6F1]"
+                    } ${content.day > currentDay ? "opacity-40" : ""}`}
                   >
-                    {day}
-                  </div>
-                  {checkin && (
-                    <span className="text-base leading-none">
-                      {moodEmojis[checkin.mood]}
+                    <span className="text-[10px] text-[#B08070]">
+                      {date
+                        .toLocaleDateString("pt-BR", { weekday: "short" })
+                        .slice(0, 3)}
                     </span>
-                  )}
-                </button>
-              ))}
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                        completed
+                          ? "bg-[#C4856A] text-white"
+                          : content.day === currentDay
+                            ? "border-2 border-[#C4856A] text-[#C4856A]"
+                            : "text-[#6B4C3B]"
+                      }`}
+                    >
+                      {content.day}
+                    </div>
+                    {completed && record && (
+                      <span className="text-base leading-none">
+                        {moodEmoji(record.mood)}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Legend */}
       <div className="flex items-center gap-4 flex-wrap">
         <div className="flex items-center gap-1.5">
           <div className="w-5 h-5 rounded-full bg-[#C4856A]" />
@@ -128,8 +101,7 @@ export default function CalendarView() {
         </div>
       </div>
 
-      {/* Selected Day Detail */}
-      {selectedDay && selectedDayContent && (
+      {selectedDay && selectedContent && (
         <motion.div
           key={selectedDay}
           initial={{ opacity: 0, y: 12 }}
@@ -139,10 +111,10 @@ export default function CalendarView() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-xs text-[#B08070] mb-1">
-                Dia {selectedDay} · {selectedDayContent.theme}
+                Dia {selectedDay} · {selectedContent.theme}
               </p>
               <h3 className="font-serif text-lg text-[#2C1810]">
-                {selectedDayContent.title}
+                {selectedContent.title}
               </h3>
             </div>
             {completedDays.includes(selectedDay) && (
@@ -150,42 +122,27 @@ export default function CalendarView() {
             )}
           </div>
 
-          {selectedCheckin ? (
+          {selected?.completedAt ? (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">
-                  {moodEmojis[selectedCheckin.mood]}
-                </span>
+                <span className="text-2xl">{moodEmoji(selected.mood)}</span>
                 <div>
                   <p className="text-xs text-[#B08070]">Humor neste dia</p>
                   <p className="text-sm font-medium text-[#4A3728]">
-                    {
-                      [
-                        "",
-                        "Muito pesado",
-                        "Pesado",
-                        "Neutro",
-                        "Leve",
-                        "Muito leve",
-                      ][selectedCheckin.mood]
-                    }
+                    {moodLabel(selected.mood)}
                   </p>
                 </div>
               </div>
-              {selectedCheckin.notes && (
+              {selected.notes.trim() && (
                 <div className="bg-[#FAF6F1] rounded-xl p-3">
                   <p className="text-sm text-[#4A3728] leading-relaxed">
-                    {selectedCheckin.notes}
+                    {selected.notes}
                   </p>
                 </div>
               )}
               <div className="flex gap-4 text-xs text-[#8B6E5A]">
-                {selectedCheckin.exerciseCompleted && (
-                  <span>✓ Exercício feito</span>
-                )}
-                {selectedCheckin.meditationListened && (
-                  <span>✓ Meditação ouvida</span>
-                )}
+                {selected.exerciseCompleted && <span>✓ Exercício feito</span>}
+                {selected.meditationListened && <span>✓ Meditação ouvida</span>}
               </div>
             </div>
           ) : (
@@ -200,26 +157,28 @@ export default function CalendarView() {
         </motion.div>
       )}
 
-      {/* Mood Summary */}
-      {Object.keys(checkins).length > 0 && (
+      {completedDays.length > 0 && (
         <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm">
           <h3 className="font-semibold text-[#2C1810] mb-4">
             Evolução do humor
           </h3>
           <div className="flex items-end gap-1 h-16">
-            {Array.from({ length: 30 }, (_, i) => {
-              const checkin = checkins[i + 1];
-              const height = checkin ? (checkin.mood / 5) * 100 : 0;
+            {Array.from({ length: DAY_COUNT }, (_, index) => {
+              const record = state.days[index + 1];
+              const completed = record?.completedAt != null;
+              const height = completed ? (record.mood / 5) * 100 : 0;
               return (
                 <div
-                  key={i}
+                  key={index}
                   className="flex-1 flex flex-col items-center justify-end"
+                  title={`Dia ${index + 1}`}
                 >
                   <div
-                    className={`w-full rounded-t-sm transition-all ${
-                      checkin ? moodColors[checkin.mood] : "bg-[#F0E4DC]"
-                    }`}
-                    style={{ height: `${Math.max(height, checkin ? 20 : 8)}%` }}
+                    className="w-full rounded-t-sm transition-all bg-[#C4856A]"
+                    style={{
+                      height: `${completed ? Math.max(height, 20) : 8}%`,
+                      opacity: completed ? 0.4 + (record.mood / 5) * 0.6 : 0.15,
+                    }}
                   />
                 </div>
               );
@@ -227,7 +186,7 @@ export default function CalendarView() {
           </div>
           <div className="flex justify-between text-xs text-[#B08070] mt-1">
             <span>Dia 1</span>
-            <span>Dia 30</span>
+            <span>Dia {DAY_COUNT}</span>
           </div>
         </div>
       )}

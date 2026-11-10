@@ -1,51 +1,40 @@
-// OUSE SER VOCÊ – Diário Emocional
-// Design: Clínica Emocional Sofisticada
-
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useJournal } from "@/hooks/useJournal";
-import { useJourney } from "@/hooks/useJourney";
+import { ChevronDown, ChevronUp, PenLine, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { PenLine, Trash2, ChevronDown, ChevronUp, Plus, X } from "lucide-react";
-import type { JournalEntry } from "@/contexts/AppContext";
+import { useApp } from "@/app/store";
+import { writtenDaysOf, type DayRecord } from "@/app/state";
+import { getDay, MOOD_SCALE, moodEmoji, moodLabel } from "@/journey";
+import { dateOfDay, formatLongDate } from "@/lib/dates";
 import MoodChart from "@/components/MoodChart";
 
-const moodEmojis = ["", "😔", "😕", "😐", "🙂", "😊"];
-const moodLabels = [
-  "",
-  "Muito pesado",
-  "Pesado",
-  "Neutro",
-  "Leve",
-  "Muito leve",
-];
-
 export default function Journal() {
-  const { journalEntries, addJournalEntry, deleteJournalEntry } = useJournal();
-  const { currentDay } = useJourney();
+  const { state, currentDay, saveDay, clearDayWriting } = useApp();
   const [showNew, setShowNew] = useState(false);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
   const [newMood, setNewMood] = useState(3);
   const [newText, setNewText] = useState("");
 
+  const toggleNewEntry = () => {
+    if (!showNew) {
+      const record = state.days[currentDay];
+      setNewMood(record?.mood ?? 3);
+      setNewText(record?.notes ?? "");
+    }
+    setShowNew(!showNew);
+  };
+
+  const written = writtenDaysOf(state);
+  const newestFirst = [...written].reverse();
+
   const handleSave = () => {
     if (!newText.trim()) return;
-    addJournalEntry({
-      dayNumber: currentDay,
-      date: new Date().toDateString(),
-      mood: newMood,
-      text: newText,
-      prompts: {},
-    });
+    saveDay(currentDay, { mood: newMood, notes: newText });
     setNewText("");
     setNewMood(3);
     setShowNew(false);
   };
-
-  const sorted = [...journalEntries].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
@@ -54,12 +43,10 @@ export default function Journal() {
           <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] mb-1">
             Diário Emocional
           </h1>
-          <p className="text-[#8B6E5A] text-sm">
-            {journalEntries.length} entradas
-          </p>
+          <p className="text-[#8B6E5A] text-sm">{written.length} entradas</p>
         </div>
         <Button
-          onClick={() => setShowNew(!showNew)}
+          onClick={toggleNewEntry}
           className="bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl h-10 px-4 text-sm"
         >
           {showNew ? (
@@ -72,10 +59,8 @@ export default function Journal() {
         </Button>
       </div>
 
-      {/* Mood Chart */}
-      {journalEntries.length > 0 && <MoodChart entries={journalEntries} />}
+      {written.length > 0 && <MoodChart records={written} />}
 
-      {/* New Entry Form */}
       {showNew && (
         <div className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm space-y-4">
           <h3 className="font-semibold text-[#2C1810]">Nova entrada</h3>
@@ -84,27 +69,27 @@ export default function Journal() {
               Como você está se sentindo?
             </p>
             <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map(v => (
+              {MOOD_SCALE.map(step => (
                 <button
-                  key={v}
-                  onClick={() => setNewMood(v)}
+                  key={step.value}
+                  onClick={() => setNewMood(step.value)}
                   className={`flex-1 py-2 rounded-xl text-xl transition-all ${
-                    newMood === v
+                    newMood === step.value
                       ? "bg-[#F5EDE8] scale-110"
                       : "bg-[#FAF6F1] hover:bg-[#F5EDE8]"
                   }`}
                 >
-                  {moodEmojis[v]}
+                  {step.emoji}
                 </button>
               ))}
             </div>
             <p className="text-xs text-center text-[#B08070] mt-1">
-              {moodLabels[newMood]}
+              {moodLabel(newMood)}
             </p>
           </div>
           <Textarea
             value={newText}
-            onChange={e => setNewText(e.target.value)}
+            onChange={event => setNewText(event.target.value)}
             placeholder="O que está no seu coração hoje?"
             className="min-h-[120px] border-[#E8D5CC] focus:border-[#C4856A] bg-[#FAF6F1] rounded-xl resize-none text-sm text-[#4A3728] placeholder:text-[#C4B0A4]"
           />
@@ -128,8 +113,7 @@ export default function Journal() {
         </div>
       )}
 
-      {/* Entries List */}
-      {sorted.length === 0 ? (
+      {newestFirst.length === 0 ? (
         <div className="text-center py-16">
           <div className="w-16 h-16 rounded-full bg-[#F5EDE8] flex items-center justify-center mx-auto mb-4">
             <PenLine className="w-7 h-7 text-[#C4856A]" />
@@ -144,15 +128,16 @@ export default function Journal() {
         </div>
       ) : (
         <div className="space-y-3">
-          {sorted.map(entry => (
+          {newestFirst.map(record => (
             <JournalCard
-              key={entry.id}
-              entry={entry}
-              isExpanded={expandedId === entry.id}
+              key={record.day}
+              record={record}
+              startDate={state.startDate}
+              isExpanded={expandedDay === record.day}
               onToggle={() =>
-                setExpandedId(expandedId === entry.id ? null : entry.id)
+                setExpandedDay(expandedDay === record.day ? null : record.day)
               }
-              onDelete={() => deleteJournalEntry(entry.id)}
+              onDelete={() => clearDayWriting(record.day)}
             />
           ))}
         </div>
@@ -162,25 +147,25 @@ export default function Journal() {
 }
 
 function JournalCard({
-  entry,
+  record,
+  startDate,
   isExpanded,
   onToggle,
   onDelete,
 }: {
-  entry: JournalEntry;
+  record: DayRecord;
+  startDate: string | null;
   isExpanded: boolean;
   onToggle: () => void;
   onDelete: () => void;
 }) {
-  const date = new Date(entry.createdAt);
-  const dateStr = date.toLocaleDateString("pt-BR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-  const promptKeys = Object.keys(entry.prompts).filter(k =>
-    entry.prompts[k]?.trim()
-  );
+  const day = getDay(record.day);
+  const writtenPrompts = day.journalPrompts
+    .map((prompt, index) => ({
+      prompt,
+      answer: record.prompts[`p${index}`] ?? "",
+    }))
+    .filter(item => item.answer.trim() !== "");
 
   return (
     <motion.div
@@ -191,13 +176,18 @@ function JournalCard({
         onClick={onToggle}
         className="w-full flex items-center gap-4 p-5 text-left hover:bg-[#FAF6F1] transition-colors"
       >
-        <span className="text-2xl">{moodEmojis[entry.mood]}</span>
+        <span className="text-2xl">{moodEmoji(record.mood)}</span>
         <div className="flex-1 min-w-0">
           <p className="text-xs text-[#B08070] mb-0.5">
-            {dateStr} · Dia {entry.dayNumber}
+            Dia {record.day}
+            {record.completedAt
+              ? ` · ${formatLongDate(record.completedAt)}`
+              : startDate
+                ? ` · ${dateOfDay(startDate, record.day).toLocaleDateString("pt-BR", { day: "numeric", month: "long" })}`
+                : ""}
           </p>
           <p className="text-sm text-[#4A3728] line-clamp-2 leading-relaxed">
-            {entry.text}
+            {record.notes}
           </p>
         </div>
         <div className="flex-shrink-0 text-[#B08070]">
@@ -211,20 +201,23 @@ function JournalCard({
 
       {isExpanded && (
         <div className="px-5 pb-5 space-y-4 border-t border-[#F0E4DC] pt-4">
-          <div className="bg-[#FAF6F1] rounded-xl p-4">
-            <p className="text-sm text-[#4A3728] leading-relaxed whitespace-pre-wrap">
-              {entry.text}
-            </p>
-          </div>
-          {promptKeys.length > 0 && (
+          {record.notes.trim() && (
+            <div className="bg-[#FAF6F1] rounded-xl p-4">
+              <p className="text-sm text-[#4A3728] leading-relaxed whitespace-pre-wrap">
+                {record.notes}
+              </p>
+            </div>
+          )}
+          {writtenPrompts.length > 0 && (
             <div className="space-y-3">
               <p className="text-xs text-[#B08070] font-medium uppercase tracking-wide">
                 Reflexões do dia
               </p>
-              {promptKeys.map(k => (
-                <div key={k} className="bg-[#FAF6F1] rounded-xl p-3">
+              {writtenPrompts.map(item => (
+                <div key={item.prompt} className="bg-[#FAF6F1] rounded-xl p-3">
+                  <p className="text-xs text-[#B08070] mb-1">{item.prompt}</p>
                   <p className="text-sm text-[#4A3728] leading-relaxed">
-                    {entry.prompts[k]}
+                    {item.answer}
                   </p>
                 </div>
               ))}
@@ -232,7 +225,7 @@ function JournalCard({
           )}
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#B08070]">
-              Humor: {moodLabels[entry.mood]}
+              Humor: {moodLabel(record.mood)}
             </span>
             <button
               onClick={onDelete}

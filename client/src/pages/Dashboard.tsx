@@ -1,88 +1,57 @@
-// OUSE SER VOCÊ – Dashboard Principal
-// Design: Clínica Emocional Sofisticada | Acolhimento + Progresso Visível
-
 import { motion } from "framer-motion";
-import { useProfile } from "@/hooks/useProfile";
-import { useJourney } from "@/hooks/useJourney";
-import { useJournal } from "@/hooks/useJournal";
-import { useAchievements } from "@/hooks/useAchievements";
-import { useAssessments } from "@/hooks/useAssessments";
-import { dailyContent, dailyQuotes, weekModules } from "@/lib/journeyData";
-import { achievements } from "@/lib/achievements";
 import {
   ArrowRight,
+  BookOpen,
   CheckCircle2,
   Flame,
-  BookOpen,
-  Star,
   Sparkles,
+  Star,
 } from "lucide-react";
-import type { AppPage } from "@/components/AppLayout";
-import ShareInstagramButton from "@/components/ShareInstagramButton";
+import { useApp } from "@/app/store";
+import { useNavigation } from "@/app/navigation";
+import { IMAGES } from "@/app/assets";
+import {
+  achievements,
+  DAY_COUNT,
+  dailyQuotes,
+  getDay,
+  weekModules,
+  weekOfDay,
+  weekProgress,
+} from "@/journey";
+import { writtenDaysOf } from "@/app/state";
+import ShareInstagramButton from "@/share/ShareInstagramButton";
 
-const MEDITATION_IMG = "/images/meditation-calm.webp";
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4, ease: "easeOut" as const, delay },
+});
 
-interface DashboardProps {
-  onNavigate: (page: AppPage, extra?: unknown) => void;
+function getGreeting() {
+  const hours = new Date().getHours();
+  if (hours < 12) return "Bom dia";
+  if (hours < 18) return "Boa tarde";
+  return "Boa noite";
 }
 
-const weekColors = {
-  1: {
-    bg: "bg-rose-50",
-    border: "border-rose-200",
-    text: "text-rose-700",
-    dot: "bg-rose-400",
-  },
-  2: {
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    text: "text-amber-700",
-    dot: "bg-amber-400",
-  },
-  3: {
-    bg: "bg-teal-50",
-    border: "border-teal-200",
-    text: "text-teal-700",
-    dot: "bg-teal-400",
-  },
-  4: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    text: "text-purple-700",
-    dot: "bg-purple-400",
-  },
-};
+export default function Dashboard() {
+  const { state, completedDays, currentDay, currentStreak, progressPercent } =
+    useApp();
+  const { navigate, openDay } = useNavigation();
+  const { scanner, unlockedAchievements } = state;
 
-export default function Dashboard({ onNavigate }: DashboardProps) {
-  const { userName } = useProfile();
-  const { currentDay, completedDays, currentStreak, progressPercent } =
-    useJourney();
-  const { journalEntries } = useJournal();
-  const { unlockedAchievements } = useAchievements();
-  const { scannerResult } = useAssessments();
-  const today = dailyContent.find(d => d.day === currentDay) || dailyContent[0];
-  const todayQuote = dailyQuotes[(currentDay - 1) % dailyQuotes.length];
+  const day = getDay(currentDay);
+  const week = weekOfDay(currentDay);
+  const quote = dailyQuotes[(currentDay - 1) % dailyQuotes.length];
   const todayCompleted = completedDays.includes(currentDay);
-  const currentWeek = weekModules.find(w => w.week === today.week)!;
-  const weekColor = weekColors[today.week as keyof typeof weekColors];
-
-  // Recent achievements
-  const recentAchievements = achievements
-    .filter(a => unlockedAchievements.includes(a.id))
-    .slice(-3);
-
-  const fadeUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.4, ease: "easeOut" as const },
-  };
+  const unlocked = unlockedAchievements;
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
-      {/* Greeting */}
-      <motion.div {...fadeUp}>
+      <motion.div {...fadeUp()}>
         <p className="text-[#B08070] text-sm mb-1">
-          {getGreeting()}, {userName}
+          {getGreeting()}, {state.userName}
         </p>
         <h1 className="font-serif text-2xl lg:text-3xl text-[#2C1810] leading-tight">
           {todayCompleted
@@ -91,15 +60,13 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </h1>
       </motion.div>
 
-      {/* Daily Quote */}
       <motion.div
-        {...fadeUp}
-        transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
+        {...fadeUp(0.05)}
         className="relative overflow-hidden rounded-2xl"
       >
         <div className="absolute inset-0">
           <img
-            src={MEDITATION_IMG}
+            src={IMAGES.meditation}
             alt=""
             className="w-full h-full object-cover"
           />
@@ -110,24 +77,22 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             Frase do dia
           </p>
           <p className="font-serif text-xl lg:text-2xl text-white leading-relaxed italic">
-            "{todayQuote}"
+            "{quote}"
           </p>
           <p className="text-[#E8D5CC] text-sm mt-3">— Soraya Farias</p>
         </div>
       </motion.div>
 
-      {/* Today's Day Card */}
       <motion.div
-        {...fadeUp}
-        transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
+        {...fadeUp(0.1)}
         className="bg-white rounded-2xl border border-[#F0E4DC] shadow-sm overflow-hidden"
       >
         <div
-          className={`px-6 py-3 ${weekColor.bg} border-b ${weekColor.border} flex items-center gap-2`}
+          className={`px-6 py-3 ${week.palette.bg} border-b ${week.palette.border} flex items-center gap-2`}
         >
-          <div className={`w-2 h-2 rounded-full ${weekColor.dot}`} />
-          <span className={`text-xs font-medium ${weekColor.text}`}>
-            {currentWeek.subtitle} — {currentWeek.title}
+          <div className={`w-2 h-2 rounded-full ${week.palette.dot}`} />
+          <span className={`text-xs font-medium ${week.palette.text}`}>
+            {week.subtitle} — {week.title}
           </span>
         </div>
         <div className="p-6">
@@ -135,16 +100,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs text-[#B08070] font-medium uppercase tracking-wide">
-                  Dia {today.day}
+                  Dia {day.day}
                 </span>
                 <span className="text-[#E8D5CC]">·</span>
-                <span className="text-xs text-[#B08070]">{today.theme}</span>
+                <span className="text-xs text-[#B08070]">{day.theme}</span>
               </div>
               <h2 className="font-serif text-lg lg:text-xl text-[#2C1810] leading-snug mb-2">
-                {today.title}
+                {day.title}
               </h2>
               <p className="text-[#8B6E5A] text-sm leading-relaxed line-clamp-2">
-                {today.soraiaMessage}
+                {day.soraiaMessage}
               </p>
             </div>
             {todayCompleted && (
@@ -154,7 +119,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             )}
           </div>
           <button
-            onClick={() => onNavigate("day")}
+            onClick={() => openDay(currentDay)}
             className="mt-4 w-full flex items-center justify-center gap-2 h-11 bg-[#C4856A] hover:bg-[#B07055] text-white rounded-xl font-medium text-sm transition-all duration-200 active:scale-[0.97] shadow-sm"
           >
             {todayCompleted ? "Revisar o dia" : "Começar o dia"}
@@ -163,12 +128,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </div>
       </motion.div>
 
-      {/* Stats Row */}
-      <motion.div
-        {...fadeUp}
-        transition={{ duration: 0.4, ease: "easeOut", delay: 0.15 }}
-        className="grid grid-cols-3 gap-3"
-      >
+      <motion.div {...fadeUp(0.15)} className="grid grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-[#F0E4DC] p-4 text-center shadow-sm">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Flame className="w-4 h-4 text-[#C4856A]" />
@@ -183,7 +143,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <BookOpen className="w-4 h-4 text-[#C4856A]" />
           </div>
           <p className="font-serif text-2xl font-bold text-[#C4856A]">
-            {journalEntries.length}
+            {writtenDaysOf(state).length}
           </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Entradas no diário</p>
         </div>
@@ -192,32 +152,26 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <Star className="w-4 h-4 text-[#C4856A]" />
           </div>
           <p className="font-serif text-2xl font-bold text-[#C4856A]">
-            {unlockedAchievements.length}
+            {unlocked.length}
           </p>
           <p className="text-xs text-[#8B6E5A] mt-0.5">Conquistas</p>
         </div>
       </motion.div>
 
-      {/* Progress Overview */}
       <motion.div
-        {...fadeUp}
-        transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+        {...fadeUp(0.2)}
         className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm"
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-[#2C1810]">Sua jornada</h3>
           <div className="flex items-center gap-2">
             <ShareInstagramButton
-              type="progress"
-              completedDays={completedDays.length}
-              totalDays={30}
-              currentWeek={today.week}
-              weekTheme={currentWeek.theme}
+              subject={{ kind: "progress", completedDays }}
               size="sm"
               variant="secondary"
             />
             <span className="text-sm text-[#C4856A] font-medium">
-              {completedDays.length}/30 dias
+              {completedDays.length}/{DAY_COUNT} dias
             </span>
           </div>
         </div>
@@ -229,37 +183,31 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
           />
         </div>
-        {/* Week mini-progress */}
         <div className="grid grid-cols-4 gap-2">
-          {weekModules.map(week => {
-            const weekDays = dailyContent.filter(d => d.week === week.week);
-            const completed = weekDays.filter(d =>
-              completedDays.includes(d.day)
-            ).length;
-            const pct = Math.round((completed / weekDays.length) * 100);
-            const wc = weekColors[week.week as keyof typeof weekColors];
+          {weekModules.map(module => {
+            const progress = weekProgress(module.week, completedDays);
             return (
-              <div key={week.week} className="text-center">
+              <div key={module.week} className="text-center">
                 <div
-                  className={`h-1.5 rounded-full ${wc.bg} border ${wc.border} overflow-hidden mb-1`}
+                  className={`h-1.5 rounded-full ${module.palette.bg} border ${module.palette.border} overflow-hidden mb-1`}
                 >
                   <div
-                    className={`h-full ${wc.dot} rounded-full transition-all duration-700`}
-                    style={{ width: `${pct}%` }}
+                    className={`h-full ${module.palette.dot} rounded-full transition-all duration-700`}
+                    style={{ width: `${progress.percent}%` }}
                   />
                 </div>
-                <p className="text-[10px] text-[#B08070]">S{week.week}</p>
+                <p className="text-[10px] text-[#B08070]">
+                  S{module.week} · {module.shortTitle}
+                </p>
               </div>
             );
           })}
         </div>
       </motion.div>
 
-      {/* Scanner CTA (if not done) */}
-      {!scannerResult && (
+      {!scanner && (
         <motion.div
-          {...fadeUp}
-          transition={{ duration: 0.4, ease: "easeOut", delay: 0.25 }}
+          {...fadeUp(0.25)}
           className="bg-gradient-to-br from-[#F5EDE8] to-[#FAF6F1] rounded-2xl border border-[#E8D5CC] p-6"
         >
           <div className="flex items-start gap-4">
@@ -275,7 +223,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 trabalhar agora.
               </p>
               <button
-                onClick={() => onNavigate("scanner")}
+                onClick={() => navigate("scanner")}
                 className="mt-3 text-sm text-[#C4856A] font-semibold flex items-center gap-1 hover:gap-2 transition-all"
               >
                 Fazer o diagnóstico <ArrowRight className="w-3.5 h-3.5" />
@@ -285,11 +233,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </motion.div>
       )}
 
-      {/* Recent Achievements */}
-      {recentAchievements.length > 0 && (
+      {recentAchievements(unlocked).length > 0 && (
         <motion.div
-          {...fadeUp}
-          transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
+          {...fadeUp(0.3)}
           className="bg-white rounded-2xl border border-[#F0E4DC] p-6 shadow-sm"
         >
           <div className="flex items-center justify-between mb-4">
@@ -297,21 +243,23 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               Conquistas recentes
             </h3>
             <button
-              onClick={() => onNavigate("achievements")}
+              onClick={() => navigate("achievements")}
               className="text-xs text-[#C4856A] font-medium"
             >
               Ver todas
             </button>
           </div>
           <div className="space-y-3">
-            {recentAchievements.map(a => (
-              <div key={a.id} className="flex items-center gap-3">
-                <span className="text-2xl">{a.icon}</span>
+            {recentAchievements(unlocked).map(achievement => (
+              <div key={achievement.id} className="flex items-center gap-3">
+                <span className="text-2xl">{achievement.icon}</span>
                 <div>
                   <p className="text-sm font-medium text-[#2C1810]">
-                    {a.title}
+                    {achievement.title}
                   </p>
-                  <p className="text-xs text-[#8B6E5A]">{a.description}</p>
+                  <p className="text-xs text-[#8B6E5A]">
+                    {achievement.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -322,9 +270,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   );
 }
 
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Bom dia";
-  if (h < 18) return "Boa tarde";
-  return "Boa noite";
+function recentAchievements(unlocked: string[]) {
+  return achievements.filter(a => unlocked.includes(a.id)).slice(-3);
 }

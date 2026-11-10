@@ -68,7 +68,7 @@ export default function AccessPending() {
 
         <div className="mt-4 flex flex-col gap-2 border-t border-line pt-4 sm:flex-row">
           <Action onClick={retry} disabled={signingIn}>
-            {denied ? "Já pedi, verificar de novo" : "Tentar de novo"}
+            {denied ? "Já pedi. Verificar de novo" : "Tentar de novo"}
           </Action>
           <Action variant="secondary" onClick={signOut} disabled={signingIn}>
             {signingIn ? "Saindo…" : "Trocar de conta"}

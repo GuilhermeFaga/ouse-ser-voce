@@ -76,7 +76,7 @@ export default function Notes() {
         description={
           sorted.length === 0
             ? "Um lugar para o que você não quer esquecer."
-            : `${countLabel} neste dispositivo.`
+            : `${countLabel} neste dispositivo e na nuvem.`
         }
         actions={
           composerOpen || sorted.length === 0 ? undefined : (
@@ -124,7 +124,7 @@ export default function Notes() {
               label="Título"
               htmlFor="note-new-title"
               optional
-              hint="Serve só para reconhecer a nota na lista."
+              hint="Serve só para reconhecer a anotação na lista."
               className="mt-4"
             >
               <input
@@ -160,7 +160,7 @@ export default function Notes() {
             </div>
 
             <p className="mt-3 text-xs leading-relaxed text-ink-muted">
-              Fica salvo neste dispositivo. Só você lê.
+              Fica salvo neste dispositivo e na nuvem. Só você lê.
             </p>
           </Card>
         </motion.div>
@@ -171,7 +171,7 @@ export default function Notes() {
           <EmptyState
             icon={NotebookPen}
             title="Nenhuma anotação ainda"
-            body="Um pensamento por nota, sem título obrigatório. O que você escrever fica salvo neste dispositivo e pode ser editado depois."
+            body="Um pensamento por nota, sem título obrigatório. O que você escrever fica salvo neste dispositivo e na nuvem. Dá para editar depois."
             action={
               <Action
                 size="lg"
@@ -267,7 +267,7 @@ function NoteCard({ note }: { note: Note }) {
             label="Título"
             htmlFor={`${note.id}-title`}
             optional
-            hint="Serve só para reconhecer a nota na lista."
+            hint="Serve só para reconhecer a anotação na lista."
           >
             <input
               id={`${note.id}-title`}
@@ -329,7 +329,7 @@ function NoteCard({ note }: { note: Note }) {
               aria-expanded={expanded}
               onClick={() => setExpanded(!expanded)}
             >
-              {expanded ? "Mostrar menos" : "Ler a nota inteira"}
+              {expanded ? "Mostrar menos" : "Ler a anotação inteira"}
             </Action>
           )}
 

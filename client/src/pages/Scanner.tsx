@@ -323,7 +323,7 @@ function ScannerResults({
             {hasStarted ? `Voltar ao dia ${currentDay}` : "Fazer o dia 1"}
           </Action>
           <p className="mt-2 text-center text-xs text-ink-muted">
-            {`Dia ${currentDay} · ${day.theme} · salvo neste dispositivo`}
+            {`Dia ${currentDay} · ${day.theme} · salvo neste dispositivo e na nuvem`}
           </p>
         </Card>
       </motion.div>

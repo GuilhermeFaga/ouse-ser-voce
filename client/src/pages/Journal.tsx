@@ -78,7 +78,7 @@ export default function Journal() {
             ? "Sua entrada de hoje está guardada"
             : "O que você quer guardar de hoje?"
         }
-        description="Uma entrada por dia, no seu ritmo. O que você escreve fica salvo neste dispositivo, para reler quando quiser."
+        description="Uma entrada por dia, no seu ritmo. O que você escreve fica salvo neste dispositivo e na nuvem, para reler quando quiser."
         actions={
           showNew ? (
             <Action variant="quiet" onClick={closeEditor}>
@@ -89,7 +89,7 @@ export default function Journal() {
               onClick={openEditor}
               icon={<Plus className="h-4 w-4" aria-hidden />}
             >
-              Nova entrada
+              {todayWritten ? "Editar a entrada de hoje" : "Nova entrada"}
             </Action>
           ) : undefined
         }
@@ -156,7 +156,7 @@ export default function Journal() {
               hint={
                 todayWritten
                   ? "Sua escrita de hoje já está aqui. Salvar substitui o texto."
-                  : "Uma frase já basta. Fica salvo neste dispositivo — ninguém mais lê."
+                  : "Uma frase já basta. Fica salvo neste dispositivo e na nuvem — ninguém mais lê."
               }
               className="mt-5"
             >
@@ -427,7 +427,7 @@ function JournalEntryDetail({
             onClick={() => setConfirming(true)}
             icon={<Trash2 className="h-3.5 w-3.5" aria-hidden />}
           >
-            Excluir escrita
+            Apagar entrada
           </Action>
         )}
       </div>

@@ -156,7 +156,7 @@ interface Live {
 function syncErrorMessage(cause: unknown): string {
   const code = String((cause as { code?: unknown } | null)?.code ?? "");
   if (code.includes("permission-denied")) {
-    return "A nuvem recusou o acesso. Suas mudanças continuam neste aparelho.";
+    return "A nuvem recusou o acesso. Suas mudanças continuam neste dispositivo.";
   }
   if (code.includes("unavailable") || code.includes("network")) {
     return "Sem conexão com a nuvem.";
@@ -419,7 +419,7 @@ export function CloudSyncProvider({ children }: { children: ReactNode }) {
           replaceState(plan.state);
           const pushed = await enqueueWrite(live, plan.state, baseRevision);
           if (pushed && remote && hasRecord(remote)) {
-            toast.success("Juntamos este aparelho com a sua conta.");
+            toast.success("Juntamos este dispositivo com a sua conta.");
           }
         }
 

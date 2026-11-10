@@ -14,7 +14,7 @@ function statusView(cloud: CloudApi): {
   if (cloud.status === "error") {
     return {
       tone: "danger",
-      label: "Não salvou",
+      label: "Erro ao salvar",
       detail: cloud.error ?? "Não foi possível salvar na nuvem.",
     };
   }
@@ -23,7 +23,7 @@ function statusView(cloud: CloudApi): {
       tone: "warning",
       label: "Sem conexão",
       detail:
-        "Suas mudanças ficam neste aparelho e sobem quando a internet voltar.",
+        "Suas mudanças ficam neste dispositivo e sobem quando a internet voltar.",
     };
   }
   if (cloud.status === "linking" || cloud.status === "off") {
@@ -146,7 +146,8 @@ export default function CloudAccountCard() {
       )}
 
       <p className="mt-3 text-xs leading-relaxed text-ink-muted">
-        Sair não apaga nada: o registro continua neste aparelho e na sua conta.
+        Sair não apaga nada: o registro continua neste dispositivo e na sua
+        conta.
       </p>
     </Card>
   );

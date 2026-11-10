@@ -143,7 +143,7 @@ export default function Journey() {
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
                 {allDone
                   ? "O dia segue salvo, com a prática e o diário que você escreveu."
-                  : `Reflexão, exercício, diário e áudio (${day.meditationDuration}) · salvo neste dispositivo`}
+                  : `Reflexão, exercício, diário e áudio (${day.meditationDuration}) · salvo neste dispositivo e na nuvem`}
               </p>
             </div>
           </div>

@@ -430,7 +430,7 @@ export default function CalendarView() {
               </Action>
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
                 {selectedCompleted
-                  ? "A prática e o diário continuam salvos neste dispositivo."
+                  ? "A prática e o diário continuam salvos neste dispositivo e na nuvem."
                   : `Reflexão, exercício, diário e áudio de ${selectedContent.meditationDuration}`}
               </p>
             </div>

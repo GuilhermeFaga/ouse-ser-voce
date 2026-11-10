@@ -270,7 +270,7 @@ function DayScreen({
                   aria-hidden
                 />
                 {step.label}
-                {done && <span className="sr-only"> — concluído</span>}
+                {done && <span className="sr-only"> — etapa concluída</span>}
               </button>
             );
           })}
@@ -550,7 +550,7 @@ function DayScreen({
                       done ? "text-ink-muted" : "text-ink-subtle"
                     )}
                   >
-                    {done ? "registrado" : "não marcado"}
+                    {done ? "registro feito" : "sem registro"}
                   </span>
                 </li>
               );

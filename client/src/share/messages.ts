@@ -46,7 +46,7 @@ ${subject.achievement.description}
 
 Estou transformando minha vida, uma prática por vez. Você também pode! 🌟
 
-#OuseSerVocê #30DiasParaMudar #TransformacaoEmocional #Conquista #AutoestimA`;
+#OuseSerVocê #30DiasParaMudar #TransformacaoEmocional #Conquista #Autoestima`;
     case "progress": {
       const completed = subject.completedDays.length;
       const percent = progressPercent(subject.completedDays);
